@@ -67,7 +67,8 @@ class VisualEffectsEngine {
     triggerAttackEffect(attacker, target, damage) {
         this.createSlashEffect(target);
         this.createDamageNumber(target, damage);
-        this.screenShakeEffect();
+        this.screenShake(damage > 10 ? 1.5 : 1);
+        this.comboFlash();
         this.createImpactParticles(target);
     }
     
@@ -136,6 +137,75 @@ class VisualEffectsEngine {
         setTimeout(() => {
             body.style.animation = '';
             this.screenShake = false;
+        }, 500);
+    }
+    
+    screenShake(intensity = 1) {
+        if (this.screenShake) return;
+        this.screenShake = true;
+        
+        const body = document.body;
+        body.style.animation = `screenShake ${0.3 + intensity * 0.2}s`;
+        
+        setTimeout(() => {
+            body.style.animation = '';
+            this.screenShake = false;
+        }, 600);
+    }
+    
+    comboFlash() {
+        const combo = (window.battleEncounters && window.battleEncounters.combo) || 0;
+        if (combo < 2) return;
+        
+        const flash = document.createElement('div');
+        flash.className = 'fixed inset-0 pointer-events-none z-50';
+        flash.style.background = 'radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%)';
+        flash.style.animation = 'comboFlashAnim 0.6s ease-out';
+        
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 600);
+    }
+    
+    divineAura(target) {
+        const el = (typeof target === 'string') ? document.querySelector(target) : target;
+        if (!el) return;
+        
+        const aura = document.createElement('div');
+        aura.style.position = 'absolute';
+        aura.style.inset = '-10px';
+        aura.style.pointerEvents = 'none';
+        aura.style.zIndex = '30';
+        aura.style.boxShadow = '0 0 30px 10px rgba(255,215,0,0.6), 0 0 60px 20px rgba(147,51,234,0.4)';
+        aura.style.borderRadius = 'inherit';
+        aura.style.animation = 'divineAuraPulse 1.5s ease-out';
+        
+        el.style.position = el.style.position || 'relative';
+        el.appendChild(aura);
+        
+        setTimeout(() => aura.remove(), 1500);
+    }
+    
+    transitionFade(callback) {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 pointer-events-none z-[60]';
+        overlay.style.background = 'black';
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 0.5s ease-in-out';
+        
+        document.body.appendChild(overlay);
+        
+        requestAnimationFrame(() => {
+            overlay.style.opacity = '1';
+        });
+        
+        setTimeout(() => {
+            if (typeof callback === 'function') {
+                callback();
+            }
+            requestAnimationFrame(() => {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 500);
+            });
         }, 500);
     }
     
@@ -483,6 +553,17 @@ style.textContent = `
             transform: translateX(-50%) rotate(var(--rotation)) scaleY(2);
             opacity: 0;
         }
+    }
+    
+    @keyframes comboFlashAnim {
+        0% { opacity: 0.8; transform: scale(1); }
+        100% { opacity: 0; transform: scale(1.1); }
+    }
+    
+    @keyframes divineAuraPulse {
+        0% { opacity: 0.8; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.05); }
+        100% { opacity: 0; transform: scale(1.1); }
     }
 `;
 document.head.appendChild(style);

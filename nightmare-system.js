@@ -80,17 +80,27 @@ class ChallengeMode {
         this.inNightmare = true;
         this.loopCount++;
         this.nightmareLevel = Math.floor(this.loopCount / 3) + 1;
-        
+
+        const roll = Math.random();
+        if (roll < 0.15) {
+            this.triggerMirroredSelf();
+            return;
+        }
+        if (roll < 0.30) {
+            this.triggerUnmaking();
+            return;
+        }
+
         // Show nightmare UI
         document.getElementById('nightmare-ui').classList.remove('hidden');
-        
+
         // Reality breaking effects
         this.breakReality();
         this.showNightmareMessage();
-        
+
         // Start nightmare music effect
         this.createNightmareAudio();
-        
+
         // Distort the game world
         this.distortGameWorld();
     }
@@ -451,9 +461,17 @@ class ChallengeMode {
     
     checkLoopSolution() {
         if (this.selectedPiece === this.loopSolution) {
-            this.breakLoopSuccess();
+            if (this.inUnmaking) {
+                this.endUnmaking(true);
+            } else {
+                this.breakLoopSuccess();
+            }
         } else {
-            this.breakLoopFailure();
+            if (this.inUnmaking) {
+                this.endUnmaking(false);
+            } else {
+                this.breakLoopFailure();
+            }
         }
     }
     
@@ -504,7 +522,209 @@ class ChallengeMode {
         document.body.appendChild(failure);
         setTimeout(() => failure.remove(), 2000);
     }
-    
+
+    triggerMirroredSelf() {
+        // Break reality before the scenario
+        for (let i = 0; i < 6; i++) {
+            setTimeout(() => this.createRealityTear(), i * 120);
+        }
+        this.createNightmareEntity();
+
+        const questions = (Array.isArray(window.game.choices) && window.game.choices.length > 0)
+            ? window.game.choices.slice(-5).map(c => {
+                const label = typeof c === 'string' ? c : (c.text || c.description || JSON.stringify(c));
+                return label;
+            })
+            : [
+                'Do you seek power or surrender it?',
+                'Have you loved what was made, or only its reflection?',
+                'When the divine speaks, do you obey or question?',
+                'Is faith a light you carry, or a light you chase?',
+                'Would you repeat the loop, or destroy it?'
+            ];
+
+        const chosen = [];
+        while (chosen.length < 3 && chosen.length < questions.length) {
+            const idx = Math.floor(Math.random() * questions.length);
+            if (!chosen.includes(idx)) chosen.push(idx);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50';
+        overlay.innerHTML = `
+            <div class="text-center max-w-2xl w-full mx-4">
+                <div class="text-6xl mb-4 animate-pulse">🪞</div>
+                <h2 class="text-3xl font-bold text-purple-400 mb-2">THE MIRRORED SELF</h2>
+                <p class="text-xl text-gray-300 mb-6">Your reflection asks what you already know.</p>
+                <div id="mirror-questions" class="space-y-4 text-left"></div>
+                <div class="mt-6">
+                    <button onclick="window.nightmare.submitMirrorAnswers()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-bold">
+                        Reveal Yourself
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        const qContainer = overlay.querySelector('#mirror-questions');
+        this.mirrorAnswers = {};
+
+        chosen.forEach((qi, i) => {
+            const qBlock = document.createElement('div');
+            qBlock.className = 'bg-gray-900 bg-opacity-70 p-4 rounded-lg border border-purple-700';
+            qBlock.innerHTML = `<div class="text-purple-300 font-bold mb-2">Question ${i + 1}: ${questions[qi]}</div>`;
+            const choicesBlock = document.createElement('div');
+            choicesBlock.className = 'grid grid-cols-2 gap-2 mt-2';
+            ['Yes', 'No', 'I do not know', 'I refuse'].forEach(ans => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-purple-800 hover:bg-purple-600 text-white px-3 py-2 rounded text-sm';
+                btn.textContent = ans;
+                btn.onclick = () => {
+                    choicesBlock.querySelectorAll('button').forEach(b => b.classList.replace('bg-purple-600', 'bg-purple-800'));
+                    btn.classList.replace('bg-purple-800', 'bg-purple-600');
+                    this.mirrorAnswers[i] = ans;
+                };
+                choicesBlock.appendChild(btn);
+            });
+            qBlock.appendChild(choicesBlock);
+            qContainer.appendChild(qBlock);
+        });
+    }
+
+    submitMirrorAnswers() {
+        const total = Object.keys(this.mirrorAnswers).length;
+        if (total < 3) {
+            const warn = document.createElement('div');
+            warn.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg z-50';
+            warn.textContent = 'Answer all three questions before facing yourself.';
+            document.body.appendChild(warn);
+            setTimeout(() => warn.remove(), 2000);
+            return;
+        }
+
+        document.querySelectorAll('.fixed.inset-0').forEach(el => el.remove());
+
+        const success = document.createElement('div');
+        success.className = 'fixed inset-0 bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center z-50';
+        success.innerHTML = `
+            <div class="text-center">
+                <div class="text-6xl mb-4">🪞</div>
+                <h2 class="text-3xl font-bold text-purple-300 mb-4">REFLECTION ACCEPTED</h2>
+                <p class="text-xl text-gray-300 mb-6">The mirror shatters. Clarity pierces the loop.</p>
+                <div class="text-lg text-yellow-400 mb-6">
+                    <div>Boon: Clarity (+15 Wisdom, -1 Nightmare Level)</div>
+                </div>
+                <button onclick="window.nightmare.endNightmare()" class="bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-bold">
+                    Return to Reality
+                </button>
+            </div>
+        `;
+        document.body.appendChild(success);
+
+        this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 15;
+        this.nightmareLevel = Math.max(1, (this.nightmareLevel || 1) - 1);
+        this.game.updateStats();
+        this.inNightmare = false;
+        this.endNightmare();
+    }
+
+    triggerUnmaking() {
+        this.inUnmaking = true;
+        this.unmakingStep = 0;
+        this.maxUnmakingSteps = 5;
+        this.showUnmakingOverlay();
+        this.runUnmakingDecay();
+    }
+
+    showUnmakingOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
+        overlay.id = 'unmaking-overlay';
+        overlay.innerHTML = `
+            <div class="text-center max-w-xl w-full mx-4">
+                <div class="text-6xl mb-4 animate-pulse">🌑</div>
+                <h2 class="text-3xl font-bold text-red-500 mb-2">THE UNMAKING</h2>
+                <p class="text-xl text-gray-300 mb-2">Reality is being unwritten.</p>
+                <div class="w-full bg-gray-800 rounded-full h-3 mb-4">
+                    <div id="unmaking-bar" class="bg-red-500 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <div id="unmaking-stage" class="text-sm text-red-300 mb-4">Stage 1 of ${this.maxUnmakingSteps}</div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+    }
+
+    runUnmakingDecay() {
+        if (!this.inUnmaking) return;
+
+        this.unmakingStep++;
+
+        // Escalating visual decay each stage
+        if (this.unmakingStep >= 1) {
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => this.createRealityTear(), i * 90);
+            }
+            document.body.style.filter = `invert(${Math.min(100, 15 * this.unmakingStep)}%) hue-rotate(${30 * this.unmakingStep}deg)`;
+        }
+        if (this.unmakingStep >= 2) {
+            this.showNightmareMessage();
+        }
+        if (this.unmakingStep >= 3) {
+            this.createNightmareEntity();
+        }
+        if (this.unmakingStep >= 4) {
+            document.body.style.animation = 'realityGlitch 0.4s infinite';
+        }
+
+        // Update progress
+        const pct = Math.min(100, Math.round((this.unmakingStep / this.maxUnmakingSteps) * 100));
+        const bar = document.getElementById('unmaking-bar');
+        const stage = document.getElementById('unmaking-stage');
+        if (bar) bar.style.width = pct + '%';
+        if (stage) stage.textContent = `Stage ${this.unmakingStep} of ${this.maxUnmakingSteps}`;
+
+        if (this.unmakingStep >= this.maxUnmakingSteps) {
+            // Final stage: force loop-break puzzle
+            this.createLoopBreakPuzzle();
+        } else {
+            setTimeout(() => this.runUnmakingDecay(), 2200);
+        }
+    }
+
+    endUnmaking(success) {
+        this.inUnmaking = false;
+        document.querySelectorAll('#unmaking-overlay, .fixed.inset-0').forEach(el => el.remove());
+        document.body.style.animation = '';
+        document.body.style.filter = '';
+        document.body.style.transform = '';
+
+        if (success) {
+            const msg = document.createElement('div');
+            msg.className = 'fixed inset-0 bg-gradient-to-br from-green-900 to-blue-900 flex items-center justify-center z-50';
+            msg.innerHTML = `
+                <div class="text-center">
+                    <div class="text-6xl mb-4">🛡️</div>
+                    <h2 class="text-3xl font-bold text-green-400 mb-4">THE UNMAKING HALTED</h2>
+                    <p class="text-xl text-gray-300 mb-6">You stitched reality back together, thread by thread.</p>
+                    <div class="text-lg text-yellow-400 mb-6">
+                        <div>Reward: +20 Wisdom</div>
+                    </div>
+                    <button onclick="window.nightmare.endNightmare()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold">
+                        Return to Reality
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(msg);
+            this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 20;
+            this.game.updateStats();
+            this.inNightmare = false;
+            this.endNightmare();
+        } else {
+            this.showNightmareEnd('The unmaking consumes all. The loop tightens.');
+        }
+    }
+
     endNightmare() {
         this.inNightmare = false;
         

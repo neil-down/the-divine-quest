@@ -23,7 +23,8 @@ class DivineQuest {
             "The prayer of a righteous person is powerful and effective. (James 5:16)",
             "Do not be conformed to this world, but be transformed by the renewal of your mind. (Romans 12:2)",
             "For God gave us a spirit not of fear but of power and love and self-control. (2 Timothy 1:7)",
-            "Christ died for our sins according to the Scriptures, was buried, and was raised on the third day. (1 Corinthians 15:3-4)"
+            "Christ died for our sins according to the Scriptures, was buried, and was raised on the third day. (1 Corinthians 15:3-4)",
+            "Jesus answered, 'Everyone who drinks this water will be thirsty again, but whoever drinks the water I give them will never thirst. Indeed, the water I give them will become in them a spring of water welling up to eternal life.' (John 4:13-14)"
         ];
         
         this.scriptures = [
@@ -236,6 +237,62 @@ class DivineQuest {
                                 text: "Live for God's glory",
                                 description: "Devote your life to bringing glory to God in all things.",
                                 effects: { faith: 15, wisdom: 10, compassion: 5 },
+                                nextChapter: 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Well of Living Water",
+                scenes: [
+                    {
+                        text: "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.",
+                        choices: [
+                            {
+                                text: "Drink deeply of the living water",
+                                description: "Receive the grace of Christ that satisfies the soul forever.",
+                                effects: { faith: 10, wisdom: 5, compassion: 5 },
+                                nextChapter: 8
+                            },
+                            {
+                                text: "Listen to the stranger's teaching",
+                                description: "Sit in humility and learn from the wisdom being shared.",
+                                effects: { faith: 5, wisdom: 10, compassion: 5 },
+                                nextChapter: 8
+                            },
+                            {
+                                text: "Share your water with someone nearby",
+                                description: "Demonstrate Christ's love through practical generosity.",
+                                effects: { faith: 5, wisdom: 5, compassion: 10 },
+                                nextChapter: 8
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Upper Room",
+                scenes: [
+                    {
+                        text: "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.",
+                        choices: [
+                            {
+                                text: "Pray and wait for the Spirit",
+                                description: "Join in persistent prayer, surrendering to the Spirit's timing.",
+                                effects: { faith: 10, wisdom: 5, compassion: 10 },
+                                nextChapter: 0
+                            },
+                            {
+                                text: "Teach the gathered crowd",
+                                description: "Boldly proclaim the truth of Christ to all who are listening.",
+                                effects: { faith: 5, wisdom: 10, compassion: 5 },
+                                nextChapter: 0
+                            },
+                            {
+                                text: "Break bread in fellowship",
+                                description: "Share a meal in unity, remembering Christ's sacrifice together.",
+                                effects: { faith: 5, wisdom: 5, compassion: 10 },
                                 nextChapter: 0
                             }
                         ]

@@ -133,7 +133,36 @@ class EnhancedGameplay {
     runMeditationGame() {
         const area = document.getElementById('meditation-area');
         let score = 0;
+        let focus = 50;
         let timeLeft = 30;
+        
+        // Breathing visualizer - 4-7-8 rhythm circle
+        const breathingCircle = document.createElement('div');
+        breathingCircle.className = 'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full pointer-events-none';
+        breathingCircle.style.background = 'radial-gradient(circle, rgba(168, 85, 247, 0.25), rgba(59, 130, 246, 0.1))';
+        breathingCircle.style.transform = 'translate(-50%, -50%) scale(1)';
+        breathingCircle.style.opacity = '0.3';
+        area.appendChild(breathingCircle);
+        
+        let breathPhase = 0;
+        const breathTick = setInterval(() => {
+            if (timeLeft <= 0) { clearInterval(breathTick); return; }
+            breathPhase = (breathPhase + 0.1) % 19;
+            let scale, opacity;
+            if (breathPhase < 4) {
+                scale = 1 + (breathPhase / 4) * 0.5;
+                opacity = 0.3 + (breathPhase / 4) * 0.3;
+            } else if (breathPhase < 11) {
+                scale = 1.5;
+                opacity = 0.6;
+            } else {
+                const t = (breathPhase - 11) / 8;
+                scale = 1.5 - t * 0.5;
+                opacity = 0.6 - t * 0.3;
+            }
+            breathingCircle.style.transform = `translate(-50%, -50%) scale(${scale})`;
+            breathingCircle.style.opacity = opacity;
+        }, 100);
         
         const timer = document.createElement('div');
         timer.className = 'absolute top-2 right-2 text-purple-800 font-bold';
@@ -145,12 +174,36 @@ class EnhancedGameplay {
         scoreDisplay.textContent = `Focus: ${score}`;
         area.appendChild(scoreDisplay);
         
+        // Focus / Stillness meter
+        const focusText = document.createElement('div');
+        focusText.className = 'absolute bottom-5 left-2 text-xs text-purple-700 font-bold';
+        focusText.textContent = `Stillness: ${focus}`;
+        area.appendChild(focusText);
+        
+        const focusMeter = document.createElement('div');
+        focusMeter.className = 'absolute bottom-2 left-2 right-2 h-3 bg-purple-100 rounded-full overflow-hidden';
+        const focusFill = document.createElement('div');
+        focusFill.className = 'h-full bg-purple-500 rounded-full transition-all duration-300';
+        focusFill.style.width = focus + '%';
+        focusMeter.appendChild(focusFill);
+        area.appendChild(focusMeter);
+        
+        const focusDecay = setInterval(() => {
+            if (timeLeft <= 0) return;
+            focus = Math.max(0, focus - 1);
+            focusFill.style.width = focus + '%';
+            focusText.textContent = `Stillness: ${focus}`;
+        }, 1500);
+        
         const gameInterval = setInterval(() => {
             timeLeft--;
             timer.textContent = `Time: ${timeLeft}`;
             
             if (timeLeft <= 0) {
                 clearInterval(gameInterval);
+                clearInterval(focusDecay);
+                clearInterval(breathTick);
+                this._meditationFocus = focus;
                 this.endMeditation(score);
             } else {
                 // Create meditation orb
@@ -161,7 +214,10 @@ class EnhancedGameplay {
                 
                 orb.onclick = () => {
                     score += 5;
+                    focus = Math.min(100, focus + 3);
                     scoreDisplay.textContent = `Focus: ${score}`;
+                    focusFill.style.width = focus + '%';
+                    focusText.textContent = `Stillness: ${focus}`;
                     orb.remove();
                     
                     // Add visual feedback
@@ -189,11 +245,12 @@ class EnhancedGameplay {
     
     endMeditation(score) {
         const area = document.getElementById('meditation-area');
+        const focus = this._meditationFocus || 0;
         area.innerHTML = `
             <div class="flex flex-col items-center justify-center h-full">
                 <div class="text-6xl mb-4">${score >= 100 ? '🌟' : score >= 50 ? '✨' : '🙏'}</div>
                 <div class="text-2xl font-bold text-purple-800 mb-2">Meditation Complete</div>
-                <div class="text-lg text-gray-700 mb-4">Focus Level: ${score}</div>
+                <div class="text-lg text-gray-700 mb-4">Focus Level: ${score} | Stillness: ${focus}</div>
                 <div class="text-sm text-gray-600">
                     ${score >= 100 ? 'Profound spiritual insight gained!' : 
                       score >= 50 ? 'Your spirit feels centered and calm.' : 
@@ -210,6 +267,12 @@ class EnhancedGameplay {
         } else if (score >= 50) {
             this.game.playerStats.faith += 2;
             this.game.playerStats.wisdom += 2;
+        }
+        
+        // Stillness completion bonus
+        if (focus >= 50) {
+            this.game.playerStats.faith += 3;
+            this.game.playerStats.wisdom += 3;
         }
         
         this.game.updateStats();

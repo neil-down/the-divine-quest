@@ -68,6 +68,31 @@ class DivinePuzzles {
                 solution: '17',
                 explanation: 'Pattern: blessings = prayers + 2, so 10 + 7 = 17',
                 reward: { wisdom: 20 }
+            },
+            {
+                id: 'parable_riddle',
+                name: 'The Parable of Hidden Light',
+                description: 'Answer this ancient riddle to uncover divine wisdom',
+                type: 'riddle',
+                difficulty: 'medium',
+                riddle: 'I have no wings, yet I fly. I have no voice, yet I teach truth. I have no gold, yet I am more precious than rubies. What am I?',
+                options: [
+                    { text: 'A golden crown worn by kings', correct: false },
+                    { text: 'Wisdom gifted from above', correct: true },
+                    { text: 'A silent stone from the temple', correct: false }
+                ],
+                hint: 'The answer lies not in earthly riches, but in heavenly gifts...',
+                reward: { wisdom: 20, faith: 10 }
+            },
+            {
+                id: 'creation_memory',
+                name: 'Recalling the Order of Creation',
+                description: 'Memorize the divine sequence and reproduce it to unlock wisdom',
+                type: 'sequence_memory',
+                difficulty: 'hard',
+                symbols: ['🌅', '🌊', '🌿', '⭐', '🔥'],
+                sequence: [0, 1, 2, 3, 4],
+                reward: { wisdom: 30, faith: 20 }
             }
         ];
     }
@@ -105,6 +130,12 @@ class DivinePuzzles {
                 break;
             case 'math':
                 puzzleContent = this.createMathPuzzle(puzzle);
+                break;
+            case 'riddle':
+                puzzleContent = this.createRiddlePuzzle(puzzle);
+                break;
+            case 'sequence_memory':
+                puzzleContent = this.createSequenceMemoryPuzzle(puzzle);
                 break;
         }
         
@@ -260,6 +291,58 @@ class DivinePuzzles {
         `;
     }
     
+    createRiddlePuzzle(puzzle) {
+        return `
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="text-center mb-6">
+                    <div class="text-5xl mb-4">📜</div>
+                    <p class="text-lg text-gray-200 mb-6 italic">"${puzzle.riddle}"</p>
+                    <div class="space-y-3">
+                        ${puzzle.options.map((option, index) => `
+                            <button onclick="window.puzzles.checkRiddle(${index})" class="w-full text-left bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg transition-all">
+                                <div class="font-bold">${String.fromCharCode(65 + index)}. ${option.text}</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    createSequenceMemoryPuzzle(puzzle) {
+        return `
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="text-center mb-6">
+                    <p class="text-gray-300 mb-4">Memorize the divine sequence, then reproduce it in the correct order:</p>
+                    <div id="memory-display" class="flex justify-center space-x-2 mb-6 min-h-[80px] items-center">
+                        <div class="text-gray-500 text-2xl">Press "Show Sequence" to begin</div>
+                    </div>
+                    <button id="memory-play-btn" onclick="window.puzzles.playSequence()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg mb-6">
+                        Show Sequence
+                    </button>
+                    <div class="flex justify-center space-x-2 mb-6" id="memory-input">
+                        ${puzzle.symbols.map((symbol, index) => `
+                            <div class="symbol-tile bg-purple-600 hover:bg-purple-700 text-white w-16 h-16 flex items-center justify-center rounded-lg cursor-pointer text-3xl transform transition-all hover:scale-105"
+                                 data-index="${index}" data-symbol="${symbol}" onclick="window.puzzles.selectSymbol(${index})">
+                                ${symbol}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="flex justify-center space-x-2 mb-6" id="player-sequence-display">
+                        ${puzzle.sequence.map((_, i) => `
+                            <div class="w-16 h-16 border-2 border-dashed border-gray-500 rounded-lg flex items-center justify-center" id="memory-slot-${i}">
+                                <div class="text-gray-500 text-3xl">?</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="window.puzzles.checkSequenceMemory()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold">
+                        Submit Sequence
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
     getRuneEmoji(rune) {
         const emojis = {
             faith: '🙏',
@@ -367,6 +450,78 @@ class DivinePuzzles {
         }
     }
     
+    checkRiddle(index) {
+        const option = this.currentPuzzle.options[index];
+        if (option.correct) {
+            this.solvePuzzle();
+        } else {
+            this.showError('Incorrect riddle. Listen closely and try again...');
+        }
+    }
+    
+    playSequence() {
+        const puzzle = this.currentPuzzle;
+        if (this.sequencePlaying) return;
+        this.sequencePlaying = true;
+        
+        const display = document.getElementById('memory-display');
+        const btn = document.getElementById('memory-play-btn');
+        if (btn) btn.disabled = true;
+        
+        let i = 0;
+        display.innerHTML = '';
+        
+        const showNext = () => {
+            if (i < puzzle.sequence.length) {
+                const symbolIndex = puzzle.sequence[i];
+                display.innerHTML = `<div class="text-5xl animate-pulse">${puzzle.symbols[symbolIndex]}</div>`;
+                i++;
+                setTimeout(showNext, 800);
+            } else {
+                display.innerHTML = '<div class="text-gray-400 text-xl">Now reproduce the sequence!</div>';
+                this.sequencePlaying = false;
+                if (btn) btn.disabled = false;
+            }
+        };
+        
+        showNext();
+    }
+    
+    selectSymbol(index) {
+        const puzzle = this.currentPuzzle;
+        if (!this.playerSequence) this.playerSequence = [];
+        if (this.playerSequence.length >= puzzle.sequence.length) return;
+        
+        const tile = document.querySelector(`#memory-input [data-index="${index}"]`);
+        const symbol = tile.dataset.symbol;
+        this.playerSequence.push(index);
+        
+        const slot = document.getElementById(`memory-slot-${this.playerSequence.length - 1}`);
+        slot.innerHTML = `<div class="text-3xl">${symbol}</div>`;
+        
+        tile.style.opacity = '0.3';
+        tile.style.pointerEvents = 'none';
+    }
+    
+    checkSequenceMemory() {
+        const puzzle = this.currentPuzzle;
+        const correct = JSON.stringify(this.playerSequence || []) === JSON.stringify(puzzle.sequence);
+        if (correct) {
+            this.solvePuzzle();
+        } else {
+            this.playerSequence = [];
+            this.showError('Sequence does not match. Try again!');
+            puzzle.sequence.forEach((_, i) => {
+                const slot = document.getElementById(`memory-slot-${i}`);
+                slot.innerHTML = '<div class="text-gray-500 text-3xl">?</div>';
+            });
+            document.querySelectorAll('#memory-input .symbol-tile').forEach(tile => {
+                tile.style.opacity = '1';
+                tile.style.pointerEvents = 'auto';
+            });
+        }
+    }
+    
     solvePuzzle() {
         const reward = this.currentPuzzle.reward;
         
@@ -454,6 +609,12 @@ class DivinePuzzles {
                     break;
                 case 'math':
                     hint = 'Look for the pattern in the relationship between prayers and blessings...';
+                    break;
+                case 'riddle':
+                    hint = this.currentPuzzle.hint;
+                    break;
+                case 'sequence_memory':
+                    hint = 'Watch carefully: the sequence follows the rhythm of creation...';
                     break;
             }
             

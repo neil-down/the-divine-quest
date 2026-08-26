@@ -47,6 +47,23 @@ class SpiritualBattle {
                 type: "ultimate",
                 description: "Unleash ultimate divine power",
                 cooldown: 3
+            },
+            smite: {
+                name: "Divine Smite",
+                damage: 35,
+                mpCost: 15,
+                type: "holy",
+                description: "Call down holy fire upon the enemy",
+                cooldown: 1
+            },
+            sanctuary: {
+                name: "Divine Sanctuary",
+                damage: 0,
+                mpCost: 12,
+                type: "holy",
+                description: "Invoke divine protection and heal wounds",
+                cooldown: 2,
+                heal: 25
             }
         };
     }
@@ -92,6 +109,36 @@ class SpiritualBattle {
                 description: "The ultimate enemy of hope and faith",
                 weakness: "ultimate",
                 reward: { faith: 25, wisdom: 25, compassion: 25 }
+            },
+            {
+                name: "Doubter",
+                hp: 120,
+                maxHp: 120,
+                damage: 18,
+                type: "doubt2",
+                description: "A persistent whisper of uncertainty",
+                weakness: "faith",
+                reward: { faith: 15, wisdom: 8, compassion: 7 }
+            },
+            {
+                name: "Tempter",
+                hp: 140,
+                maxHp: 140,
+                damage: 20,
+                type: "temptation",
+                description: "Seduces with promises of easy power",
+                weakness: "wisdom",
+                reward: { faith: 8, wisdom: 15, compassion: 7 }
+            },
+            {
+                name: "Accuser",
+                hp: 160,
+                maxHp: 160,
+                damage: 22,
+                type: "accusation",
+                description: "Points out every flaw and failure",
+                weakness: "compassion",
+                reward: { faith: 7, wisdom: 8, compassion: 15 }
             }
         ];
     }
@@ -105,7 +152,7 @@ class SpiritualBattle {
         
         // Select enemy
         if (enemyType === 'random') {
-            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(4, Math.floor(this.game.currentChapter) + 1))]};
+            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(7, Math.floor(this.game.currentChapter) + 1))]};
         } else {
             this.currentEnemy = {...this.enemies.find(e => e.type === enemyType)};
         }
@@ -164,7 +211,7 @@ class SpiritualBattle {
                 </div>
                 
                 <!-- Skills -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div class="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
                     <button onclick="window.battle.useSkill('prayer')" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
                         <div class="font-bold">🙏 Prayer</div>
                         <div class="text-xs">15 DMG | 5 MP</div>
@@ -180,6 +227,14 @@ class SpiritualBattle {
                     <button onclick="window.battle.useSkill('ultimate')" class="bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
                         <div class="font-bold">✨ Ultimate</div>
                         <div class="text-xs">50 DMG | 25 MP</div>
+                    </button>
+                    <button onclick="window.battle.useSkill('smite')" class="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
+                        <div class="font-bold">🔥 Smite</div>
+                        <div class="text-xs">35 DMG | 15 MP</div>
+                    </button>
+                    <button onclick="window.battle.useSkill('sanctuary')" class="bg-indigo-600 hover:bg-indigo-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
+                        <div class="font-bold">🛡️ Sanctuary</div>
+                        <div class="text-xs">25 Heal | 12 MP</div>
                     </button>
                 </div>
                 
@@ -255,6 +310,11 @@ class SpiritualBattle {
         this.combo++;
         
         log.innerHTML += `<div class="text-blue-400">You used ${skill.name} for ${damage} damage!</div>`;
+        
+        // Visual effect hook
+        if (skillName === 'smite' && window.visualEffects && window.visualEffects.triggerAttackEffect) {
+            window.visualEffects.triggerAttackEffect('player', 'enemy', damage);
+        }
         
         // Heal effect
         if (skill.heal) {

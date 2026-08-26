@@ -14,6 +14,8 @@ class EnhancedGameplay {
         this.addKeyboardNavigation();
         this.addDynamicBackground();
         this.createDivinePresence();
+        this.addTouchSupport();
+        this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
     
     createAmbientParticles() {
@@ -64,6 +66,73 @@ class EnhancedGameplay {
                 const choices = document.querySelectorAll('.choice-button');
                 if (choices[choiceIndex]) {
                     choices[choiceIndex].click();
+                }
+            }
+        });
+    }
+
+    addTouchSupport() {
+        if (!('ontouchstart' in window)) {
+            return;
+        }
+
+        let touchStartX = 0;
+        let touchStartY = 0;
+        const choicesContainer = document.getElementById('choices-container');
+
+        if (!choicesContainer) {
+            return;
+        }
+
+        choicesContainer.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        choicesContainer.addEventListener('touchend', (e) => {
+            if (!touchStartX && !touchStartY) {
+                return;
+            }
+
+            const touch = e.changedTouches[0];
+            if (!touch) {
+                return;
+            }
+
+            const deltaX = touch.clientX - touchStartX;
+            const deltaY = touch.clientY - touchStartY;
+            const absDeltaX = Math.abs(deltaX);
+            const absDeltaY = Math.abs(deltaY);
+            const choices = Array.from(document.querySelectorAll('.choice-button'));
+            const activeIndex = choices.findIndex((btn) => btn.classList.contains('touch-active'));
+            let targetIndex = activeIndex >= 0 ? activeIndex : -1;
+
+            if (absDeltaX < 10 && absDeltaY < 10) {
+                // Tap
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                const choice = element ? element.closest('.choice-button') : null;
+                if (choice) {
+                    choice.click();
+                }
+                choices.forEach((btn) => btn.classList.remove('touch-active'));
+                return;
+            }
+
+            if (absDeltaX > absDeltaY && absDeltaX > 50) {
+                if (deltaX < 0 && targetIndex < choices.length - 1) {
+                    targetIndex++;
+                } else if (deltaX > 0 && targetIndex > 0) {
+                    targetIndex--;
+                } else {
+                    return;
+                }
+
+                choices.forEach((btn) => btn.classList.remove('touch-active'));
+                if (choices[targetIndex]) {
+                    choices[targetIndex].classList.add('touch-active');
+                    choices[targetIndex].click();
                 }
             }
         });

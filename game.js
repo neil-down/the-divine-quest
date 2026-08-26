@@ -13,6 +13,33 @@ class DivineQuest {
         this.choices = [];
         this.earnedAchievements = new Set();
         
+        this.routeMap = {
+            "0-0-0": 1,
+            "0-0-1": 2,
+            "0-0-2": 3,
+            "1-0-0": 2,
+            "1-0-1": 3,
+            "1-0-2": 4,
+            "2-0-0": 4,
+            "2-0-1": 4,
+            "2-0-2": 4,
+            "3-0-0": 4,
+            "3-0-1": 4,
+            "3-0-2": 4,
+            "4-0-0": 5,
+            "4-0-1": 5,
+            "4-0-2": 5,
+            "5-0-0": 6,
+            "5-0-1": 6,
+            "5-0-2": 6,
+            "6-0-0": 7,
+            "6-0-1": 7,
+            "6-0-2": 7,
+            "7-0-0": 0,
+            "7-0-1": 0,
+            "7-0-2": 0
+        };
+        
         this.wisdomQuotes = [
             "The fear of the LORD is the beginning of wisdom, and knowledge of the Holy One is understanding. (Proverbs 9:10)",
             "Trust in the LORD with all your heart and lean not on your own understanding. (Proverbs 3:5)",
@@ -112,13 +139,13 @@ class DivineQuest {
                                 text: "Join in corporate prayer",
                                 description: "Gather with the pastor in prayer, seeking God's will through intercession.",
                                 effects: { faith: 10, wisdom: 10, compassion: 5 },
-                                nextChapter: 4
+                                nextChapter: 2
                             },
                             {
                                 text: "Study the Scriptures together",
                                 description: "Open the Bible with the pastor to understand sound doctrine and God's revelation.",
                                 effects: { faith: 5, wisdom: 15, compassion: 0 },
-                                nextChapter: 4
+                                nextChapter: 3
                             },
                             {
                                 text: "Practice biblical fellowship",
@@ -253,19 +280,19 @@ class DivineQuest {
                                 text: "Drink deeply of the living water",
                                 description: "Receive the grace of Christ that satisfies the soul forever.",
                                 effects: { faith: 10, wisdom: 5, compassion: 5 },
-                                nextChapter: 8
+                                nextChapter: 0
                             },
                             {
                                 text: "Listen to the stranger's teaching",
                                 description: "Sit in humility and learn from the wisdom being shared.",
                                 effects: { faith: 5, wisdom: 10, compassion: 5 },
-                                nextChapter: 8
+                                nextChapter: 0
                             },
                             {
                                 text: "Share your water with someone nearby",
                                 description: "Demonstrate Christ's love through practical generosity.",
                                 effects: { faith: 5, wisdom: 5, compassion: 10 },
-                                nextChapter: 8
+                                nextChapter: 0
                             }
                         ]
                     }
@@ -307,7 +334,7 @@ class DivineQuest {
     init() {
         this.updateStats();
         this.updateWisdomQuote();
-        this.loadChapter(0, 0);
+        this.goToChapter(0, 0);
         this.startWisdomRotation();
     }
     
@@ -341,6 +368,21 @@ class DivineQuest {
         }, 10000);
     }
     
+    goToChapter(index, scene = 0) {
+        if (index >= this.storyChapters.length) {
+            index = 0;
+        }
+
+        this.currentChapter = index;
+        this.currentScene = scene;
+
+        this.loadChapter(index, scene);
+
+        document.dispatchEvent(new CustomEvent('chapterChanged', {
+            detail: { chapter: index, scene: scene }
+        }));
+    }
+
     loadChapter(chapterIndex, sceneIndex = 0) {
         if (chapterIndex >= this.storyChapters.length) {
             chapterIndex = 0;
@@ -437,9 +479,10 @@ class DivineQuest {
             // Update display
             this.updateStats();
             
-            // Load next chapter
+            // Load next chapter via routeMap
             setTimeout(() => {
-                this.loadChapter(choice.nextChapter, 0);
+                const nextChapter = this.routeMap[`${this.currentChapter}-${this.currentScene}-${choiceIndex}`];
+                this.goToChapter(nextChapter, 0);
             }, 500);
         }, 300);
     }
@@ -582,7 +625,7 @@ class DivineQuest {
             this.choices = data.choices || [];
             
             this.updateStats();
-            this.loadChapter(this.currentChapter, this.currentScene);
+            this.goToChapter(this.currentChapter, this.currentScene);
             
             this.showAchievement('Game Loaded', 'Your spiritual journey continues!');
         }
@@ -595,7 +638,7 @@ class DivineQuest {
         this.choices = [];
         
         this.updateStats();
-        this.loadChapter(0, 0);
+        this.goToChapter(0, 0);
         
         localStorage.removeItem('divineQuestSave');
         this.showAchievement('New Journey', 'Your spiritual quest begins anew!');

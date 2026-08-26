@@ -20,6 +20,7 @@ class ProgressionSystem {
         this.updateLevelDisplay();
         this.addProgressionUI();
         this.checkMilestones();
+        this.wirePassiveEffects();
     }
     
     initMilestones() {
@@ -43,6 +44,8 @@ class ProgressionSystem {
                 skills: [
                     { id: "prayer", name: "Enhanced Prayer", description: "Prayers are 50% more effective", unlocked: false, cost: 5 },
                     { id: "divine_intervention", name: "Divine Intervention", description: "Chance for automatic blessings", unlocked: false, cost: 15 },
+                    { id: "resilient_faith", name: "Resilient Faith", description: "Increases maximum faith by 25", unlocked: false, cost: 20, prerequisites: ["prayer"], effect: { type: "faith_cap", value: 25 } },
+                    { id: "blessed_guard", name: "Blessed Guard", description: "Reduces battle damage by 10%", unlocked: false, cost: 35, prerequisites: ["divine_intervention"], effect: { type: "damage_reduction", value: 0.1 } },
                     { id: "miracle", name: "Miracle Worker", description: "Can perform miracles", unlocked: false, cost: 30 }
                 ]
             },
@@ -51,6 +54,8 @@ class ProgressionSystem {
                 skills: [
                     { id: "insight", name: "Divine Insight", description: "See hidden meanings in texts", unlocked: false, cost: 5 },
                     { id: "prophecy", name: "Prophecy", description: "Foresee future events", unlocked: false, cost: 15 },
+                    { id: "scholar_insight", name: "Scholar's Insight", description: "Gain +1 wisdom per chapter", unlocked: false, cost: 20, prerequisites: ["insight"], effect: { type: "wisdom_gain", value: 1 } },
+                    { id: "scripture_mastery", name: "Scripture Mastery", description: "Puzzles award 20% more experience", unlocked: false, cost: 25, prerequisites: ["prophecy"], effect: { type: "puzzle_exp", value: 0.2 } },
                     { id: "enlightenment", name: "Enlightenment", description: "Understand all mysteries", unlocked: false, cost: 30 }
                 ]
             },
@@ -59,6 +64,8 @@ class ProgressionSystem {
                 skills: [
                     { id: "healing", name: "Divine Healing", description: "Heal others with compassion", unlocked: false, cost: 5 },
                     { id: "empathy", name: "Empathy", description: "Feel others' emotions", unlocked: false, cost: 15 },
+                    { id: "healer_touch", name: "Healer's Touch", description: "Automatically heal 15 HP after each battle", unlocked: false, cost: 20, prerequisites: ["healing"], effect: { type: "post_battle_heal", value: 15 } },
+                    { id: "steadfast", name: "Steadfast", description: "Reduce nightmare escalation by 25%", unlocked: false, cost: 25, prerequisites: ["empathy"], effect: { type: "nightmare_reduction", value: 0.25 } },
                     { id: "redemption", name: "Redemption", description: "Save lost souls", unlocked: false, cost: 30 }
                 ]
             }
@@ -165,6 +172,9 @@ class ProgressionSystem {
             const skill = path.skills.find(s => s.id === skillId);
             if (skill) {
                 skill.unlocked = true;
+                if (!this.unlocks.skills.includes(skillId)) {
+                    this.unlocks.skills.push(skillId);
+                }
                 this.game.showAchievement('Skill Unlocked!', skill.name);
             }
         });
@@ -194,12 +204,17 @@ class ProgressionSystem {
                 <div class="bg-gray-800 rounded-lg p-4">
                     <h3 class="text-xl font-bold text-yellow-400 mb-3">${path.name}</h3>
                     <div class="space-y-2">
-                        ${path.skills.map(skill => `
+                        ${path.skills.map(skill => {
+                            const prereqText = skill.prerequisites && skill.prerequisites.length > 0 
+                                ? `<div class="text-xs text-yellow-500 mt-1">Requires: ${skill.prerequisites.join(', ')}</div>` 
+                                : '';
+                            return `
                             <div class="bg-gray-700 p-3 rounded-lg ${skill.unlocked ? 'border-2 border-green-500' : 'opacity-60'}">
                                 <div class="flex justify-between items-center">
                                     <div>
                                         <div class="font-bold ${skill.unlocked ? 'text-green-400' : 'text-gray-400'}">${skill.name}</div>
                                         <div class="text-xs text-gray-400">${skill.description}</div>
+                                        ${prereqText}
                                     </div>
                                     <div>
                                         ${skill.unlocked ? 
@@ -209,7 +224,8 @@ class ProgressionSystem {
                                     </div>
                                 </div>
                             </div>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
                 </div>
             `;
@@ -241,7 +257,19 @@ class ProgressionSystem {
         const skill = this.skillTree[pathKey].skills.find(s => s.id === skillId);
         
         if (skill && !skill.unlocked && this.playerLevel >= skill.cost) {
+            // Check prerequisites
+            if (skill.prerequisites && skill.prerequisites.length > 0) {
+                const allPrereqsMet = skill.prerequisites.every(prereqId => 
+                    this.unlocks.skills.includes(prereqId)
+                );
+                if (!allPrereqsMet) {
+                    this.game.showAchievement('Skill Locked', `Requires: ${skill.prerequisites.join(', ')}`);
+                    return;
+                }
+            }
+            
             skill.unlocked = true;
+            this.unlocks.skills.push(skillId);
             this.game.showAchievement('Skill Purchased!', skill.name);
             this.showSkillTree(); // Refresh the tree
         }
@@ -253,7 +281,7 @@ class ProgressionSystem {
     }
     
     // Add experience for various actions
-    addExperienceForAction(action) {
+    addExperienceForAction(action, bonusExp = 0) {
         const expGains = {
             choice: 10,
             battle_win: 50,
@@ -262,8 +290,107 @@ class ProgressionSystem {
             milestone: 100
         };
         
-        const gain = expGains[action] || 5;
-        this.gainExperience(gain);
+        const baseGain = expGains[action] || 5;
+        const totalGain = baseGain + bonusExp;
+        this.gainExperience(totalGain);
+    }
+    
+    getUnlockedSkill(id) {
+        for (const path of Object.values(this.skillTree)) {
+            const skill = path.skills.find(s => s.id === id);
+            if (skill && skill.unlocked) return skill;
+        }
+        return null;
+    }
+    
+    getPassiveBonus(type) {
+        let total = 0;
+        for (const path of Object.values(this.skillTree)) {
+            for (const skill of path.skills) {
+                if (skill.unlocked && skill.effect && skill.effect.type === type) {
+                    total += skill.effect.value;
+                }
+            }
+        }
+        return total;
+    }
+    
+    wirePassiveEffects() {
+        if (!window.game) return;
+        
+        // Healer's Touch: auto-heal after battles
+        document.addEventListener('battleVictory', () => {
+            const healAmount = this.getPassiveBonus('post_battle_heal');
+            if (healAmount > 0 && typeof window.game.heal === 'function') {
+                window.game.heal(healAmount);
+            } else if (healAmount > 0 && typeof window.game.health !== 'undefined') {
+                window.game.health = Math.min(
+                    (window.game.maxHealth || window.game.health),
+                    window.game.health + healAmount
+                );
+            }
+        });
+        
+        // Scholar's Insight: bonus wisdom per chapter
+        if (typeof window.game.advanceChapter === 'function') {
+            const originalAdvanceChapter = window.game.advanceChapter.bind(window.game);
+            window.game.advanceChapter = () => {
+                const result = originalAdvanceChapter();
+                const wisdomBonus = this.getPassiveBonus('wisdom_gain');
+                if (wisdomBonus > 0) {
+                    if (typeof window.game.addWisdom === 'function') {
+                        window.game.addWisdom(wisdomBonus);
+                    } else if (typeof window.game.wisdom !== 'undefined') {
+                        window.game.wisdom += wisdomBonus;
+                    }
+                }
+                return result;
+            };
+        }
+        
+        // Resilient Faith: boost maximum faith
+        const faithCapBonus = this.getPassiveBonus('faith_cap');
+        if (faithCapBonus > 0) {
+            if (typeof window.game.maxFaith !== 'undefined') {
+                window.game.maxFaith += faithCapBonus;
+            }
+            if (typeof window.game.faithCap !== 'undefined') {
+                window.game.faithCap += faithCapBonus;
+            }
+            if (typeof window.game.faith !== 'undefined' && typeof window.game.maxFaith !== 'undefined') {
+                window.game.faith = Math.min(window.game.faith + faithCapBonus, window.game.maxFaith);
+            }
+        }
+        
+        // Blessed Guard: reduce battle damage
+        const dmgReduction = this.getPassiveBonus('damage_reduction');
+        if (dmgReduction > 0 && typeof window.game.takeDamage === 'function') {
+            const originalTakeDamage = window.game.takeDamage.bind(window.game);
+            window.game.takeDamage = function(amount) {
+                const reduced = Math.max(1, amount * (1 - dmgReduction));
+                return originalTakeDamage(reduced);
+            };
+        }
+        
+        // Steadfast: reduce nightmare escalation
+        const nightmareReduction = this.getPassiveBonus('nightmare_reduction');
+        if (nightmareReduction > 0) {
+            if (typeof window.game.addNightmareLevel === 'function') {
+                const originalAddNightmareLevel = window.game.addNightmareLevel.bind(window.game);
+                window.game.addNightmareLevel = function(amount) {
+                    const reduced = amount * (1 - nightmareReduction);
+                    return originalAddNightmareLevel(reduced);
+                };
+            }
+        }
+        
+        // Scripture Mastery: bonus experience from puzzles
+        const puzzleExpBonus = this.getPassiveBonus('puzzle_exp');
+        if (puzzleExpBonus > 0) {
+            document.addEventListener('puzzleSolved', () => {
+                this.addExperienceForAction('puzzle_solve', Math.floor(30 * puzzleExpBonus));
+            });
+        }
     }
 }
 

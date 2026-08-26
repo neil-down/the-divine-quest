@@ -1,0 +1,280 @@
+// Enhanced Gameplay Features for The Divine Quest
+
+class EnhancedGameplay {
+    constructor(game) {
+        this.game = game;
+        this.particles = [];
+        this.ambientEffects = true;
+        this.soundEnabled = false;
+        this.init();
+    }
+    
+    init() {
+        this.createAmbientParticles();
+        this.addKeyboardNavigation();
+        this.addDynamicBackground();
+        this.createDivinePresence();
+    }
+    
+    createAmbientParticles() {
+        const particleContainer = document.createElement('div');
+        particleContainer.className = 'divine-particles';
+        particleContainer.id = 'particles';
+        document.body.appendChild(particleContainer);
+        
+        // Create floating particles
+        for (let i = 0; i < 20; i++) {
+            setTimeout(() => {
+                this.createParticle();
+            }, i * 200);
+        }
+        
+        // Continuously generate particles
+        setInterval(() => {
+            if (this.particles.length < 15) {
+                this.createParticle();
+            }
+        }, 3000);
+    }
+    
+    createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 10 + 's';
+        particle.style.animationDuration = (10 + Math.random() * 10) + 's';
+        
+        const container = document.getElementById('particles');
+        if (container) {
+            container.appendChild(particle);
+            this.particles.push(particle);
+            
+            // Remove particle after animation
+            setTimeout(() => {
+                particle.remove();
+                this.particles = this.particles.filter(p => p !== particle);
+            }, 20000);
+        }
+    }
+    
+    addKeyboardNavigation() {
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '1' && e.key <= '3') {
+                const choiceIndex = parseInt(e.key) - 1;
+                const choices = document.querySelectorAll('.choice-button');
+                if (choices[choiceIndex]) {
+                    choices[choiceIndex].click();
+                }
+            }
+        });
+    }
+    
+    addDynamicBackground() {
+        let hue = 250;
+        setInterval(() => {
+            hue = (hue + 0.5) % 360;
+            if (this.ambientEffects) {
+                document.body.style.background = `linear-gradient(135deg, hsl(${hue}, 70%, 30%) 0%, hsl(${(hue + 30) % 360}, 70%, 40%) 50%, hsl(${(hue + 60) % 360}, 70%, 50%) 100%)`;
+            }
+        }, 100);
+    }
+    
+    createDivinePresence() {
+        const presence = document.createElement('div');
+        presence.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30';
+        presence.innerHTML = `
+            <div class="w-32 h-32 rounded-full opacity-20 animate-pulse" 
+                 style="background: radial-gradient(circle, rgba(255, 215, 0, 0.4), transparent);">
+            </div>
+        `;
+        presence.id = 'divine-presence';
+        document.body.appendChild(presence);
+        
+        // Subtle movement
+        setInterval(() => {
+            const x = 50 + (Math.sin(Date.now() / 3000) * 10);
+            const y = 50 + (Math.cos(Date.now() / 4000) * 5);
+            presence.style.left = x + '%';
+            presence.style.top = y + '%';
+        }, 50);
+    }
+    
+    addRitualMechanic() {
+        // Add prayer/meditation mini-game
+        const ritualButton = document.createElement('button');
+        ritualButton.className = 'fixed bottom-4 left-4 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-40';
+        ritualButton.innerHTML = '<i class="fas fa-spa text-xl"></i>';
+        ritualButton.title = 'Enter Prayer Meditation';
+        
+        ritualButton.onclick = () => this.startPrayerMeditation();
+        document.body.appendChild(ritualButton);
+    }
+    
+    startPrayerMeditation() {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50';
+        overlay.innerHTML = `
+            <div class="bg-white rounded-xl p-8 max-w-md text-center">
+                <h3 class="text-2xl font-bold mb-4 text-purple-800">Prayer Meditation</h3>
+                <p class="mb-6 text-gray-700">Focus your mind and connect with the divine. Click the orbs as they appear to center your spirit.</p>
+                <div id="meditation-area" class="relative h-64 bg-gradient-to-br from-purple-100 to-blue-100 rounded-lg mb-6">
+                    <!-- Meditation orbs will appear here -->
+                </div>
+                <button onclick="this.closest('.fixed').remove()" class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600">
+                    Close
+                </button>
+            </div>
+        `;
+        
+        document.body.appendChild(overlay);
+        this.runMeditationGame();
+    }
+    
+    runMeditationGame() {
+        const area = document.getElementById('meditation-area');
+        let score = 0;
+        let timeLeft = 30;
+        
+        const timer = document.createElement('div');
+        timer.className = 'absolute top-2 right-2 text-purple-800 font-bold';
+        timer.textContent = `Time: ${timeLeft}`;
+        area.appendChild(timer);
+        
+        const scoreDisplay = document.createElement('div');
+        scoreDisplay.className = 'absolute top-2 left-2 text-purple-800 font-bold';
+        scoreDisplay.textContent = `Focus: ${score}`;
+        area.appendChild(scoreDisplay);
+        
+        const gameInterval = setInterval(() => {
+            timeLeft--;
+            timer.textContent = `Time: ${timeLeft}`;
+            
+            if (timeLeft <= 0) {
+                clearInterval(gameInterval);
+                this.endMeditation(score);
+            } else {
+                // Create meditation orb
+                const orb = document.createElement('div');
+                orb.className = 'absolute w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full cursor-pointer hover:scale-110 transition-transform';
+                orb.style.left = Math.random() * 80 + 10 + '%';
+                orb.style.top = Math.random() * 80 + 10 + '%';
+                
+                orb.onclick = () => {
+                    score += 5;
+                    scoreDisplay.textContent = `Focus: ${score}`;
+                    orb.remove();
+                    
+                    // Add visual feedback
+                    const feedback = document.createElement('div');
+                    feedback.className = 'absolute text-purple-600 font-bold text-xl';
+                    feedback.textContent = '+5';
+                    feedback.style.left = orb.style.left;
+                    feedback.style.top = orb.style.top;
+                    area.appendChild(feedback);
+                    
+                    setTimeout(() => feedback.remove(), 1000);
+                };
+                
+                area.appendChild(orb);
+                
+                // Remove orb after 2 seconds if not clicked
+                setTimeout(() => {
+                    if (orb.parentNode) {
+                        orb.remove();
+                    }
+                }, 2000);
+            }
+        }, 1000);
+    }
+    
+    endMeditation(score) {
+        const area = document.getElementById('meditation-area');
+        area.innerHTML = `
+            <div class="flex flex-col items-center justify-center h-full">
+                <div class="text-6xl mb-4">${score >= 100 ? '🌟' : score >= 50 ? '✨' : '🙏'}</div>
+                <div class="text-2xl font-bold text-purple-800 mb-2">Meditation Complete</div>
+                <div class="text-lg text-gray-700 mb-4">Focus Level: ${score}</div>
+                <div class="text-sm text-gray-600">
+                    ${score >= 100 ? 'Profound spiritual insight gained!' : 
+                      score >= 50 ? 'Your spirit feels centered and calm.' : 
+                      'Continue practicing to deepen your connection.'}
+                </div>
+            </div>
+        `;
+        
+        // Apply bonus to player stats
+        if (score >= 100) {
+            this.game.playerStats.faith += 5;
+            this.game.playerStats.wisdom += 5;
+            this.game.playerStats.compassion += 3;
+        } else if (score >= 50) {
+            this.game.playerStats.faith += 2;
+            this.game.playerStats.wisdom += 2;
+        }
+        
+        this.game.updateStats();
+    }
+    
+    addDivineIntervention() {
+        // Random divine events
+        setInterval(() => {
+            if (Math.random() < 0.1) { // 10% chance every 10 seconds
+                this.triggerDivineEvent();
+            }
+        }, 10000);
+    }
+    
+    triggerDivineEvent() {
+        const events = [
+            {
+                title: "Divine Whisper",
+                message: "A gentle voice reminds you: 'You are on the right path.'",
+                effect: { faith: 2, wisdom: 1, compassion: 1 }
+            },
+            {
+                title: "Sacred Sign", 
+                message: "You notice a pattern of light forming ancient symbols in the air.",
+                effect: { faith: 3, wisdom: 2, compassion: 0 }
+            },
+            {
+                title: "Compassion Wave",
+                message: "You feel an overwhelming urge to help those around you.",
+                effect: { faith: 1, wisdom: 0, compassion: 3 }
+            }
+        ];
+        
+        const event = events[Math.floor(Math.random() * events.length)];
+        
+        const notification = document.createElement('div');
+        notification.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6 rounded-xl shadow-2xl z-50 max-w-sm text-center';
+        notification.innerHTML = `
+            <div class="text-3xl mb-3">✨</div>
+            <h4 class="font-bold text-lg mb-2">${event.title}</h4>
+            <p class="text-sm opacity-90 mb-4">${event.message}</p>
+            <button onclick="this.closest('.fixed').remove()" class="bg-white text-purple-600 px-4 py-2 rounded-lg hover:bg-gray-100">
+                Accept the blessing
+            </button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Apply effects
+        setTimeout(() => {
+            this.game.playerStats.faith += event.effect.faith;
+            this.game.playerStats.wisdom += event.effect.wisdom;
+            this.game.playerStats.compassion += event.effect.compassion;
+            this.game.updateStats();
+        }, 1000);
+    }
+}
+
+// Initialize enhancements when game loads
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        if (window.game) {
+            const enhanced = new EnhancedGameplay(window.game);
+            enhanced.addRitualMechanic();
+            enhanced.addDivineIntervention();
+        }
+    }, 1000);
+});

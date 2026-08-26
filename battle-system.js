@@ -9,6 +9,8 @@ class SpiritualBattle {
         this.playerMP = 50;
         this.combo = 0;
         this.battleTurn = 0;
+        this.triggeredEnrages = new Set();
+        this.behaviorFlags = {};
         this.skills = this.initSkills();
         this.enemies = this.initEnemies();
     }
@@ -105,9 +107,11 @@ class SpiritualBattle {
                 hp: 200,
                 maxHp: 200,
                 damage: 25,
+                defense: 12,
                 type: "despair",
                 description: "The ultimate enemy of hope and faith",
                 weakness: "ultimate",
+                isBoss: true,
                 reward: { faith: 25, wisdom: 25, compassion: 25 }
             },
             {
@@ -139,6 +143,42 @@ class SpiritualBattle {
                 description: "Points out every flaw and failure",
                 weakness: "compassion",
                 reward: { faith: 7, wisdom: 8, compassion: 15 }
+            },
+            {
+                name: "Pharisee",
+                hp: 150,
+                maxHp: 150,
+                damage: 10,
+                defense: 25,
+                type: "pharisee",
+                behavior: "wall",
+                description: "An immovable wall of rigid tradition",
+                weakness: "wisdom",
+                reward: { faith: 8, wisdom: 15, compassion: 5 }
+            },
+            {
+                name: "Legion",
+                hp: 170,
+                maxHp: 170,
+                damage: 18,
+                defense: 10,
+                type: "legion",
+                behavior: "summon",
+                description: "A horde of dark spirits bound as one",
+                weakness: "faith",
+                reward: { faith: 12, wisdom: 5, compassion: 10 }
+            },
+            {
+                name: "False Prophet",
+                hp: 130,
+                maxHp: 130,
+                damage: 14,
+                defense: 8,
+                type: "false-prophet",
+                behavior: "debuff",
+                description: "Twists truth to drain the spirit",
+                weakness: "ultimate",
+                reward: { faith: 5, wisdom: 10, compassion: 15 }
             }
         ];
     }
@@ -149,10 +189,12 @@ class SpiritualBattle {
         this.inBattle = true;
         this.battleTurn = 0;
         this.combo = 0;
+        this.triggeredEnrages = new Set();
+        this.behaviorFlags = {};
         
         // Select enemy
         if (enemyType === 'random') {
-            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(7, Math.floor(this.game.currentChapter) + 1))]};
+            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(10, Math.floor(this.game.currentChapter) + 1))]};
         } else {
             this.currentEnemy = {...this.enemies.find(e => e.type === enemyType)};
         }
@@ -293,6 +335,10 @@ class SpiritualBattle {
         // Calculate damage
         let damage = skill.damage;
         
+        // Apply enemy defense
+        const enemyDefense = this.currentEnemy.defense || 0;
+        damage = Math.max(1, damage - Math.floor(enemyDefense / 2));
+        
         // Weakness bonus
         if (skill.type === this.currentEnemy.weakness) {
             damage *= 2;
@@ -339,7 +385,17 @@ class SpiritualBattle {
         const log = document.getElementById('battle-log');
         
         // Enemy attack
-        const damage = this.currentEnemy.damage;
+        let damage = this.currentEnemy.damage;
+        
+        // False Prophet debuff
+        if (this.currentEnemy.type === 'false-prophet' && Math.random() < 0.3) {
+            this.playerMP = Math.max(0, this.playerMP - 5);
+            if (log) {
+                log.innerHTML += `<div class="text-purple-400">The False Prophet saps your spiritual energy! -5 MP</div>`;
+                log.scrollTop = log.scrollHeight;
+            }
+        }
+        
         this.playerHP -= damage;
         
         log.innerHTML += `<div class="text-red-400">${this.currentEnemy.name} attacks for ${damage} damage!</div>`;
@@ -371,6 +427,38 @@ class SpiritualBattle {
     updateEnemyStats() {
         document.getElementById('enemy-hp').textContent = Math.max(0, this.currentEnemy.hp);
         document.getElementById('enemy-hp-bar').style.width = `${Math.max(0, (this.currentEnemy.hp / this.currentEnemy.maxHp) * 100)}%`;
+        
+        const hpPercent = this.currentEnemy.hp / this.currentEnemy.maxHp;
+        const log = document.getElementById('battle-log');
+        
+        // Legion summon behavior
+        if (this.currentEnemy && this.currentEnemy.type === 'legion' && hpPercent <= 0.5 && !this.behaviorFlags.legionSummon) {
+            this.behaviorFlags.legionSummon = true;
+            this.currentEnemy.damage += 10;
+            if (log) {
+                log.innerHTML += `<div class="text-red-400 font-bold">👥 Legion calls forth shadow minions! Attack surges!</div>`;
+                log.scrollTop = log.scrollHeight;
+            }
+        }
+        
+        // Boss enrage phases
+        if (this.currentEnemy && this.currentEnemy.isBoss) {
+            if (hpPercent <= 0.3 && !this.triggeredEnrages.has(3)) {
+                this.triggeredEnrages.add(3);
+                this.currentEnemy.damage = Math.floor(this.currentEnemy.damage * 1.5);
+                if (log) {
+                    log.innerHTML += `<div class="text-red-500 text-xl font-bold animate-pulse border-2 border-red-500 p-2 my-2 text-center">⚡ EN RAGE! The Archdemon of Despair enters its Abyssal Fury phase! ⚡</div>`;
+                    log.scrollTop = log.scrollHeight;
+                }
+            } else if (hpPercent <= 0.6 && !this.triggeredEnrages.has(6)) {
+                this.triggeredEnrages.add(6);
+                this.currentEnemy.damage = Math.floor(this.currentEnemy.damage * 1.3);
+                if (log) {
+                    log.innerHTML += `<div class="text-orange-500 text-lg font-bold animate-pulse border-2 border-orange-500 p-2 my-2 text-center">⚠️ EN RAGE! Fading Light phase begins! ⚠️</div>`;
+                    log.scrollTop = log.scrollHeight;
+                }
+            }
+        }
     }
     
     updatePlayerStats() {

@@ -9,15 +9,86 @@ class ChallengeMode {
         this.challengeEntities = [];
         this.timeDistortion = false;
         this.realityPuzzles = [];
+        this.inNightmare = false;
+        this.metaProgress = null;
+        this.failureCount = 0;
+        this.currentFailures = 0;
         this.init();
     }
     
     init() {
         this.createChallengeUI();
+        this.loadMetaProgress();
+        this.createMetaHUD();
         this.startRealityMonitoring();
         this.addNightmareTrigger();
     }
     
+    loadMetaProgress() {
+        try {
+            const raw = localStorage.getItem('divine-quest-meta-progress');
+            if (raw) {
+                this.metaProgress = JSON.parse(raw);
+            }
+        } catch (e) {
+            this.metaProgress = null;
+        }
+        if (!this.metaProgress || typeof this.metaProgress !== 'object') {
+            this.metaProgress = { loopsCompleted: 0, totalClarity: 0, bestEscapes: 0 };
+        }
+    }
+
+    saveMetaProgress() {
+        try {
+            localStorage.setItem('divine-quest-meta-progress', JSON.stringify(this.metaProgress));
+        } catch (e) {
+            // Storage unavailable
+        }
+    }
+
+    createMetaHUD() {
+        if (document.getElementById('meta-progress-hud')) return;
+        const hud = document.createElement('div');
+        hud.id = 'meta-progress-hud';
+        hud.className = 'fixed bottom-4 left-4 bg-gray-900 bg-opacity-80 rounded-lg p-3 text-white text-xs z-40 border border-gray-700';
+        hud.innerHTML = '<div class="text-gray-400">Loops Completed</div><div class="text-xl font-bold text-yellow-400" id="meta-loops-count">0</div>';
+        document.body.appendChild(hud);
+        this.updateMetaHUD();
+    }
+
+    updateMetaHUD() {
+        if (!this.metaProgress) return;
+        const el = document.getElementById('meta-loops-count');
+        if (el) el.textContent = this.metaProgress.loopsCompleted;
+    }
+
+    recordEscape() {
+        if (!this.metaProgress) return;
+        this.metaProgress.loopsCompleted = (this.metaProgress.loopsCompleted || 0) + 1;
+        this.metaProgress.bestEscapes = Math.max(this.metaProgress.bestEscapes || 0, this.loopCount);
+        const clarityGain = (window.game && window.game.playerStats) ? (window.game.playerStats.clarity || window.game.playerStats.wisdom || 0) : 0;
+        this.metaProgress.totalClarity = (this.metaProgress.totalClarity || 0) + clarityGain;
+        this.saveMetaProgress();
+        this.updateMetaHUD();
+    }
+
+    recordFailure() {
+        this.currentFailures = (this.currentFailures || 0) + 1;
+        this.failureCount = (this.failureCount || 0) + 1;
+    }
+
+    determineEndingType() {
+        const clarity = (window.game && window.game.playerStats) ? (window.game.playerStats.clarity || window.game.playerStats.wisdom || 0) : 0;
+        const metaClarity = this.metaProgress ? (this.metaProgress.totalClarity || 0) : 0;
+        if (clarity >= 50 || metaClarity >= 150) {
+            return 'awakening';
+        }
+        if (this.currentFailures >= 3 || this.loopCount >= 6) {
+            return 'consumption';
+        }
+        return 'generic';
+    }
+
     createChallengeUI() {
         const ui = document.createElement('div');
         ui.className = 'fixed top-4 right-4 bg-purple-900 bg-opacity-90 rounded-lg p-4 text-white z-50 hidden';
@@ -376,6 +447,7 @@ class ChallengeMode {
         
         // Permanent corruption
         this.corruptGame();
+        this.recordFailure();
         
         this.showNightmareEnd("Your sanity is gone. The nightmare has won... for now.");
     }
@@ -476,6 +548,8 @@ class ChallengeMode {
     }
     
     breakLoopSuccess() {
+        this.recordEscape();
+        this.currentFailures = 0;
         // Remove nightmare overlay
         document.querySelector('.fixed.inset-0').remove();
         
@@ -506,6 +580,7 @@ class ChallengeMode {
     }
     
     breakLoopFailure() {
+        this.recordFailure();
         // Penalty
         this.drainSanity(20);
         
@@ -626,6 +701,8 @@ class ChallengeMode {
         this.nightmareLevel = Math.max(1, (this.nightmareLevel || 1) - 1);
         this.game.updateStats();
         this.inNightmare = false;
+        this.recordEscape();
+        this.currentFailures = 0;
         this.endNightmare();
     }
 
@@ -719,14 +796,18 @@ class ChallengeMode {
             this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 20;
             this.game.updateStats();
             this.inNightmare = false;
+            this.recordEscape();
+            this.currentFailures = 0;
             this.endNightmare();
         } else {
+            this.recordFailure();
             this.showNightmareEnd('The unmaking consumes all. The loop tightens.');
         }
     }
 
     endNightmare() {
         this.inNightmare = false;
+        this.currentFailures = 0;
         
         // Remove nightmare UI
         document.getElementById('nightmare-ui').classList.add('hidden');
@@ -751,15 +832,40 @@ class ChallengeMode {
     }
     
     showNightmareEnd(message) {
+        const type = this.determineEndingType();
+        this.showNightmareEnding(type, message);
+    }
+
+    showNightmareEnding(type, message) {
         const overlay = document.createElement('div');
         overlay.className = 'fixed inset-0 bg-black flex items-center justify-center z-50';
+        let icon = '💀';
+        let title = 'NIGHTMARE CONSUMES';
+        let titleColor = 'text-red-500';
+        let btnClass = 'bg-red-600 hover:bg-red-700';
+        let btnText = 'Face the Dawn';
+
+        if (type === 'awakening') {
+            icon = '✨';
+            title = 'AWAKENING';
+            titleColor = 'text-yellow-400';
+            btnClass = 'bg-yellow-600 hover:bg-yellow-700';
+            btnText = 'Embrace Truth';
+        } else if (type === 'consumption') {
+            icon = '🌑';
+            title = 'CONSUMPTION';
+            titleColor = 'text-purple-500';
+            btnClass = 'bg-purple-600 hover:bg-purple-700';
+            btnText = 'Dissolve';
+        }
+
         overlay.innerHTML = `
             <div class="text-center">
-                <div class="text-6xl mb-4">💀</div>
-                <h2 class="text-3xl font-bold text-red-500 mb-4">NIGHTMARE CONSUMES</h2>
+                <div class="text-6xl mb-4">${icon}</div>
+                <h2 class="text-3xl font-bold ${titleColor} mb-4">${title}</h2>
                 <p class="text-xl text-gray-300 mb-6">${message}</p>
-                <button onclick="window.nightmare.endNightmare()" class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-bold">
-                    Face the Dawn
+                <button onclick="window.nightmare.endNightmare()" class="${btnClass} text-white px-8 py-3 rounded-lg font-bold">
+                    ${btnText}
                 </button>
             </div>
         `;

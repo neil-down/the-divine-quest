@@ -133,9 +133,12 @@ This game serves as:
 - **Study Guide**: Companion materials for deeper learning
 - **Skill Tree**: Progression and skill tree system
 - **PWA/Deploy**: Progressive web app packaging and deployment
+- **Achievements & Grace Shop**: Meta-progression with unlockable achievements and grace-point perks
+- **Advanced Accessibility**: Reduced-motion support, focus-visible outlines, screen-shake/ripple feedback
 
 ### Planned Features
 - **Community Features**: Share achievements and spiritual insights
+- **Localization of new content**: es/fr translations for Layer 4–5 strings
 
 ### Educational Extensions
 - **Discussion Questions**: Prompts for group reflection
@@ -146,7 +149,8 @@ This game serves as:
 - **Layer 1**: Sound design, mobile optimization, study guide, skill-tree expansion, branching router + reachability
 - **Layer 2**: Settings menu, enemy archetypes + boss enrage, i18n scaffold, nightmare meta-progression + deeper endings
 - **Layer 3**: i18n en/es/fr completion, mobile/touch polish
-- **Layer 4 (in progress)**: New chapters, combat depth, puzzles, study-guide expansion, visuals/accessibility, settings/progression, audio
+- **Layer 4**: New chapters (11/12), combat depth (Legion boss, Pharisee), puzzles (verse-scramble/theme-match), study-guide expansion, visuals/accessibility, settings/progression, audio
+- **Layer 5**: Story II (Communion of Saints, New Heavens), Combat II (Legion enrage, Pharisee debuff, L4 balance pass), Puzzles II (verse-order + difficulty scaling), Study II (Covenant, Atonement, Justification, Church, Eschatology), Visuals II (battle-impact shake, choice-ripple), Audio II (ambient tracks + levelup/defeat SFX), Progression II (achievements + grace shop), PWA/Docs hardening
 
 ## Contributing
 

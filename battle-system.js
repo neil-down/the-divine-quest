@@ -648,6 +648,8 @@ class SpiritualBattle {
         this.game.playerStats.compassion = Math.max(0, this.game.playerStats.compassion - 10);
         this.game.updateStats();
         
+        document.dispatchEvent(new CustomEvent('battleDefeat'));
+        
         setTimeout(() => {
             this.endBattle();
         }, 3000);

@@ -30,7 +30,7 @@ class DivineQuest {
             "4-0-1": 5,
             "4-0-2": 5,
             "5-0-0": 6,
-            "5-0-1": 6,
+            "5-0-1": 11,
             "5-0-2": 6,
             "6-0-0": 7,
             "6-0-1": 9,
@@ -40,13 +40,19 @@ class DivineQuest {
             "7-0-2": 0,
             "8-0-0": 5,
             "8-0-1": 4,
-            "8-0-2": 6,
+            "8-0-2": 12,
             "9-0-0": 4,
             "9-0-1": 5,
             "9-0-2": 7,
             "10-0-0": 0,
             "10-0-1": 1,
-            "10-0-2": 2
+            "10-0-2": 11,
+            "11-0-0": 0,
+            "11-0-1": 2,
+            "11-0-2": 3,
+            "12-0-0": 1,
+            "12-0-1": 4,
+            "12-0-2": 6
         };
         
         this.wisdomQuotes = [
@@ -418,6 +424,62 @@ class DivineQuest {
                         ]
                     }
                 ]
+            },
+            {
+                title: "The Communion of Saints",
+                scenes: [
+                    {
+                        text: "In the communion of saints you find you are not alone on the pilgrim way. The cloud of witnesses — patriarchs, prophets, apostles, and martyrs — surrounds you, cheering you onward. Yet the Roman church had blurred this fellowship with the idolatry of Mariolatry and saint-veneration, exalting creatures above the Creator. You recall the Reformed conviction that Christ alone is the mediator, and that we honor the saints by imitating their faith, not by praying to them. The unity of the body of Christ transcends time and tongue, bound by one Spirit and one hope.",
+                        choices: [
+                            {
+                                text: "Honor the saints by imitating their faith",
+                                description: "Their lives point beyond themselves to Christ, the alone mediator.",
+                                effects: { faith: 15, wisdom: 15, compassion: 5 },
+                                nextChapter: 0
+                            },
+                            {
+                                text: "Rejoice in the unity of the body of Christ",
+                                description: "Many members, one Spirit, one hope — the church catholic and reformed.",
+                                effects: { faith: 10, wisdom: 10, compassion: 20 },
+                                nextChapter: 2
+                            },
+                            {
+                                text: "Press on toward the prize in Christ",
+                                description: "Forgetting what lies behind, straining forward to what lies ahead.",
+                                effects: { faith: 12, wisdom: 12, compassion: 8 },
+                                nextChapter: 3
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The New Heavens and New Earth",
+                scenes: [
+                    {
+                        text: "The vision swells to its culmination: behold, the dwelling place of God is with man, and He will dwell with them. The new heavens and the new earth, where righteousness dwells, replace the old that passed away with its groaning. The Reformed hope is not escape from creation but its renewal — the creation liberated from bondage to corruption into the freedom of the glory of the children of God. You see that the quest was never mere moral striving but union with Christ, from whom all grace flows and to whom all glory returns. With joy you surrender the journey into His hands, knowing the Author and Finisher of faith completes what He began.",
+                        choices: [
+                            {
+                                text: "Rest in the finished work of Christ",
+                                description: "It is by grace you have been saved, through faith — not of yourselves.",
+                                effects: { faith: 20, wisdom: 10, compassion: 10 },
+                                nextChapter: 1
+                            },
+                            {
+                                text: "Feed His sheep in the renewed world",
+                                description: "Love one another as He has loved you, bearing the image of the city to come.",
+                                effects: { faith: 10, wisdom: 10, compassion: 25 },
+                                nextChapter: 4
+                            },
+                            {
+                                text: "Begin the quest anew in gratitude",
+                                description: "The old has passed away; behold, all things are made new.",
+                                effects: { faith: 15, wisdom: 15, compassion: 15 },
+                                nextChapter: 6
+                            }
+                        ]
+                    }
+                ]
             }
         ];
         
@@ -448,6 +510,7 @@ class DivineQuest {
         
         // Check for achievements
         this.checkAchievements();
+        document.dispatchEvent(new CustomEvent('statsChanged'));
     }
     
     updateWisdomQuote() {

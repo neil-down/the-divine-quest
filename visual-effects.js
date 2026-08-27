@@ -540,6 +540,34 @@ style.textContent = `
         setTimeout(() => flash.remove(), 600);
     }
 
+    triggerChoiceRipple(x, y, target) {
+        if (this._reducedMotion()) return;
+        const ripple = document.createElement('span');
+        ripple.className = 'tdq-choice-ripple';
+        const rect = (target && target.getBoundingClientRect) ? target.getBoundingClientRect() : null;
+        const rx = rect ? (x - rect.left) : 10;
+        const ry = rect ? (y - rect.top) : 10;
+        ripple.style.left = rx + 'px';
+        ripple.style.top = ry + 'px';
+        if (target && target.style) {
+            const prevPos = target.style.position;
+            if (!prevPos || prevPos === 'static') target.style.position = 'relative';
+            target.style.overflow = 'hidden';
+            target.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+    }
+
+    triggerBattleImpact() {
+        if (this._reducedMotion()) return;
+        if (document.body) {
+            document.body.classList.remove('tdq-battle-impact');
+            void document.body.offsetWidth; // reflow to restart animation
+            document.body.classList.add('tdq-battle-impact');
+            setTimeout(() => document.body.classList.remove('tdq-battle-impact'), 450);
+        }
+    }
+
     @keyframes ringExpand {
         0% {
             transform: scale(0);
@@ -618,8 +646,40 @@ style.textContent = `
         animation: tdqConvictionFlash 0.5s ease-out forwards;
     }
 
+    .tdq-choice-ripple {
+        position: absolute;
+        border-radius: 50%;
+        transform: scale(0);
+        background: rgba(251, 191, 36, 0.45);
+        animation: tdqChoiceRipple 0.55s ease-out forwards;
+        pointer-events: none;
+        width: 120px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
+    }
+
+    .tdq-battle-impact {
+        animation: tdqBattleShake 0.4s ease-in-out;
+    }
+
+    @keyframes tdqChoiceRipple {
+        0% { transform: scale(0); opacity: 0.6; }
+        100% { transform: scale(2.2); opacity: 0; }
+    }
+
+    @keyframes tdqBattleShake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-8px); }
+        40% { transform: translateX(7px); }
+        60% { transform: translateX(-5px); }
+        80% { transform: translateX(4px); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .tdq-grace-shimmer, .tdq-conviction-flash { animation: none !important; display: none !important; }
+        .tdq-choice-ripple { display: none !important; }
+        .tdq-battle-impact { animation: none !important; }
     }
 `;
 document.head.appendChild(style);
@@ -678,5 +738,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return result;
             };
         }
+
+        // Battle impact: brief screen shake when the player takes a hit
+        document.addEventListener('battleHit', () => {
+            if (window.visualEffects) window.visualEffects.triggerBattleImpact();
+        });
+        if (window.battleEncounters && typeof window.battleEncounters.takeDamage === 'function') {
+            const originalTakeDamage = window.battleEncounters.takeDamage.bind(window.battleEncounters);
+            window.battleEncounters.takeDamage = function(amount) {
+                const result = originalTakeDamage(amount);
+                document.dispatchEvent(new CustomEvent('battleHit'));
+                return result;
+            };
+        }
+
+        // Choice ripple: tap/click feedback on choice buttons
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest && e.target.closest('.choice-button');
+            if (btn && window.visualEffects) {
+                window.visualEffects.triggerChoiceRipple(e.clientX, e.clientY, btn);
+            }
+        });
     }, 1000);
 });

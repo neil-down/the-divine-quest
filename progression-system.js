@@ -11,8 +11,14 @@ class ProgressionSystem {
             abilities: []
         };
         this.achievements = [];
+        this.achievementsUnlocked = new Set();
+        this.gracePoints = 0;
+        this.purchasedPerks = new Set();
+        this.achState = { battlesWon: 0, battlesLost: 0, puzzlesSolved: 0, bossesDefeated: 0 };
         this.milestones = this.initMilestones();
         this.skillTree = this.initSkillTree();
+        this.achievementDefs = this.initAchievements();
+        this.shopPerks = this.initShopPerks();
         this.init();
     }
     
@@ -75,6 +81,122 @@ class ProgressionSystem {
         };
     }
     
+    initAchievements() {
+        return [
+            { id: 'first_victory', name: 'First Victory', description: 'Win your first battle', check: (s) => s.battlesWon >= 1 },
+            { id: 'scripture_scholar', name: 'Scripture Scholar', description: 'Solve 5 puzzles', check: (s) => s.puzzlesSolved >= 5 },
+            { id: 'faithful', name: 'Faithful', description: 'Reach 90 faith', check: (s) => s.faith >= 90 },
+            { id: 'wise', name: 'Wise', description: 'Reach 90 wisdom', check: (s) => s.wisdom >= 90 },
+            { id: 'compassionate', name: 'Compassionate', description: 'Reach 90 compassion', check: (s) => s.compassion >= 90 },
+            { id: 'boss_slayer', name: 'Boss Slayer', description: 'Defeat a boss', check: (s) => s.bossesDefeated >= 1 },
+            { id: 'level_10', name: 'Spiritual Maturity', description: 'Reach level 10', check: (s) => s.level >= 10 },
+            { id: 'level_25', name: 'Saintly', description: 'Reach level 25', check: (s) => s.level >= 25 },
+            { id: 'well_rounded', name: 'Well Rounded', description: 'Reach 70 in all three stats', check: (s) => s.faith >= 70 && s.wisdom >= 70 && s.compassion >= 70 },
+            { id: 'pacifist_scholar', name: 'Pacifist Scholar', description: 'Solve 10 puzzles without losing a battle', check: (s) => s.puzzlesSolved >= 10 && s.battlesLost === 0 }
+        ];
+    }
+
+    initShopPerks() {
+        return [
+            { id: 'max_hp_plus', name: '+10 Max HP', description: 'Increases your maximum HP by 10', cost: 3, effect: () => { if (typeof window.game !== 'undefined' && typeof window.game.maxHealth !== 'undefined') { window.game.maxHealth += 10; window.game.health = Math.min(window.game.health + 10, window.game.maxHealth); } } },
+            { id: 'start_faith', name: '+1 Starting Faith', description: 'Begin each journey with +1 faith', cost: 4, effect: () => { if (typeof window.game !== 'undefined' && typeof window.game.faith !== 'undefined') { window.game.faith += 1; } } },
+            { id: 'wisdom_insight', name: 'Keener Insight', description: 'Puzzles award +1 wisdom', cost: 5, effect: () => { this.gracePerkWisdom = (this.gracePerkWisdom || 0) + 1; } }
+        ];
+    }
+
+    getAchievementState() {
+        return {
+            battlesWon: this.achState.battlesWon || 0,
+            battlesLost: this.achState.battlesLost || 0,
+            puzzlesSolved: this.achState.puzzlesSolved || 0,
+            bossesDefeated: this.achState.bossesDefeated || 0,
+            level: this.playerLevel,
+            faith: (this.game && this.game.playerStats && this.game.playerStats.faith) || 0,
+            wisdom: (this.game && this.game.playerStats && this.game.playerStats.wisdom) || 0,
+            compassion: (this.game && this.game.playerStats && this.game.playerStats.compassion) || 0
+        };
+    }
+
+    evaluateAchievements() {
+        this.achievementDefs.forEach(def => {
+            if (this.achievementsUnlocked.has(def.id)) return;
+            const state = this.getAchievementState();
+            if (def.check(state)) {
+                this.achievementsUnlocked.add(def.id);
+                this.gracePoints += 1;
+                this.achievements.push(def.name);
+                this.game.showAchievement(def.name, def.description);
+            }
+        });
+        this.updateLevelDisplay();
+    }
+
+    showAchievementsPanel() {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50';
+        overlay.id = 'achievements-overlay';
+        const items = this.achievementDefs.map(def => {
+            const unlocked = this.achievementsUnlocked.has(def.id);
+            return `<div class="bg-gray-700 p-3 rounded-lg ${unlocked ? 'border-2 border-yellow-400' : 'opacity-50'}">
+                <div class="font-bold ${unlocked ? 'text-yellow-400' : 'text-gray-400'}">${unlocked ? '🏆 ' : '🔒 '}${def.name}</div>
+                <div class="text-xs text-gray-300">${def.description}</div>
+            </div>`;
+        }).join('');
+        overlay.innerHTML = `
+            <div class="bg-black rounded-2xl p-8 max-w-2xl w-full mx-4 border-2 border-yellow-500">
+                <div class="text-center mb-4">
+                    <h2 class="text-3xl font-bold text-yellow-400 mb-2">🏆 Achievements</h2>
+                    <div class="text-yellow-300">Grace Points: <span id="grace-points">${this.gracePoints}</span></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4 max-h-80 overflow-y-auto">${items}</div>
+                <div class="text-center">
+                    <button onclick="window.progression.showShop()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold mr-2">🛒 Grace Shop</button>
+                    <button onclick="document.getElementById('achievements-overlay').remove()" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-bold">Close</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+    }
+
+    showShop() {
+        const overlay = document.createElement('div');
+        overlay.className = 'fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50';
+        overlay.id = 'shop-overlay';
+        const items = this.shopPerks.map(perk => {
+            const owned = this.purchasedPerks.has(perk.id);
+            return `<div class="bg-gray-700 p-3 rounded-lg">
+                <div class="font-bold text-green-400">${perk.name}</div>
+                <div class="text-xs text-gray-300 mb-2">${perk.description}</div>
+                ${owned ? '<span class="text-green-400">✓ Owned</span>' : `<button onclick="window.progression.purchasePerk('${perk.id}')" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm">${perk.cost} GP</button>`}
+            </div>`;
+        }).join('');
+        overlay.innerHTML = `
+            <div class="bg-black rounded-2xl p-8 max-w-2xl w-full mx-4 border-2 border-purple-500">
+                <div class="text-center mb-4">
+                    <h2 class="text-3xl font-bold text-purple-400 mb-2">🛒 Grace Shop</h2>
+                    <div class="text-yellow-300">Grace Points: <span id="shop-grace">${this.gracePoints}</span></div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">${items}</div>
+                <div class="text-center">
+                    <button onclick="document.getElementById('shop-overlay').remove(); window.progression.showAchievementsPanel();" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-bold">Back</button>
+                </div>
+            </div>`;
+        document.body.appendChild(overlay);
+    }
+
+    purchasePerk(perkId) {
+        const perk = this.shopPerks.find(p => p.id === perkId);
+        if (!perk || this.purchasedPerks.has(perkId)) return;
+        if (this.gracePoints < perk.cost) {
+            this.game.showAchievement('Not Enough Grace', `Need ${perk.cost} grace points.`);
+            return;
+        }
+        this.gracePoints -= perk.cost;
+        this.purchasedPerks.add(perkId);
+        perk.effect();
+        this.game.showAchievement('Perk Purchased!', perk.name);
+        this.showShop();
+    }
+
     addProgressionUI() {
         const ui = document.createElement('div');
         ui.className = 'fixed top-20 left-4 bg-black bg-opacity-80 rounded-lg p-4 text-white z-40';
@@ -95,6 +217,9 @@ class ProgressionSystem {
             </div>
             <button onclick="window.progression.showSkillTree()" class="w-full bg-purple-600 hover:bg-purple-700 text-white p-2 rounded text-sm">
                 🌳 Skill Tree
+            </button>
+            <button onclick="window.progression.showAchievementsPanel()" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded text-sm mt-2">
+                🏆 Achievements
             </button>
         `;
         
@@ -416,11 +541,30 @@ document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('battleVictory', () => {
                 const bonus = window.progressionSystem.getPassiveBonus('battle_exp');
                 window.progressionSystem.addExperienceForAction('battle_win', Math.floor(50 * bonus));
+                window.progressionSystem.achState.battlesWon++;
+                window.progressionSystem.gracePoints += 1;
+                if (window.battleEncounters && window.battleEncounters.currentEnemy && window.battleEncounters.currentEnemy.isBoss) {
+                    window.progressionSystem.achState.bossesDefeated++;
+                }
+                window.progressionSystem.evaluateAchievements();
             });
-            
+
+            // Battle defeats
+            document.addEventListener('battleDefeat', () => {
+                window.progressionSystem.achState.battlesLost++;
+            });
+
             // Puzzle solutions
             document.addEventListener('puzzleSolved', () => {
                 window.progressionSystem.addExperienceForAction('puzzle_solve');
+                window.progressionSystem.achState.puzzlesSolved++;
+                window.progressionSystem.gracePoints += 1;
+                window.progressionSystem.evaluateAchievements();
+            });
+
+            // Stat changes re-check achievements
+            document.addEventListener('statsChanged', () => {
+                window.progressionSystem.evaluateAchievements();
             });
         }
     }, 4000);

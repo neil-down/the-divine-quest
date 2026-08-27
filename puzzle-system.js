@@ -120,10 +120,78 @@ class DivinePuzzles {
                 ],
                 hint: 'This verse opens the very first book of the sacred text...',
                 reward: { wisdom: 20, faith: 15 }
+            },
+            {
+                id: 'verse_order_creation',
+                name: 'Order the Creation Account',
+                description: 'Sequence these fragments from the Genesis creation account in their correct biblical order',
+                type: 'verse-order',
+                difficulty: 'easy',
+                fragments: [
+                    'In the beginning God created the heavens and the earth',
+                    'And the earth was without form, and void',
+                    'And God said, Let there be light',
+                    'And God saw the light, that it was good'
+                ],
+                solution: [
+                    'In the beginning God created the heavens and the earth',
+                    'And the earth was without form, and void',
+                    'And God said, Let there be light',
+                    'And God saw the light, that it was good'
+                ],
+                hint: 'The first fragment mentions the very beginning of all things...',
+                reward: { faith: 15, wisdom: 15 }
+            },
+            {
+                id: 'verse_order_plagues',
+                name: 'The Plagues of Egypt',
+                description: 'Arrange these events from the Exodus in their chronological order',
+                type: 'verse-order',
+                difficulty: 'medium',
+                fragments: [
+                    'The death of the firstborn',
+                    'Turning of the Nile to blood',
+                    'The Passover lamb is sacrificed',
+                    'Darkness covers the land for three days'
+                ],
+                solution: [
+                    'Turning of the Nile to blood',
+                    'Darkness covers the land for three days',
+                    'The Passover lamb is sacrificed',
+                    'The death of the firstborn'
+                ],
+                hint: 'The plagues progressed from water to darkness to the final judgment...',
+                reward: { faith: 20, wisdom: 20 }
+            },
+            {
+                id: 'verse_order_redemption',
+                name: 'The Story of Redemption',
+                description: 'Sequence these sacred events in the order they occurred in salvation history',
+                type: 'verse-order',
+                difficulty: 'hard',
+                fragments: [
+                    'Christ is crucified for our sins',
+                    'The Holy Spirit descends at Pentecost',
+                    'Jesus is baptized in the Jordan',
+                    'Jesus ascends into heaven'
+                ],
+                solution: [
+                    'Jesus is baptized in the Jordan',
+                    'Christ is crucified for our sins',
+                    'Jesus ascends into heaven',
+                    'The Holy Spirit descends at Pentecost'
+                ],
+                hint: 'Consider the earthly ministry of Christ: His baptism, His death, His ascension, and the Spirit\'s coming...',
+                reward: { faith: 25, wisdom: 25 }
             }
         ];
     }
     
+    getDifficultyRank(difficulty) {
+        const ranks = { 'easy': 1, 'medium': 2, 'hard': 3 };
+        return ranks[difficulty] || 0;
+    }
+
     startRandomPuzzle() {
         if (this.currentPuzzle) return;
         
@@ -131,6 +199,24 @@ class DivinePuzzles {
         if (availablePuzzles.length === 0) return;
         
         const puzzle = availablePuzzles[Math.floor(Math.random() * availablePuzzles.length)];
+        
+        // Difficulty scaling: at higher faith, upgrade verse-order puzzles to harder pool
+        const faithLevel = this.game.playerStats.faith;
+        if (puzzle.type === 'verse-order' && faithLevel >= 50) {
+            const currentRank = this.getDifficultyRank(puzzle.difficulty);
+            const allUnsolved = this.puzzles.filter(p => !this.solvedPuzzles.includes(p.id));
+            const harderPuzzles = allUnsolved.filter(p => 
+                p.type === 'verse-order' && 
+                this.getDifficultyRank(p.difficulty) > currentRank
+            );
+            if (harderPuzzles.length > 0) {
+                const harder = harderPuzzles[Math.floor(Math.random() * harderPuzzles.length)];
+                this.currentPuzzle = harder;
+                this.showPuzzle(harder);
+                return;
+            }
+        }
+        
         this.currentPuzzle = puzzle;
         this.showPuzzle(puzzle);
     }
@@ -169,6 +255,9 @@ class DivinePuzzles {
                 break;
             case 'theme-match':
                 puzzleContent = this.createThemeMatchPuzzle(puzzle);
+                break;
+            case 'verse-order':
+                puzzleContent = this.createVerseOrderPuzzle(puzzle);
                 break;
         }
         
@@ -414,6 +503,100 @@ class DivinePuzzles {
                 </div>
             </div>
         `;
+    }
+
+    createVerseOrderPuzzle(puzzle) {
+        puzzle._shuffledFragments = [...puzzle.fragments].sort(() => Math.random() - 0.5);
+        this.playerSequence = [];
+
+        return `
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="text-center mb-4">
+                    <p class="text-gray-300 mb-4">Sequence these sacred fragments in their correct biblical order:</p>
+                    <div class="flex justify-center flex-wrap gap-2 mb-6" id="verse-fragments">
+                        ${puzzle._shuffledFragments.map((fragment, index) => `
+                            <button onclick="window.puzzles.selectVerseFragment(${index})" 
+                                    class="verse-fragment-btn bg-purple-600 hover:bg-purple-700 text-white p-3 rounded-lg transition-all">
+                                ${fragment}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="text-center mb-4">
+                        <p class="text-sm text-gray-400 mb-2">Your sequence:</p>
+                        <div class="flex justify-center flex-wrap gap-2" id="verse-order-display">
+                            <span class="text-gray-500">Click fragments above to build the sequence</span>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button onclick="window.puzzles.clearVerseOrder()" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg mr-2">
+                            Clear
+                        </button>
+                        <button onclick="window.puzzles.checkVerseOrder()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold">
+                            Submit Solution
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    selectVerseFragment(index) {
+        if (!this.playerSequence) this.playerSequence = [];
+
+        const fragment = this.currentPuzzle._shuffledFragments[index];
+        this.playerSequence.push(fragment);
+
+        // Disable the clicked button
+        const buttons = document.querySelectorAll('#verse-fragments .verse-fragment-btn');
+        if (buttons[index]) {
+            buttons[index].disabled = true;
+            buttons[index].classList.add('opacity-30', 'pointer-events-none');
+        }
+
+        this.updateVerseOrderDisplay();
+    }
+
+    updateVerseOrderDisplay() {
+        const display = document.getElementById('verse-order-display');
+        if (!display) return;
+
+        if (!this.playerSequence || this.playerSequence.length === 0) {
+            display.innerHTML = '<span class="text-gray-500">Click fragments above to build the sequence</span>';
+            return;
+        }
+
+        display.innerHTML = this.playerSequence.map((frag, i) => `
+            <div class="bg-yellow-600 text-white p-2 rounded-lg">
+                <span class="text-sm text-gray-300">${i + 1}.</span> ${frag}
+            </div>
+        `).join('');
+    }
+
+    clearVerseOrder() {
+        this.playerSequence = [];
+
+        // Re-enable all fragment buttons
+        document.querySelectorAll('#verse-fragments .verse-fragment-btn').forEach(btn => {
+            btn.disabled = false;
+            btn.classList.remove('opacity-30', 'pointer-events-none');
+        });
+
+        this.updateVerseOrderDisplay();
+    }
+
+    checkVerseOrder() {
+        if (!this.playerSequence || this.playerSequence.length !== this.currentPuzzle.fragments.length) {
+            this.showError(`You must sequence all ${this.currentPuzzle.fragments.length} fragments!`);
+            return;
+        }
+
+        const correct = JSON.stringify(this.playerSequence) === JSON.stringify(this.currentPuzzle.fragments);
+        if (correct) {
+            this.solvePuzzle();
+        } else {
+            this.showError('Incorrect order. Consider the biblical timeline more carefully...');
+            this.clearVerseOrder();
+        }
     }
     
     getRuneEmoji(rune) {
@@ -712,6 +895,9 @@ class DivinePuzzles {
                     break;
                 case 'theme-match':
                     hint = this.currentPuzzle.hint || 'Think about the major themes and opening books of the sacred text...';
+                    break;
+                case 'verse-order':
+                    hint = this.currentPuzzle.hint || 'Look for key words that indicate time or sequence in the sacred narrative...';
                     break;
             }
             

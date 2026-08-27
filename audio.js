@@ -52,18 +52,39 @@ class DivineAudio {
   }
 
   _startAmbient() {
-    this.ambientGain = this.ctx.createGain();
-    this.ambientGain.gain.value = 0.18;
-    this.ambientGain.connect(this.masterGain);
+    this._startAmbientTrack(this.ambientTrack || 'tabernacle');
+  }
 
+  stopAmbient() {
+    this.ambientNodes.forEach(node => {
+      try { node.stop && node.stop(); } catch (e) { /* ignore */ }
+    });
+    this.ambientNodes = [];
+  }
+
+  // Gentle ambient pad tracks the toggle can cycle through
+  ambientTracks() {
+    return {
+      'tabernacle': [130.81, 196.0, 164.81, 392.0, 523.25],     // C root chord warmth
+      'still-waters': [146.83, 220.0, 293.66, 440.0],            // D suspended calm
+      'heights': [164.81, 246.94, 329.63, 493.88, 659.25]        // E open bright
+    };
+  }
+
+  _startAmbientTrack(name) {
+    this.stopAmbient();
+    if (!this.ambientGain) {
+      this.ambientGain = this.ctx.createGain();
+      this.ambientGain.gain.value = 0.18;
+      this.ambientGain.connect(this.masterGain);
+    }
     const filter = this.ctx.createBiquadFilter();
     filter.type = 'lowpass';
     filter.frequency.value = 500;
     filter.Q.value = 0.5;
     filter.connect(this.ambientGain);
 
-    // Gentle root chord: C3, G3, E3, G4, C5 (add2-suspended warmth)
-    const freqs = [130.81, 196.0, 164.81, 392.0, 523.25];
+    const freqs = (this.ambientTracks()[name] || this.ambientTracks()['tabernacle']);
     freqs.forEach((f, i) => {
       const detune = (Math.random() - 0.5) * 6;
       const { osc, gain } = this._createOsc(i < 2 ? 'sine' : 'triangle', f, detune, 0.025);
@@ -71,7 +92,6 @@ class DivineAudio {
       osc.connect(filter);
       this.ambientNodes.push(osc, gain);
 
-      // Slow LFO for movement
       const lfo = this.ctx.createOscillator();
       const lfoGain = this.ctx.createGain();
       lfo.type = 'sine';
@@ -84,11 +104,14 @@ class DivineAudio {
     });
   }
 
-  stopAmbient() {
-    this.ambientNodes.forEach(node => {
-      try { node.stop && node.stop(); } catch (e) { /* ignore */ }
-    });
-    this.ambientNodes = [];
+  cycleAmbient() {
+    const names = Object.keys(this.ambientTracks());
+    const idx = names.indexOf(this.ambientTrack || 'tabernacle');
+    this.ambientTrack = names[(idx + 1) % names.length];
+    if (this.ambientEnabled && !this.muted && this.started) {
+      this._startAmbientTrack(this.ambientTrack);
+    }
+    return this.ambientTrack;
   }
 
   // Ambient toggle API — respects existing mute/volume model
@@ -295,6 +318,38 @@ class DivineAudio {
         osc.stop(now + 1.3);
         break;
       }
+      case 'levelup': {
+        // Ascending arpeggio — joyful
+        [523.25, 659.25, 783.99, 1046.5, 1318.51].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'triangle';
+          const t = now + i * 0.07;
+          osc.frequency.value = freq;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.16, t + 0.03);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+          out(osc, g);
+          osc.start(t);
+          osc.stop(t + 0.75);
+        });
+        break;
+      }
+      case 'defeat': {
+        // Low descending tone — somber
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(82.41, now + 1.4);
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.22, now + 0.1);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.6);
+        out(osc, g);
+        osc.start(now);
+        osc.stop(now + 1.7);
+        break;
+      }
       default:
         break;
     }
@@ -423,9 +478,29 @@ window.divineAudio = new DivineAudio();
     return true;
   }
 
+  function hookLevelUp() {
+    if (!window.progressionSystem || typeof window.progressionSystem.onLevelUp !== 'function') return false;
+    const original = window.progressionSystem.onLevelUp.bind(window.progressionSystem);
+    window.progressionSystem.onLevelUp = function () {
+      audio.play('levelup');
+      return original();
+    };
+    return true;
+  }
+
+  function hookDefeat() {
+    if (!window.battleEncounters || typeof window.battleEncounters.defeat !== 'function') return false;
+    const original = window.battleEncounters.defeat.bind(window.battleEncounters);
+    window.battleEncounters.defeat = function (...args) {
+      audio.play('defeat');
+      return original(...args);
+    };
+    return true;
+  }
+
   // Wait for globals to be defined by other scripts
   function tryHook() {
-    if (hookShowAchievement() || hookTriggerAttackEffect() || hookTriggerVictoryEffect()) {
+    if (hookShowAchievement() || hookTriggerAttackEffect() || hookTriggerVictoryEffect() || hookLevelUp() || hookDefeat()) {
       clearInterval(timer);
       timer = null;
     }

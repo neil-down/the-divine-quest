@@ -199,6 +199,56 @@ class StudyGuide {
                 ],
                 commentary: window.I18N.t("Eschatology is the study of last things, and Reformed theology embraces a robust, biblical hope anchored in the return of Christ. The kingdom of God has been inaugurated in Christ's first coming but has not yet been consummated; believers live in the 'already/not yet' tension, enjoying the benefits of salvation now while awaiting its full realization when Christ returns. Reformed orthodoxy rejects both utopian optimism that the world will gradually perfect itself and pessimistic escapism that despises the present creation. Instead, it teaches that Christ will bodily return, raise the dead, judge the world in righteousness, and establish the new heavens and new earth—a renewed, physical, everlasting realm where righteousness dwells. The resurrection of the body is central: Christianity is not the escape of the soul from matter, but the redemption of the whole person and the renewal of the whole creation. This hope does not paralyze but energizes the believer, pressing toward holiness, missions, and faithful stewardship of all God has made. The Heidelberg Catechism closes with the comfort of resurrection life, and the Westminster Confession confesses a general resurrection of both the just and the unjust."),
                 scripture: { reference: "1 Thessalonians 4:16-17", text: "For the Lord himself will descend from heaven with a cry of command, with the voice of an archangel, and with the sound of the trumpet of God. And the dead in Christ will rise first. Then we who are alive, who are left, will be caught up together with them in the clouds to meet the Lord in the air, and so we will always be with the Lord." }
+            },
+            19: {
+                title: window.I18N.t("Total Depravity"),
+                questions: [
+                    "What does 'total depravity' mean, and how is it different from saying every person is as bad as they could possibly be?",
+                    "If human nature is fallen in every part, what hope is there for any person to seek God?",
+                    "How does the doctrine of total depravity make grace not only helpful but absolutely necessary?"
+                ],
+                commentary: window.I18N.t("Total depravity is the first head of the TULIP summary of Reformed soteriology. It does not teach that every human is as wicked as possible, but that sin has corrupted every part of human nature—mind, will, affections, and conscience—so that no one seeks God by nature (Romans 3:10-12). The will is not neutral but in bondage to sin; left to himself, a person chooses according to his fallen desires. This is why Reformed theology insists that salvation must be monergistic in its inception: the initiative is entirely God's. The Spirit must regenerate the dead heart before anyone can respond in faith (John 6:44, 65). Total depravity magnifies grace: if the saved were in any part the authors of their own deliverance, they could boast; but since all are equally lost, the rescue of any is sheer mercy. Calvin grounded this in Augustine's anti-Pelagian writings, and the Canons of Dort affirm that 'there is left in man since the fall, no spark of true saving light.' The doctrine is humbling but hopeful: the worse the disease, the greater the Physician."),
+                scripture: { reference: "Romans 3:10-12", text: "as it is written: 'None is righteous, no, not one; no one understands; no one seeks for God. All have turned aside; together they have become worthless; no one does good, not even one.'" }
+            },
+            20: {
+                title: window.I18N.t("Unconditional Election"),
+                questions: [
+                    "Why does Reformed theology describe God's election as 'unconditional' rather than based on foreseen faith or merit?",
+                    "Does election undermine evangelism and prayer, or does it ground them in God's sovereign purpose?",
+                    "How can a believer find comfort—not anxiety—in the doctrine that God chose His people before the foundation of the world?"
+                ],
+                commentary: window.I18N.t("Unconditional election teaches that from before the foundation of the world, God freely and sovereignly chose a people for Himself in Christ, not on the basis of any foreseen faith, merit, or good in them, but according to the good pleasure of His will (Ephesians 1:4-5). The Reformed confession rejects the view that God elects because He foresaw who would believe; that would make the ultimate cause of salvation reside in man rather than God, and grace would no longer be grace. Election is grounded in God's loving, wise, and secret decree, revealed and applied through the gospel. Far from discouraging evangelism, this doctrine fuels it: the apostle who most taught election was also the apostle to the Gentiles, for he knew the Elector delights to gather His sheep through the preaching of the word. Election is a comfort, not a terror: those whom God predestined He also called, justified, and will glorify (Romans 8:29-30). The believer's perseverance rests not on the strength of his own resolving but on the immutability of God's counsel."),
+                scripture: { reference: "Ephesians 1:4-5", text: "even as he chose us in him before the foundation of the world, that we should be holy and blameless before him. In love he predestined us for adoption to himself as sons through Jesus Christ, according to the purpose of his will" }
+            },
+            21: {
+                title: window.I18N.t("The Law and the Gospel"),
+                questions: [
+                    "What is the difference between the moral, civil, and ceremonial law, and which continues to bind the conscience today?",
+                    "How does confusing law and gospel distort both the message of free grace and the call to holy living?",
+                    "In what three uses does Reformed theology say the law serves the believer and the church?"
+                ],
+                commentary: window.I18N.t("The distinction between law and gospel is, in Luther's words, the sum of all Christian doctrine. The law commands and condemns; the gospel promises and gives. Reformed covenant theology has historically distinguished three uses of the law: the civil use, restraining sin in society; the pedagogical (or elenctic) use, convicting sinners and driving them to Christ; and the normative (or third) use, guiding the grateful believer in sanctification. The moral law, summed in the Ten Commandments and reaffirmed by Christ, remains the abiding rule of life; the ceremonial and civil aspects of the Mosaic code found their fulfillment in Christ and are no longer binding as covenant obligations. The gospel does not abolish the law's authority but fulfills it, so that believers, freed from the law as a covenant of works, now delight in it as the pattern of grateful obedience. The Heidelberg Catechism asks, 'Since then we are delivered from the law, can it no longer accuse us?' and answers that the law still shows us our sin and the holiness God requires—yet our acceptance before God rests solely on Christ's obedience, not ours."),
+                scripture: { reference: "Galatians 3:24-25", text: "So then, the law was our guardian until Christ came, in order that we might be justified by faith. But now that faith has come, we are no longer under a guardian." }
+            },
+            22: {
+                title: window.I18N.t("Union with Christ"),
+                questions: [
+                    "Why do Reformed theologians call 'union with Christ' the fountain from which all other benefits of salvation flow?",
+                    "How does being 'in Christ' connect justification, adoption, sanctification, and glorification into one reality?",
+                    "What does it mean practically to live each day 'rooted' in this union rather than striving to earn what is already ours?"
+                ],
+                commentary: window.I18N.t("Union with Christ is the central, organizing blessing of salvation: all the benefits of redemption—justification, adoption, sanctification, and glorification—are ours only because we are united to the risen and ascended Christ by the Spirit (John 15:1-5; Romans 6:1-11). Calvin called it the sum of all blessings, and modern Reformed theology (following him and later writers such as John Murray and Sinclair Ferguson) emphasizes that we must not treat the ordo salutis as a ladder of separate steps but as dimensions of one shared life. Because Christ lived, died, and rose, those in Him have died to sin's dominion and been raised to newness of life; His righteousness is theirs by imputation, His death theirs by identification, His resurrection theirs by power. This truth guards against both legalism (trying to earn what is already given) and antinomianism (forgetting that grace teaches us to say no to sin). Living 'in Christ' means the Christian life is not the sinner's lonely climb to God but the Spirit's continual drawing of the elect into the fellowship of the Son with the Father."),
+                scripture: { reference: "Romans 6:5", text: "For if we have been united with him in a death like his, we shall certainly be united with him in a resurrection like his." }
+            },
+            23: {
+                title: window.I18N.t("The Two Kingdoms"),
+                questions: [
+                    "What does the Reformed 'two kingdoms' (or twofold government) doctrine say about how Christ rules the church and the civil order?",
+                    "How can Christians be wholly devoted to Christ while also honoring earthly authorities and engaging culture?",
+                    "Why does this doctrine protect both the church from becoming a political lobby and the state from claiming the soul?"
+                ],
+                commentary: window.I18N.t("The two-kingdoms doctrine, recovered by Luther and refined in Reformed political theology, teaches that God governs the world through two distinct but overlapping spheres: the spiritual kingdom, exercised by the Word and Spirit through the church, and the civil kingdom, exercised by magistrates through law and sword. Both are ordained by God, yet they have different means, ends, and limits. The church's weapons are spiritual, not coercive; the state's mandate is to preserve outward order, justice, and the common good, not to save souls. This distinction protects the conscience: Christ is Lord of both kingdoms, but He rules the church by grace and the state by common grace. It prevents the church from becoming a political machine and the state from claiming religious authority. Reformed believers therefore engage culture, politics, and vocation with diligence and gratitude, recognizing that all legitimate authority is delegated, and that the civil magistrate remains under the King of kings. The Two Kingdoms view is not withdrawal from the world but a clear-eyed pursuit of faithful presence in every God-ordained sphere."),
+                scripture: { reference: "Romans 13:1", text: "Let every person be subject to the governing authorities. For there is no authority except from God, and those that exist have been instituted by God." }
             }
         };
 
@@ -360,7 +410,8 @@ class StudyGuide {
 
         // Reset chapter tracking and render
         this.lastChapter = this.getCurrentChapter();
-        this.renderContent(this.lastChapter);
+        this.browseIndex = 0; // start browsing at the first topic
+        this.renderContent(0);
 
         // Show overlay
         requestAnimationFrame(() => {
@@ -393,7 +444,14 @@ class StudyGuide {
         const contentArea = this.panel.querySelector('#study-guide-content');
         if (!contentArea) return;
 
-        const data = this.content[chapterIndex];
+        // When opened during a specific chapter, prefer that topic; otherwise browse all topics.
+        const keys = Object.keys(this.content).map(Number).sort((a, b) => a - b);
+        if (typeof this.browseIndex !== 'number' || this.browseIndex < 0 || this.browseIndex >= keys.length) {
+            this.browseIndex = keys.indexOf(chapterIndex);
+            if (this.browseIndex < 0) this.browseIndex = 0;
+        }
+        const topicKey = keys[this.browseIndex];
+        const data = this.content[topicKey];
         if (!data) {
             contentArea.innerHTML = `
                 <p class="text-slate-400 italic">Study guide content for this chapter is not yet available.</p>
@@ -410,10 +468,19 @@ class StudyGuide {
 
         contentArea.innerHTML = `
             <section class="space-y-4">
-                <header>
-                    <h3 class="text-xl font-bold text-indigo-200 mb-1">${this.escapeHtml(data.title)}</h3>
-                    <div class="h-1 w-16 bg-indigo-600 rounded-full"></div>
+                <header class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold text-indigo-200 mb-1">${this.escapeHtml(data.title)}</h3>
+                        <div class="h-1 w-16 bg-indigo-600 rounded-full"></div>
+                    </div>
+                    <span class="text-xs text-slate-500 font-mono">${this.browseIndex + 1}/${keys.length}</span>
                 </header>
+
+                <div class="flex items-center gap-2">
+                    <button id="study-prev" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded text-xs" ${this.browseIndex === 0 ? 'disabled style="opacity:.4"' : ''}>← Prev</button>
+                    <button id="study-next" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1 rounded text-xs" ${this.browseIndex === keys.length - 1 ? 'disabled style="opacity:.4"' : ''}>Next →</button>
+                    <button id="study-this-chapter" class="ml-auto bg-indigo-800 hover:bg-indigo-700 text-indigo-100 px-3 py-1 rounded text-xs">Jump to current chapter</button>
+                </div>
 
                 <section>
                     <h4 class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-2">Discussion Questions</h4>
@@ -434,6 +501,13 @@ class StudyGuide {
                 </section>
             </section>
         `;
+
+        const prev = contentArea.querySelector('#study-prev');
+        const next = contentArea.querySelector('#study-next');
+        const jump = contentArea.querySelector('#study-this-chapter');
+        if (prev) prev.addEventListener('click', () => { this.browseIndex = Math.max(0, this.browseIndex - 1); this.renderContent(this.lastChapter); });
+        if (next) next.addEventListener('click', () => { this.browseIndex = Math.min(keys.length - 1, this.browseIndex + 1); this.renderContent(this.lastChapter); });
+        if (jump) jump.addEventListener('click', () => { this.browseIndex = keys.indexOf(this.lastChapter); if (this.browseIndex < 0) this.browseIndex = 0; this.renderContent(this.lastChapter); });
     }
 
     escapeHtml(str) {

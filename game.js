@@ -778,16 +778,24 @@ class DivineQuest {
             currentChapter: this.currentChapter,
             currentScene: this.currentScene,
             choices: this.choices,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
+            meta: window.progressionSystem ? {
+                playerLevel: window.progressionSystem.playerLevel,
+                experience: window.progressionSystem.experience,
+                gracePoints: window.progressionSystem.gracePoints,
+                achievements: Array.from(window.progressionSystem.achievementsUnlocked || []),
+                purchasedPerks: Array.from(window.progressionSystem.purchasedPerks || []),
+                skills: window.progressionSystem.unlocks.skills
+            } : null
         };
-        
+
         localStorage.setItem('divineQuestSave', JSON.stringify(saveData));
         this.showAchievement(
             window.I18N ? window.I18N.t('Game Saved') : 'Game Saved',
             window.I18N ? window.I18N.t('Your spiritual journey has been preserved!') : 'Your spiritual journey has been preserved!'
         );
     }
-    
+
     loadGame() {
         const saveData = localStorage.getItem('divineQuestSave');
         if (saveData) {
@@ -796,10 +804,24 @@ class DivineQuest {
             this.currentChapter = data.currentChapter;
             this.currentScene = data.currentScene;
             this.choices = data.choices || [];
-            
+
+            // Restore meta-progression so achievements/grace-points persist
+            if (data.meta && window.progressionSystem) {
+                const ps = window.progressionSystem;
+                ps.playerLevel = data.meta.playerLevel || 1;
+                ps.experience = data.meta.experience || 0;
+                ps.gracePoints = data.meta.gracePoints || 0;
+                ps.achievementsUnlocked = new Set(data.meta.achievements || []);
+                ps.purchasedPerks = new Set(data.meta.purchasedPerks || []);
+                if (Array.isArray(data.meta.skills)) {
+                    data.meta.skills.forEach(id => ps.unlocks.skills.includes(id) || ps.unlocks.skills.push(id));
+                }
+                ps.updateLevelDisplay();
+            }
+
             this.updateStats();
             this.goToChapter(this.currentChapter, this.currentScene);
-            
+
             this.showAchievement(
                 window.I18N ? window.I18N.t('Game Loaded') : 'Game Loaded',
                 window.I18N ? window.I18N.t('Your spiritual journey continues!') : 'Your spiritual journey continues!'

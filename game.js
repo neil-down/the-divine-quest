@@ -395,8 +395,8 @@ class DivineQuest {
         const scene = chapter.scenes[sceneIndex];
         
         // Update story
-        document.querySelector('#story-container h2').textContent = chapter.title;
-        document.getElementById('story-text').innerHTML = `<p class="mb-4">${scene.text}</p>`;
+        document.querySelector('#story-container h2').textContent = window.I18N ? window.I18N.t(chapter.title) : chapter.title;
+        document.getElementById('story-text').innerHTML = `<p class="mb-4">${window.I18N ? window.I18N.t(scene.text) : scene.text}</p>`;
         
         // Update choices
         const choicesContainer = document.getElementById('choices-container');
@@ -409,12 +409,14 @@ class DivineQuest {
             
             const icon = this.getChoiceIcon(choice.text);
             
+            const choiceText = window.I18N ? window.I18N.t(choice.text) : choice.text;
+            const choiceDesc = window.I18N ? window.I18N.t(choice.description) : choice.description;
             button.innerHTML = `
                 <div class="flex items-center">
                     <i class="fas ${icon} text-yellow-500 mr-3"></i>
                     <div>
-                        <h4 class="font-semibold text-white">${choice.text}</h4>
-                        <p class="text-sm text-gray-300">${choice.description}</p>
+                        <h4 class="font-semibold text-white">${choiceText}</h4>
+                        <p class="text-sm text-gray-300">${choiceDesc}</p>
                     </div>
                 </div>
             `;
@@ -426,8 +428,8 @@ class DivineQuest {
         const scriptureContainer = document.getElementById('scripture-container');
         if (scene.scripture) {
             const randomScripture = this.scriptures[Math.floor(Math.random() * this.scriptures.length)];
-            document.getElementById('scripture-text').textContent = randomScripture.text;
-            document.getElementById('scripture-reference').textContent = randomScripture.reference;
+            document.getElementById('scripture-text').textContent = window.I18N ? window.I18N.t(randomScripture.text) : randomScripture.text;
+            document.getElementById('scripture-reference').textContent = window.I18N ? window.I18N.t(randomScripture.reference) : randomScripture.reference;
             scriptureContainer.classList.remove('hidden');
         } else {
             scriptureContainer.classList.add('hidden');
@@ -490,22 +492,34 @@ class DivineQuest {
     checkAchievements() {
         // Check for balanced stats
         if (this.playerStats.faith >= 80 && this.playerStats.wisdom >= 80 && this.playerStats.compassion >= 80) {
-            this.showAchievement('Enlightened Master', 'You have achieved perfect balance in faith, wisdom, and compassion!');
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Enlightened Master') : 'Enlightened Master',
+                window.I18N ? window.I18N.t('You have achieved perfect balance in faith, wisdom, and compassion!') : 'You have achieved perfect balance in faith, wisdom, and compassion!'
+            );
         }
         
         // Check for faith-focused
         if (this.playerStats.faith >= 90) {
-            this.showAchievement('True Believer', 'Your faith shines as a beacon for others!');
+            this.showAchievement(
+                window.I18N ? window.I18N.t('True Believer') : 'True Believer',
+                window.I18N ? window.I18N.t('Your faith shines as a beacon for others!') : 'Your faith shines as a beacon for others!'
+            );
         }
         
         // Check for wisdom-focused
         if (this.playerStats.wisdom >= 90) {
-            this.showAchievement('Divine Scholar', 'You have unlocked profound theological understanding!');
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Divine Scholar') : 'Divine Scholar',
+                window.I18N ? window.I18N.t('You have unlocked profound theological understanding!') : 'You have unlocked profound theological understanding!'
+            );
         }
         
         // Check for compassion-focused
         if (this.playerStats.compassion >= 90) {
-            this.showAchievement('Compassionate Heart', 'Your love transforms the world around you!');
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Compassionate Heart') : 'Compassionate Heart',
+                window.I18N ? window.I18N.t('Your love transforms the world around you!') : 'Your love transforms the world around you!'
+            );
         }
     }
     
@@ -612,7 +626,10 @@ class DivineQuest {
         };
         
         localStorage.setItem('divineQuestSave', JSON.stringify(saveData));
-        this.showAchievement('Game Saved', 'Your spiritual journey has been preserved!');
+        this.showAchievement(
+            window.I18N ? window.I18N.t('Game Saved') : 'Game Saved',
+            window.I18N ? window.I18N.t('Your spiritual journey has been preserved!') : 'Your spiritual journey has been preserved!'
+        );
     }
     
     loadGame() {
@@ -627,7 +644,10 @@ class DivineQuest {
             this.updateStats();
             this.goToChapter(this.currentChapter, this.currentScene);
             
-            this.showAchievement('Game Loaded', 'Your spiritual journey continues!');
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Game Loaded') : 'Game Loaded',
+                window.I18N ? window.I18N.t('Your spiritual journey continues!') : 'Your spiritual journey continues!'
+            );
         }
     }
     
@@ -641,7 +661,10 @@ class DivineQuest {
         this.goToChapter(0, 0);
         
         localStorage.removeItem('divineQuestSave');
-        this.showAchievement('New Journey', 'Your spiritual quest begins anew!');
+        this.showAchievement(
+            window.I18N ? window.I18N.t('New Journey') : 'New Journey',
+            window.I18N ? window.I18N.t('Your spiritual quest begins anew!') : 'Your spiritual quest begins anew!'
+        );
     }
 }
 
@@ -651,6 +674,13 @@ let game;
 // Initialize game when page loads
 document.addEventListener('DOMContentLoaded', () => {
     game = new DivineQuest();
+    
+    // Re-render on-screen narrative when language changes
+    document.addEventListener('languageChanged', () => {
+        if (game && typeof game.loadChapter === 'function') {
+            game.loadChapter(game.currentChapter, game.currentScene);
+        }
+    });
     
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {

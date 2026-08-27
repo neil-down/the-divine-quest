@@ -72,9 +72,16 @@ class EnhancedGameplay {
     }
 
     addTouchSupport() {
-        if (!('ontouchstart' in window)) {
-            return;
+        // Detect touch-capable devices and add body class for CSS targeting
+        const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.matchMedia('(hover: none)').matches);
+        if (isTouch) {
+            document.body.classList.add('touch');
         }
+
+        // Apply touch-action to choice buttons to prevent 300ms delay / double-tap zoom
+        document.querySelectorAll('.choice-button').forEach(btn => {
+            btn.style.touchAction = 'manipulation';
+        });
 
         let touchStartX = 0;
         let touchStartY = 0;

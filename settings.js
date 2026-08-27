@@ -155,6 +155,12 @@ class Settings {
           </div>
 
           <div class="space-y-5">
+            <!-- Language -->
+            <div>
+              <label class="block text-sm font-semibold mb-2 text-gray-300" id="settings-language-label">__LANG_LABEL__</label>
+              <div id="settings-lang-buttons" class="flex flex-wrap gap-2"></div>
+            </div>
+
             <!-- Volume -->
             <div>
               <label class="block text-sm font-semibold mb-2 text-gray-300">Master Volume</label>
@@ -218,6 +224,39 @@ class Settings {
       });
     }
 
+    // Build language selector buttons
+    const langWrap = this.panel.querySelector('#settings-lang-buttons');
+    if (langWrap) {
+      const I18N = window.I18N;
+      langWrap.innerHTML = '';
+      if (I18N) {
+        const langs = Object.keys(I18N.strings);
+        langs.forEach((code) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('data-lang', code);
+          b.textContent = I18N.langNames[code] || code;
+          b.className = 'px-3 py-2 rounded border text-sm font-semibold transition-colors ' +
+            (code === I18N.lang
+              ? 'border-yellow-500 bg-yellow-500 text-black'
+              : 'border-gray-600 bg-gray-800 text-gray-100 hover:border-yellow-400');
+          b.addEventListener('click', () => {
+            I18N.setLanguage(code);
+            const all = langWrap.querySelectorAll('button[data-lang]');
+            all.forEach((x) => {
+              const on = x.getAttribute('data-lang') === code;
+              x.className = 'px-3 py-2 rounded border text-sm font-semibold transition-colors ' +
+                (on ? 'border-yellow-500 bg-yellow-500 text-black' : 'border-gray-600 bg-gray-800 text-gray-100 hover:border-yellow-400');
+            });
+            b.blur();
+          });
+          langWrap.appendChild(b);
+        });
+      } else {
+        langWrap.textContent = 'Language unavailable';
+      }
+    }
+
     const speed = this.panel.querySelector('#settings-text-speed');
     if (speed) {
       speed.addEventListener('change', () => this.setTextSpeed(speed.value));
@@ -248,6 +287,21 @@ class Settings {
     }
   }
 
+  _refreshLanguageUI() {
+    if (!this.panel) return;
+    const I18N = window.I18N;
+    const label = this.panel.querySelector('#settings-language-label');
+    if (label && I18N) label.textContent = I18N.t('language');
+    const wrap = this.panel.querySelector('#settings-lang-buttons');
+    if (!wrap || !I18N) return;
+    if (wrap.childElementCount === 0) return; // buttons built in _bindControls
+    wrap.querySelectorAll('button[data-lang]').forEach((b) => {
+      const on = b.getAttribute('data-lang') === I18N.lang;
+      b.className = 'px-3 py-2 rounded border text-sm font-semibold transition-colors ' +
+        (on ? 'border-yellow-500 bg-yellow-500 text-black' : 'border-gray-600 bg-gray-800 text-gray-100 hover:border-yellow-400');
+    });
+  }
+
   togglePanel() {
     if (!this.panel) this.injectUI();
     if (this.panel.classList.contains('hidden')) {
@@ -269,6 +323,7 @@ class Settings {
     }
     const speed = this.panel.querySelector('#settings-text-speed');
     if (speed) speed.value = this.settings.textSpeed;
+    this._refreshLanguageUI();
     const rm = this.panel.querySelector('#settings-reduced-motion');
     if (rm) {
       rm.setAttribute('aria-checked', String(this.settings.reducedMotion));

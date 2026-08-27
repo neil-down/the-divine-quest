@@ -1,19 +1,8 @@
 /**
- * i18n.js — lightweight localization scaffold for The Divine Quest.
- *
- * HOW TO RETROFIT game.js NARRATIVE TEXT:
- *   1. Wrap every user-facing string in window.I18N.t('...').
- *      Example:  const title = 'Chapter One';
- *                ↓
- *                const title = window.I18N.t('chapter1.title');
- *   2. Add the key/value pair to the appropriate language object
- *      inside I18N.strings (e.g. I18N.strings.en['chapter1.title']).
- *   3. For static HTML, add data-i18n="key" to elements. This module
- *      auto-translates any element that declares data-i18n on load and
- *      after every language change (listens for 'languageChanged').
- *   4. Keep keys namespaced by chapter/context to avoid collisions,
- *      e.g. 'settings', 'study', 'achievement', 'victory', 'select',
- *           'mute', 'volume', 'chapter1.opening', etc.
+ * i18n.js — lightweight localization for The Divine Quest.
+ * API: window.I18N.t(key), .setLanguage(lang), .cycleLanguage(),
+ *      .applyDocumentTranslations(), .langNames, .strings
+ * Listens for a 'languageChanged' CustomEvent; auto-translates [data-i18n] nodes.
  */
 
 (function () {
@@ -26,90 +15,420 @@
   const STORAGE_KEY = 'tdq_i18n_lang';
 
   const strings = {
-    en: {
-      settings: 'Settings',
-      study: 'Study',
-      achievement: 'Achievement',
-      victory: 'Victory',
-      select: 'Select',
-      mute: 'Mute',
-      volume: 'Volume',
-      language: 'Language',
-    },
-    es: {
-      settings: 'Ajustes',
-      study: 'Estudiar',
-      achievement: 'Logro',
-      victory: 'Victoria',
-      select: 'Seleccionar',
-      mute: 'Silenciar',
-      volume: 'Volumen',
-      language: 'Idioma',
-    },
+  "en": {
+    "The Crossroads of Grace": "The Crossroads of Grace",
+    "The Garden of Prayer": "The Garden of Prayer",
+    "The Library of God's Word": "The Library of God's Word",
+    "The Mission Field": "The Mission Field",
+    "The Glory of God": "The Glory of God",
+    "The Christian Life": "The Christian Life",
+    "The Well of Living Water": "The Well of Living Water",
+    "The Upper Room": "The Upper Room",
+    "You stand at the crossroads of God's grace, where His divine providence guides your path. The Holy Scriptures speak of a journey of faith—not of works, but of understanding God's sovereign grace. Before you lies a path that will test not just your beliefs, but your understanding of Christ's redemptive work. Suddenly, the ground trembles as three divine portals materialize before you, each radiating different colors of sacred light.": "You stand at the crossroads of God's grace, where His divine providence guides your path. The Holy Scriptures speak of a journey of faith—not of works, but of understanding God's sovereign grace. Before you lies a path that will test not just your beliefs, but your understanding of Christ's redemptive work. Suddenly, the ground trembles as three divine portals materialize before you, each radiating different colors of sacred light.",
+    "You find yourself in a sacred garden where every leaf whispers God's truth. The air is thick with the presence of the Holy Spirit. A wise pastor sits beneath an ancient tree, their eyes holding the depth of years spent studying God's Word and shepherding His flock.": "You find yourself in a sacred garden where every leaf whispers God's truth. The air is thick with the presence of the Holy Spirit. A wise pastor sits beneath an ancient tree, their eyes holding the depth of years spent studying God's Word and shepherding His flock.",
+    "Before you stands the sacred library, containing the complete canon of Scripture and the writings of the Reformers. The books glow with the light of divine inspiration, and you can hear the collective wisdom of God's people throughout the ages. A guardian appears, holding a key that can unlock any biblical truth you seek.": "Before you stands the sacred library, containing the complete canon of Scripture and the writings of the Reformers. The books glow with the light of divine inspiration, and you can hear the collective wisdom of God's people throughout the ages. A guardian appears, holding a key that can unlock any biblical truth you seek.",
+    "You arrive at a village where the need for the Gospel is great, yet so is the hope found in Christ. The people here face spiritual darkness, but they also possess the capacity for faith in God's grace. Their prayers rise like incense to the throne of grace.": "You arrive at a village where the need for the Gospel is great, yet so is the hope found in Christ. The people here face spiritual darkness, but they also possess the capacity for faith in God's grace. Their prayers rise like incense to the throne of grace.",
+    "You have climbed the mountain of understanding and now stand at its summit. Here, the boundaries between earth and heaven dissolve in the light of God's glory. The divine presence is not something you seek anymore—it is someone you know in Christ Jesus. All your previous choices have led to this moment of worship and adoration.": "You have climbed the mountain of understanding and now stand at its summit. Here, the boundaries between earth and heaven dissolve in the light of God's glory. The divine presence is not something you seek anymore—it is someone you know in Christ Jesus. All your previous choices have led to this moment of worship and adoration.",
+    "Your journey has transformed you through God's grace. You understand now that theology is not about having all the answers, but about living faithfully according to God's Word. Knowing Christ is not a destination to be reached, but a relationship to be nurtured daily. As you reflect on your path, you realize that every choice, every struggle, and every moment of doubt was part of God's sovereign plan to draw you closer to Himself.": "Your journey has transformed you through God's grace. You understand now that theology is not about having all the answers, but about living faithfully according to God's Word. Knowing Christ is not a destination to be reached, but a relationship to be nurtured daily. As you reflect on your path, you realize that every choice, every struggle, and every moment of doubt was part of God's sovereign plan to draw you closer to Himself.",
+    "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.": "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.",
+    "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.": "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.",
+    "The Path of Faith": "The Path of Faith",
+    "The Path of Scripture": "The Path of Scripture",
+    "The Path of Service": "The Path of Service",
+    "Join in corporate prayer": "Join in corporate prayer",
+    "Study the Scriptures together": "Study the Scriptures together",
+    "Practice biblical fellowship": "Practice biblical fellowship",
+    "Study the Old Testament": "Study the Old Testament",
+    "Read the New Testament": "Read the New Testament",
+    "Examine the Reformation writings": "Examine the Reformation writings",
+    "Preach the Gospel": "Preach the Gospel",
+    "Teach sound doctrine": "Teach sound doctrine",
+    "Demonstrate Christ's love": "Demonstrate Christ's love",
+    "Worship in spirit and truth": "Worship in spirit and truth",
+    "Serve as Christ's ambassador": "Serve as Christ's ambassador",
+    "Glorify God in all things": "Glorify God in all things",
+    "Continue in grace": "Continue in grace",
+    "Share the Gospel": "Share the Gospel",
+    "Live for God's glory": "Live for God's glory",
+    "Drink deeply of the living water": "Drink deeply of the living water",
+    "Listen to the stranger's teaching": "Listen to the stranger's teaching",
+    "Share your water with someone nearby": "Share your water with someone nearby",
+    "Pray and wait for the Spirit": "Pray and wait for the Spirit",
+    "Teach the gathered crowd": "Teach the gathered crowd",
+    "Break bread in fellowship": "Break bread in fellowship",
+    "Step through the golden portal of trusting in Christ's finished work on the cross.": "Step through the golden portal of trusting in Christ's finished work on the cross.",
+    "Enter the blue portal of studying God's Word and sound doctrine.": "Enter the blue portal of studying God's Word and sound doctrine.",
+    "Walk through the green portal of serving others in Christ's love.": "Walk through the green portal of serving others in Christ's love.",
+    "Gather with the pastor in prayer, seeking God's will through intercession.": "Gather with the pastor in prayer, seeking God's will through intercession.",
+    "Open the Bible with the pastor to understand sound doctrine and God's revelation.": "Open the Bible with the pastor to understand sound doctrine and God's revelation.",
+    "Serve alongside the pastor in ministering to others through Christ's love.": "Serve alongside the pastor in ministering to others through Christ's love.",
+    "Delve into the Law and Prophets that point forward to Christ's coming.": "Delve into the Law and Prophets that point forward to Christ's coming.",
+    "Explore the Gospels and Epistles that reveal Christ's redemptive work.": "Explore the Gospels and Epistles that reveal Christ's redemptive work.",
+    "Learn from Luther, Calvin, and other Reformers who recovered biblical truth.": "Learn from Luther, Calvin, and other Reformers who recovered biblical truth.",
+    "Share the good news of Jesus Christ and His salvation.": "Share the good news of Jesus Christ and His salvation.",
+    "Instruct the people in biblical truth and Reformed theology.": "Instruct the people in biblical truth and Reformed theology.",
+    "Serve the community through practical acts of Christian charity.": "Serve the community through practical acts of Christian charity.",
+    "Surrender completely to God, worshiping Him as revealed in Scripture.": "Surrender completely to God, worshiping Him as revealed in Scripture.",
+    "Return to the world as an ambassador for Christ, sharing the Gospel.": "Return to the world as an ambassador for Christ, sharing the Gospel.",
+    "Live your life to bring glory to God in every thought, word, and deed.": "Live your life to bring glory to God in every thought, word, and deed.",
+    "With renewed faith, continue walking in God's grace each day.": "With renewed faith, continue walking in God's grace each day.",
+    "Tell others about Christ's love and the salvation found in Him.": "Tell others about Christ's love and the salvation found in Him.",
+    "Devote your life to bringing glory to God in all things.": "Devote your life to bringing glory to God in all things.",
+    "Receive the grace of Christ that satisfies the soul forever.": "Receive the grace of Christ that satisfies the soul forever.",
+    "Sit in humility and learn from the wisdom being shared.": "Sit in humility and learn from the wisdom being shared.",
+    "Demonstrate Christ's love through practical generosity.": "Demonstrate Christ's love through practical generosity.",
+    "Join in persistent prayer, surrendering to the Spirit's timing.": "Join in persistent prayer, surrendering to the Spirit's timing.",
+    "Boldly proclaim the truth of Christ to all who are listening.": "Boldly proclaim the truth of Christ to all who are listening.",
+    "Share a meal in unity, remembering Christ's sacrifice together.": "Share a meal in unity, remembering Christ's sacrifice together.",
+    "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.": "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.",
+    "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.": "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.",
+    "Jesus Christ is the same yesterday and today and forever.": "Jesus Christ is the same yesterday and today and forever.",
+    "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.": "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.",
+    "I am the way, and the truth, and the life. No one comes to the Father except through me.": "I am the way, and the truth, and the life. No one comes to the Father except through me.",
+    "For all have sinned and fall short of the glory of God.": "For all have sinned and fall short of the glory of God.",
+    "But God shows his love for us in that while we were still sinners, Christ died for us.": "But God shows his love for us in that while we were still sinners, Christ died for us.",
+    "If we confess our sins, he is faithful and just to forgive us our sins and to cleanse us from all unrighteousness.": "If we confess our sins, he is faithful and just to forgive us our sins and to cleanse us from all unrighteousness.",
+    "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.": "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.",
+    "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.": "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.",
+    "Ephesians 2:8": "Ephesians 2:8",
+    "2 Timothy 3:16": "2 Timothy 3:16",
+    "Hebrews 13:8": "Hebrews 13:8",
+    "John 3:16": "John 3:16",
+    "John 14:6": "John 14:6",
+    "Romans 3:23": "Romans 3:23",
+    "Romans 5:8": "Romans 5:8",
+    "1 John 1:9": "1 John 1:9",
+    "Romans 6:23": "Romans 6:23",
+    "2 Corinthians 5:17": "2 Corinthians 5:17",
+    "Enlightened Master": "Enlightened Master",
+    "You have achieved perfect balance in faith, wisdom, and compassion!": "You have achieved perfect balance in faith, wisdom, and compassion!",
+    "True Believer": "True Believer",
+    "Your faith shines as a beacon for others!": "Your faith shines as a beacon for others!",
+    "Divine Scholar": "Divine Scholar",
+    "You have unlocked profound theological understanding!": "You have unlocked profound theological understanding!",
+    "Compassionate Heart": "Compassionate Heart",
+    "Your love transforms the world around you!": "Your love transforms the world around you!",
+    "Game Saved": "Game Saved",
+    "Your spiritual journey has been preserved!": "Your spiritual journey has been preserved!",
+    "Game Loaded": "Game Loaded",
+    "Your spiritual journey continues!": "Your spiritual journey continues!",
+    "New Journey": "New Journey",
+    "Your spiritual quest begins anew!": "Your spiritual quest begins anew!",
+    "settings": "Settings",
+    "study": "Study",
+    "achievement": "Achievement",
+    "victory": "Victory",
+    "select": "Select",
+    "mute": "Mute",
+    "volume": "Master Volume",
+    "language": "Language",
+    "textSpeed": "Text Speed",
+    "speed.slow": "Slow",
+    "speed.normal": "Normal",
+    "speed.fast": "Fast",
+    "reducedMotion": "Reduced Motion",
+    "muteAudio": "Mute Audio",
+    "saveSlot": "Save Slot",
+    "stat.faith": "Faith",
+    "stat.wisdom": "Wisdom",
+    "stat.compassion": "Compassion",
+    "footer.quote": "The journey of a thousand miles begins with a single step of faith.",
+    "panel.journey": "Your Spiritual Journey",
+    "panel.wisdom": "Divine Wisdom",
+    "scripture.title": "Sacred Scripture"
+  },
+  "es": {
+    "The Crossroads of Grace": "El Cruce de la Gracia",
+    "The Garden of Prayer": "El Jardín de la Oración",
+    "The Library of God's Word": "La Biblioteca de la Palabra de Dios",
+    "The Mission Field": "El Campo de Misión",
+    "The Glory of God": "La Gloria de Dios",
+    "The Christian Life": "La Vida Cristiana",
+    "The Well of Living Water": "El Pozo de Agua Viva",
+    "The Upper Room": "El Aposento Alto",
+    "You stand at the crossroads of God's grace, where His divine providence guides your path. The Holy Scriptures speak of a journey of faith—not of works, but of understanding God's sovereign grace. Before you lies a path that will test not just your beliefs, but your understanding of Christ's redemptive work. Suddenly, the ground trembles as three divine portals materialize before you, each radiating different colors of sacred light.": "Te encuentras en el cruce de la gracia de Dios, donde Su providencia divina guía tu camino. Las Sagradas Escrituras hablan de un viaje de fe—no de obras, sino de comprender la gracia soberana de Dios. Ante ti se presenta un camino que pondrá a prueba no solo tus creencias, sino tu comprensión de la obra redentora de Cristo. De repente, el suelo tiembla y tres portales divinos se materializan ante ti, cada uno irradiando distintos colores de luz sagrada.",
+    "You find yourself in a sacred garden where every leaf whispers God's truth. The air is thick with the presence of the Holy Spirit. A wise pastor sits beneath an ancient tree, their eyes holding the depth of years spent studying God's Word and shepherding His flock.": "Te encuentras en un jardín sagrado donde cada hoja susurra la verdad de Dios. El aire está cargado de la presencia del Espíritu Santo. Un pastor sabio se sienta bajo un árbol antiguo, y sus ojos guardan la profundidad de años estudiando la Palabra de Dios y pastoreando Su rebaño.",
+    "Before you stands the sacred library, containing the complete canon of Scripture and the writings of the Reformers. The books glow with the light of divine inspiration, and you can hear the collective wisdom of God's people throughout the ages. A guardian appears, holding a key that can unlock any biblical truth you seek.": "Ante ti se alza la biblioteca sagrada, que contiene el canon completo de la Escritura y los escritos de los Reformadores. Los libros brillan con la luz de la inspiración divina, y puedes oír la sabiduría colectiva del pueblo de Dios a través de los siglos. Aparece un guardián, sosteniendo una llave capaz de abrir cualquier verdad bíblica que busques.",
+    "You arrive at a village where the need for the Gospel is great, yet so is the hope found in Christ. The people here face spiritual darkness, but they also possess the capacity for faith in God's grace. Their prayers rise like incense to the throne of grace.": "Llegas a un pueblo donde la necesidad del Evangelio es grande, pero también lo es la esperanza que se encuentra en Cristo. Sus habitantes enfrentan las tinieblas espirituales, pero también poseen la capacidad de fe en la gracia de Dios. Sus oraciones se elevan como incienso ante el trono de la gracia.",
+    "You have climbed the mountain of understanding and now stand at its summit. Here, the boundaries between earth and heaven dissolve in the light of God's glory. The divine presence is not something you seek anymore—it is someone you know in Christ Jesus. All your previous choices have led to this moment of worship and adoration.": "Has subido la montaña del entendimiento y ahora te encuentras en su cumbre. Aquí, los límites entre la tierra y el cielo se disuelven en la luz de la gloria de Dios. La presencia divina ya no es algo que buscas—es alguien que conoces en Cristo Jesús. Todas tus elecciones anteriores te han llevado a este momento de adoración y alabanza.",
+    "Your journey has transformed you through God's grace. You understand now that theology is not about having all the answers, but about living faithfully according to God's Word. Knowing Christ is not a destination to be reached, but a relationship to be nurtured daily. As you reflect on your path, you realize that every choice, every struggle, and every moment of doubt was part of God's sovereign plan to draw you closer to Himself.": "Tu viaje te ha transformado por medio de la gracia de Dios. Comprendes ahora que la teología no trata de tener todas las respuestas, sino de vivir fielmente conforme a la Palabra de Dios. Conocer a Cristo no es un destino por alcanzar, sino una relación que cultivar día a día. Al reflexionar sobre tu camino, te das cuenta de que cada elección, cada lucha y cada momento de duda formó parte del plan soberano de Dios para acercarte a Él.",
+    "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.": "Llegas a un pozo a las afueras de una villa bulliciosa, el mismo pozo donde Jesús se sentó cansado de Su viaje. Una mujer llega a sacar agua, y en el silencio del momento percibes la invitación: beber del agua que sacia toda sed. El sol cae bajo, y el aire vibra con la promesa del agua viva—la gracia que fluye de Cristo a todos los que la reciben.",
+    "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.": "Entras en el aposento alto donde los primeros discípulos se reunieron tras la ascensión de Cristo. El ambiente está cargado de oración y expectativa. De repente, un sonido como de viento impetuoso llena el lugar, y el Espíritu desciende sobre todos los presentes. Lenguas de fuego reposan sobre cada cabeza, y la comunidad es transformada—ya no con temor, sino audaz en el amor. El cuerpo de Cristo cobra vida de una manera nueva.",
+    "The Path of Faith": "El Camino de la Fe",
+    "The Path of Scripture": "El Camino de la Escritura",
+    "The Path of Service": "El Camino del Servicio",
+    "Join in corporate prayer": "Únete en oración comunitaria",
+    "Study the Scriptures together": "Estudia las Escrituras juntos",
+    "Practice biblical fellowship": "Practica la comunión bíblica",
+    "Study the Old Testament": "Estudia el Antiguo Testamento",
+    "Read the New Testament": "Lee el Nuevo Testamento",
+    "Examine the Reformation writings": "Examina los escritos de la Reforma",
+    "Preach the Gospel": "Predica el Evangelio",
+    "Teach sound doctrine": "Enseña sana doctrina",
+    "Demonstrate Christ's love": "Demuestra el amor de Cristo",
+    "Worship in spirit and truth": "Adora en espíritu y en verdad",
+    "Serve as Christ's ambassador": "Sirve como embajador de Cristo",
+    "Glorify God in all things": "Glorifica a Dios en todas las cosas",
+    "Continue in grace": "Permanece en la gracia",
+    "Share the Gospel": "Comparte el Evangelio",
+    "Live for God's glory": "Vive para la gloria de Dios",
+    "Drink deeply of the living water": "Bebe profundamente del agua viva",
+    "Listen to the stranger's teaching": "Escucha la enseñanza del extranjero",
+    "Share your water with someone nearby": "Comparte tu agua con alguien cercano",
+    "Pray and wait for the Spirit": "Ora y espera al Espíritu",
+    "Teach the gathered crowd": "Enseña a la multitud reunida",
+    "Break bread in fellowship": "Parte el pan en comunión",
+    "Step through the golden portal of trusting in Christ's finished work on the cross.": "Cruza el portal dorado de confiar en la obra consumada de Cristo en la cruz.",
+    "Enter the blue portal of studying God's Word and sound doctrine.": "Entra al portal azul de estudiar la Palabra de Dios y la sana doctrina.",
+    "Walk through the green portal of serving others in Christ's love.": "Camina por el portal verde de servir a otros en el amor de Cristo.",
+    "Gather with the pastor in prayer, seeking God's will through intercession.": "Reúnete con el pastor en oración, buscando la voluntad de Dios mediante la intercesión.",
+    "Open the Bible with the pastor to understand sound doctrine and God's revelation.": "Abre la Biblia con el pastor para entender la sana doctrina y la revelación de Dios.",
+    "Serve alongside the pastor in ministering to others through Christ's love.": "Sirve junto al pastor ministrando a otros mediante el amor de Cristo.",
+    "Delve into the Law and Prophets that point forward to Christ's coming.": "Adéntrate en la Ley y los Profetas que señalan la venida de Cristo.",
+    "Explore the Gospels and Epistles that reveal Christ's redemptive work.": "Explora los Evangelios y las Epístolas que revelan la obra redentora de Cristo.",
+    "Learn from Luther, Calvin, and other Reformers who recovered biblical truth.": "Aprende de Lutero, Calvino y otros Reformadores que recuperaron la verdad bíblica.",
+    "Share the good news of Jesus Christ and His salvation.": "Comparte las buenas nuevas de Jesucristo y Su salvación.",
+    "Instruct the people in biblical truth and Reformed theology.": "Instruye al pueblo en la verdad bíblica y la teología Reformada.",
+    "Serve the community through practical acts of Christian charity.": "Sirve a la comunidad mediante actos prácticos de caridad cristiana.",
+    "Surrender completely to God, worshiping Him as revealed in Scripture.": "Entrégate completamente a Dios, adorándolo como se revela en la Escritura.",
+    "Return to the world as an ambassador for Christ, sharing the Gospel.": "Regresa al mundo como embajador de Cristo, compartiendo el Evangelio.",
+    "Live your life to bring glory to God in every thought, word, and deed.": "Vive tu vida para traer gloria a Dios en todo pensamiento, palabra y hecho.",
+    "With renewed faith, continue walking in God's grace each day.": "Con fe renovada, continúa caminando en la gracia de Dios cada día.",
+    "Tell others about Christ's love and the salvation found in Him.": "Cuenta a otros del amor de Cristo y la salvación que se halla en Él.",
+    "Devote your life to bringing glory to God in all things.": "Dedica tu vida a traer gloria a Dios en todas las cosas.",
+    "Receive the grace of Christ that satisfies the soul forever.": "Recibe la gracia de Cristo que sacia el alma para siempre.",
+    "Sit in humility and learn from the wisdom being shared.": "Siéntate con humildad y aprende de la sabiduría que se comparte.",
+    "Demonstrate Christ's love through practical generosity.": "Demuestra el amor de Cristo mediante la generosidad práctica.",
+    "Join in persistent prayer, surrendering to the Spirit's timing.": "Únete en oración persistente, entregándote al tiempo del Espíritu.",
+    "Boldly proclaim the truth of Christ to all who are listening.": "Proclama con valentía la verdad de Cristo a todos los que escuchan.",
+    "Share a meal in unity, remembering Christ's sacrifice together.": "Comparte una comida en unidad, recordando juntos el sacrificio de Cristo.",
+    "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.": "Porque por gracia sois salvos por medio de la fe; y esto no de vosotros, pues es don de Dios.",
+    "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.": "Toda la Escritura es inspirada por Dios y útil para enseñar, para redargüir, para corregir y para instruir en justicia.",
+    "Jesus Christ is the same yesterday and today and forever.": "Jesucristo es el mismo ayer, hoy y por los siglos.",
+    "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.": "Porque de tal manera amó Dios al mundo, que ha dado a su Hijo unigénito, para que todo aquel que en él cree no se pierda, sino que tenga vida eterna.",
+    "I am the way, and the truth, and the life. No one comes to the Father except through me.": "Yo soy el camino, la verdad, y la vida; nadie viene al Padre sino por mí.",
+    "For all have sinned and fall short of the glory of God.": "Por cuanto todos pecaron, y están destituidos de la gloria de Dios.",
+    "But God shows his love for us in that while we were still sinners, Christ died for us.": "Mas Dios muestra su amor para con nosotros, en que siendo aún pecadores, Cristo murió por nosotros.",
+    "If we confess our sins, he is faithful and just to forgive us our sins and to cleanse us from all unrighteousness.": "Si confesamos nuestros pecados, él es fiel y justo para perdonar nuestros pecados y limpiarnos de toda maldad.",
+    "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.": "Porque la paga del pecado es muerte, más la dádiva de Dios es vida eterna en Cristo Jesús Señor nuestro.",
+    "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.": "De modo que si alguno está en Cristo, nueva criatura es; las cosas viejas pasaron; he aquí que son hechas nuevas.",
+    "Ephesians 2:8": "Efesios 2:8",
+    "2 Timothy 3:16": "2 Timoteo 3:16",
+    "Hebrews 13:8": "Hebreos 13:8",
+    "John 3:16": "Juan 3:16",
+    "John 14:6": "Juan 14:6",
+    "Romans 3:23": "Romanos 3:23",
+    "Romans 5:8": "Romanos 5:8",
+    "1 John 1:9": "1 Juan 1:9",
+    "Romans 6:23": "Romanos 6:23",
+    "2 Corinthians 5:17": "2 Corintios 5:17",
+    "Enlightened Master": "Maestro Iluminado",
+    "You have achieved perfect balance in faith, wisdom, and compassion!": "¡Has alcanzado el equilibrio perfecto en fe, sabiduría y compasión!",
+    "True Believer": "Verdadero Creyente",
+    "Your faith shines as a beacon for others!": "¡Tu fe resplandece como una luz guía para otros!",
+    "Divine Scholar": "Erudito Divino",
+    "You have unlocked profound theological understanding!": "¡Has desbloqueado una comprensión teológica profunda!",
+    "Compassionate Heart": "Corazón Compasivo",
+    "Your love transforms the world around you!": "¡Tu amor transforma el mundo a tu alrededor!",
+    "Game Saved": "Juego Guardado",
+    "Your spiritual journey has been preserved!": "¡Tu viaje espiritual ha sido preservado!",
+    "Game Loaded": "Juego Cargado",
+    "Your spiritual journey continues!": "¡Tu viaje espiritual continúa!",
+    "New Journey": "Nuevo Viaje",
+    "Your spiritual quest begins anew!": "¡Tu búsqueda espiritual comienza de nuevo!",
+    "settings": "Ajustes",
+    "study": "Estudiar",
+    "achievement": "Logro",
+    "victory": "Victoria",
+    "select": "Seleccionar",
+    "mute": "Silenciar",
+    "volume": "Volumen",
+    "language": "Idioma",
+    "textSpeed": "Velocidad de texto",
+    "speed.slow": "Lento",
+    "speed.normal": "Normal",
+    "speed.fast": "Rápido",
+    "reducedMotion": "Movimiento reducido",
+    "muteAudio": "Silenciar audio",
+    "saveSlot": "Ranura de guardado",
+    "stat.faith": "Fe",
+    "stat.wisdom": "Sabiduría",
+    "stat.compassion": "Compasión",
+    "footer.quote": "El viaje de mil millas comienza con un solo paso de fe.",
+    "panel.journey": "Tu Viaje Espiritual",
+    "panel.wisdom": "Sabiduría Divina",
+    "scripture.title": "Escritura Sagrada"
+  },
+  "fr": {
+    "The Crossroads of Grace": "Le Carrefour de la Grâce",
+    "The Garden of Prayer": "Le Jardin de la Prière",
+    "The Library of God's Word": "La Bibliothèque de la Parole de Dieu",
+    "The Mission Field": "Le Champ de Mission",
+    "The Glory of God": "La Gloire de Dieu",
+    "The Christian Life": "La Vie Chrétienne",
+    "The Well of Living Water": "Le Puits d'Eau Vivante",
+    "The Upper Room": "La Chambre Haute",
+    "You stand at the crossroads of God's grace, where His divine providence guides your path. The Holy Scriptures speak of a journey of faith—not of works, but of understanding God's sovereign grace. Before you lies a path that will test not just your beliefs, but your understanding of Christ's redemptive work. Suddenly, the ground trembles as three divine portals materialize before you, each radiating different colors of sacred light.": "Vous vous tenez au carrefour de la grâce de Dieu, où Sa providence divine guide vos pas. Les Saintes Écritures parlent d'un chemin de foi—non pas d'œuvres, mais de la compréhension de la grâce souveraine de Dieu. Devant vous s'ouvre un chemin qui mettra à l'épreuve non seulement vos croyances, mais votre compréhension de l'œuvre rédemptrice du Christ. Soudain, le sol tremble et trois portails divins apparaissent devant vous, chacun irradient des couleurs différentes de lumière sacrée.",
+    "You find yourself in a sacred garden where every leaf whispers God's truth. The air is thick with the presence of the Holy Spirit. A wise pastor sits beneath an ancient tree, their eyes holding the depth of years spent studying God's Word and shepherding His flock.": "Vous vous trouvez dans un jardin sacré où chaque feuille chuchote la vérité de Dieu. L'air est saturé de la présence du Saint-Esprit. Un pasteur sage est assis sous un arbre ancien, et ses yeux portent la profondeur d'années passées à étudier la Parole de Dieu et à conduire Son troupeau.",
+    "Before you stands the sacred library, containing the complete canon of Scripture and the writings of the Reformers. The books glow with the light of divine inspiration, and you can hear the collective wisdom of God's people throughout the ages. A guardian appears, holding a key that can unlock any biblical truth you seek.": "Devant vous se dresse la bibliothèque sacrée, renfermant le canon complet de l'Écriture et les écrits des Réformateurs. Les livres rayonnent de la lumière de l'inspiration divine, et vous pouvez entendre la sagesse collective du peuple de Dieu à travers les âges. Un gardien apparaît, tenant une clé capable d'ouvrir toute vérité biblique que vous cherchez.",
+    "You arrive at a village where the need for the Gospel is great, yet so is the hope found in Christ. The people here face spiritual darkness, but they also possess the capacity for faith in God's grace. Their prayers rise like incense to the throne of grace.": "Vous arrivez dans un village où le besoin de l'Évangile est grand, mais où l'espérance trouvée en Christ l'est tout autant. Ses habitants font face aux ténèbres spirituelles, mais ils possèdent aussi la capacité de foi en la grâce de Dieu. Leurs prières s'élèvent comme l'encens vers le trône de la grâce.",
+    "You have climbed the mountain of understanding and now stand at its summit. Here, the boundaries between earth and heaven dissolve in the light of God's glory. The divine presence is not something you seek anymore—it is someone you know in Christ Jesus. All your previous choices have led to this moment of worship and adoration.": "Vous avez gravi la montagne de la compréhension et vous voici maintenant à son sommet. Ici, les frontières entre la terre et le ciel se dissolvent dans la lumière de la gloire de Dieu. La présence divine n'est plus quelque chose que vous cherchez—c'est quelqu'un que vous connaissez en Jésus-Christ. Tous vos choix précédents ont mené à cet instant d'adoration et de louange.",
+    "Your journey has transformed you through God's grace. You understand now that theology is not about having all the answers, but about living faithfully according to God's Word. Knowing Christ is not a destination to be reached, but a relationship to be nurtured daily. As you reflect on your path, you realize that every choice, every struggle, and every moment of doubt was part of God's sovereign plan to draw you closer to Himself.": "Votre voyage vous a transformé par la grâce de Dieu. Vous comprenez à présent que la théologie ne consiste pas à avoir toutes les réponses, mais à vivre fidèlement selon la Parole de Dieu. Connaître Christ n'est pas une destination à atteindre, mais une relation à cultiver chaque jour. En réfléchissant à votre chemin, vous réalisez que chaque choix, chaque lutte et chaque moment de doute faisait partie du plan souverain de Dieu pour vous rapprocher de Lui.",
+    "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.": "Vous arrivez à un puits à la sortie d'une ville animée, le même puits où Jésus s'assit, fatigué de Son voyage. Une femme vient puiser de l'eau, et dans le silence de l'instant vous percevez l'invitation : boire de l'eau qui étanche toute soif. Le soleil est bas, et l'air vibre de la promesse de l'eau vive—la grâce qui coule du Christ à tous ceux qui la reçoivent.",
+    "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.": "Vous entrez dans la chambre haute où les premiers disciples se réunirent après l'ascension du Christ. L'atmosphère est saturée de prière et d'attente. Soudain, un bruit semblable à un vent impétueux remplit le lieu, et l'Esprit descend sur tous les présents. Des langues de feu se posent sur chaque tête, et la communauté est transformée—sans plus de crainte, mais audacieuse dans l'amour. Le corps du Christ prend vie d'une manière nouvelle.",
+    "The Path of Faith": "Le Chemin de la Foi",
+    "The Path of Scripture": "Le Chemin de l'Écriture",
+    "The Path of Service": "Le Chemin du Service",
+    "Join in corporate prayer": "Rejoins la prière communautaire",
+    "Study the Scriptures together": "Étudie les Écritures ensemble",
+    "Practice biblical fellowship": "Pratique la communion biblique",
+    "Study the Old Testament": "Étudie l'Ancien Testament",
+    "Read the New Testament": "Lis le Nouveau Testament",
+    "Examine the Reformation writings": "Examine les écrits de la Réforme",
+    "Preach the Gospel": "Prêche l'Évangile",
+    "Teach sound doctrine": "Enseigne la saine doctrine",
+    "Demonstrate Christ's love": "Démontre l'amour du Christ",
+    "Worship in spirit and truth": "Adore en esprit et en vérité",
+    "Serve as Christ's ambassador": "Sers l'ambassadeur du Christ",
+    "Glorify God in all things": "Glorifie Dieu en toutes choses",
+    "Continue in grace": "Persévère dans la grâce",
+    "Share the Gospel": "Partage l'Évangile",
+    "Live for God's glory": "Vive pour la gloire de Dieu",
+    "Drink deeply of the living water": "Bois à pleine gorge de l'eau vive",
+    "Listen to the stranger's teaching": "Écoute l'enseignement de l'étranger",
+    "Share your water with someone nearby": "Partage ton eau avec quelqu'un près de toi",
+    "Pray and wait for the Spirit": "Prie et attends l'Esprit",
+    "Teach the gathered crowd": "Enseigne à la foule rassemblée",
+    "Break bread in fellowship": "Partage le pain dans la communion",
+    "Step through the golden portal of trusting in Christ's finished work on the cross.": "Passe le portail doré en te confiant à l'œuvre accomplie du Christ sur la croix.",
+    "Enter the blue portal of studying God's Word and sound doctrine.": "Entre dans le portail bleu pour étudier la Parole de Dieu et la saine doctrine.",
+    "Walk through the green portal of serving others in Christ's love.": "Emprunte le portail vert pour servir les autres dans l'amour du Christ.",
+    "Gather with the pastor in prayer, seeking God's will through intercession.": "Réunis-toi avec le pasteur dans la prière, cherchant la volonté de Dieu par l'intercession.",
+    "Open the Bible with the pastor to understand sound doctrine and God's revelation.": "Ouvre la Bible avec le pasteur pour comprendre la saine doctrine et la révélation de Dieu.",
+    "Serve alongside the pastor in ministering to others through Christ's love.": "Sers aux côtés du pasteur en ministrant aux autres par l'amour du Christ.",
+    "Delve into the Law and Prophets that point forward to Christ's coming.": "Plonge dans la Loi et les Prophètes qui annoncent la venue du Christ.",
+    "Explore the Gospels and Epistles that reveal Christ's redemptive work.": "Explore les Évangiles et les Épîtres qui révèlent l'œuvre rédemptrice du Christ.",
+    "Learn from Luther, Calvin, and other Reformers who recovered biblical truth.": "Apprends de Luther, Calvin et d'autres Réformateurs qui ont retrouvé la vérité biblique.",
+    "Share the good news of Jesus Christ and His salvation.": "Partage la bonne nouvelle de Jésus-Christ et de Son salut.",
+    "Instruct the people in biblical truth and Reformed theology.": "Enseigne au peuple la vérité biblique et la théologie réformée.",
+    "Serve the community through practical acts of Christian charity.": "Sers la communauté par des actes concrets de charité chrétienne.",
+    "Surrender completely to God, worshiping Him as revealed in Scripture.": "Abandonne-toi entièrement à Dieu, l'adorant tel qu'Il est révélé dans l'Écriture.",
+    "Return to the world as an ambassador for Christ, sharing the Gospel.": "Retourne dans le monde comme ambassadeur du Christ, partageant l'Évangile.",
+    "Live your life to bring glory to God in every thought, word, and deed.": "Vis ta vie pour apporter gloire à Dieu en toute pensée, parole et action.",
+    "With renewed faith, continue walking in God's grace each day.": "Avec une foi renouvelée, continue de marcher dans la grâce de Dieu chaque jour.",
+    "Tell others about Christ's love and the salvation found in Him.": "Raconte aux autres l'amour du Christ et le salut qu'on trouve en Lui.",
+    "Devote your life to bringing glory to God in all things.": "Consacre ta vie à apporter gloire à Dieu en toutes choses.",
+    "Receive the grace of Christ that satisfies the soul forever.": "Reçois la grâce du Christ qui satisfait l'âme pour toujours.",
+    "Sit in humility and learn from the wisdom being shared.": "Assieds-toi dans l'humilité et apprends de la sagesse partagée.",
+    "Demonstrate Christ's love through practical generosity.": "Démontre l'amour du Christ par la générosité concrète.",
+    "Join in persistent prayer, surrendering to the Spirit's timing.": "Rejoins la prière persévérante, t'abandonnant au temps de l'Esprit.",
+    "Boldly proclaim the truth of Christ to all who are listening.": "Proclame avec assurance la vérité du Christ à tous ceux qui écoutent.",
+    "Share a meal in unity, remembering Christ's sacrifice together.": "Partage un repas dans l'unité, nous souvenant ensemble du sacrifice du Christ.",
+    "For by grace you have been saved through faith. And this is not your own doing; it is the gift of God.": "Car c'est par la grâce que vous êtes sauvés, par le moyen de la foi; et cela ne vient pas de vous, c'est le don de Dieu.",
+    "All Scripture is breathed out by God and profitable for teaching, for reproof, for correction, and for training in righteousness.": "Toute l'Écriture est inspirée par Dieu et utile pour enseigner, pour convaincre, pour corriger et pour former à la justice.",
+    "Jesus Christ is the same yesterday and today and forever.": "Jésus-Christ est le même hier, aujourd'hui et éternellement.",
+    "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.": "Car Dieu a tant aimé le monde qu'il a donné son Fils unique, afin que quiconque croit en lui ne périsse pas, mais qu'il ait la vie éternelle.",
+    "I am the way, and the truth, and the life. No one comes to the Father except through me.": "Je suis le chemin, la vérité et la vie. Nul ne vient au Père que par moi.",
+    "For all have sinned and fall short of the glory of God.": "Car tous ont péché et sont privés de la gloire de Dieu.",
+    "But God shows his love for us in that while we were still sinners, Christ died for us.": "Mais Dieu prouve son amour envers nous en ce que, alors que nous étions encore pécheurs, Christ est mort pour nous.",
+    "If we confess our sins, he is faithful and just to forgive us our sins and to cleanse us from all unrighteousness.": "Si nous confessons nos péchés, il est fidèle et juste pour nous pardonner nos péchés et nous purifier de toute injustice.",
+    "For the wages of sin is death, but the free gift of God is eternal life in Christ Jesus our Lord.": "Car le salaire du péché est la mort, mais le don gratuit de Dieu est la vie éternelle en Jésus-Christ notre Seigneur.",
+    "Therefore, if anyone is in Christ, he is a new creation. The old has passed away; behold, the new has come.": "Si donc quelqu'un est en Christ, il est une nouvelle créature. Les choses anciennes ont passé; voici, toutes choses sont devenues nouvelles.",
+    "Ephesians 2:8": "Éphésiens 2:8",
+    "2 Timothy 3:16": "2 Timothée 3:16",
+    "Hebrews 13:8": "Hébreux 13:8",
+    "John 3:16": "Jean 3:16",
+    "John 14:6": "Jean 14:6",
+    "Romans 3:23": "Romains 3:23",
+    "Romans 5:8": "Romains 5:8",
+    "1 John 1:9": "1 Jean 1:9",
+    "Romans 6:23": "Romains 6:23",
+    "2 Corinthians 5:17": "2 Corinthiens 5:17",
+    "Enlightened Master": "Maître Éclairé",
+    "You have achieved perfect balance in faith, wisdom, and compassion!": "Vous avez atteint le parfait équilibre en foi, sagesse et compassion !",
+    "True Believer": "Véritable Croyant",
+    "Your faith shines as a beacon for others!": "Ta foi brille comme un phare pour les autres !",
+    "Divine Scholar": "Savant Divin",
+    "You have unlocked profound theological understanding!": "Vous avez débloqué une compréhension théologique profonde !",
+    "Compassionate Heart": "Cœur Compatissant",
+    "Your love transforms the world around you!": "Ton amour transforme le monde qui t'entoure !",
+    "Game Saved": "Partie Enregistrée",
+    "Your spiritual journey has been preserved!": "Votre voyage spirituel a été préservé !",
+    "Game Loaded": "Partie Chargée",
+    "Your spiritual journey continues!": "Votre voyage spirituel continue !",
+    "New Journey": "Nouveau Voyage",
+    "Your spiritual quest begins anew!": "Votre quête spirituelle recommence !",
+    "settings": "Paramètres",
+    "study": "Étudier",
+    "achievement": "Réalisation",
+    "victory": "Victoire",
+    "select": "Sélectionner",
+    "mute": "Muet",
+    "volume": "Volume",
+    "language": "Langue",
+    "textSpeed": "Vitesse du texte",
+    "speed.slow": "Lent",
+    "speed.normal": "Normal",
+    "speed.fast": "Rapide",
+    "reducedMotion": "Mouvement réduit",
+    "muteAudio": "Couper l'audio",
+    "saveSlot": "Emplacement",
+    "stat.faith": "Foi",
+    "stat.wisdom": "Sagesse",
+    "stat.compassion": "Compassion",
+    "footer.quote": "Le voyage de mille lieues commence par un seul pas de foi.",
+    "panel.journey": "Votre Voyage Spirituel",
+    "panel.wisdom": "Sagesse Divine",
+    "scripture.title": "Sainte Écriture"
+  }
+};
+
+  const langNames = {
+    en: 'English',
+    es: 'Español',
+    fr: 'Français'
   };
 
   function getStoredLang() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored && strings[stored]) {
-        return stored;
-      }
-    } catch (_e) {
-      // localStorage may be unavailable in some contexts
-    }
+      if (stored && strings[stored]) return stored;
+    } catch (_e) {}
     return 'en';
   }
 
   function setStoredLang(lang) {
-    try {
-      localStorage.setItem(STORAGE_KEY, lang);
-    } catch (_e) {
-      // ignore write failures
-    }
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch (_e) {}
   }
 
   const I18N = {
     __initialized: true,
     strings: strings,
+    langNames: langNames,
     lang: getStoredLang(),
 
     t: function t(key) {
-      if (!key || typeof key !== 'string') {
-        return '';
-      }
+      if (!key || typeof key !== 'string') return '';
       const byLang = strings[I18N.lang];
-      if (byLang && Object.prototype.hasOwnProperty.call(byLang, key)) {
-        return byLang[key];
-      }
+      if (byLang && Object.prototype.hasOwnProperty.call(byLang, key)) return byLang[key];
       const byEn = strings.en;
-      if (byEn && Object.prototype.hasOwnProperty.call(byEn, key)) {
-        return byEn[key];
-      }
+      if (byEn && Object.prototype.hasOwnProperty.call(byEn, key)) return byEn[key];
       return key;
     },
 
     setLanguage: function setLanguage(lang) {
-      if (lang === I18N.lang) {
-        return;
-      }
-      if (!strings[lang]) {
-        return;
-      }
+      if (lang === I18N.lang) return;
+      if (!strings[lang]) return;
       I18N.lang = lang;
       setStoredLang(lang);
-      document.dispatchEvent(new CustomEvent('languageChanged', {
-        detail: { lang: lang },
-        bubbles: true,
-        composed: true,
-      }));
+      document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: lang }, bubbles: true, composed: true }));
       I18N.applyDocumentTranslations();
     },
 
     cycleLanguage: function cycleLanguage() {
       const langs = Object.keys(strings);
       const idx = langs.indexOf(I18N.lang);
-      const next = langs[(idx + 1) % langs.length];
-      I18N.setLanguage(next);
+      I18N.setLanguage(langs[(idx + 1) % langs.length]);
     },
 
     applyDocumentTranslations: function applyDocumentTranslations() {
@@ -119,30 +438,34 @@
         const key = el.getAttribute('data-i18n');
         if (key) {
           const text = I18N.t(key);
-          if (text !== key) {
-            el.textContent = text;
-          }
+          if (text !== key) el.textContent = text;
         }
       }
-    },
+      const evt = document.getElementById('settings-lang-buttons');
+      if (evt) {
+        const btns = evt.querySelectorAll('button[data-lang]');
+        for (let i = 0; i < btns.length; i++) {
+          const b = btns[i];
+          if (b.getAttribute('data-lang') === I18N.lang) b.classList.add('lang-active');
+          else b.classList.remove('lang-active');
+        }
+      }
+    }
   };
 
   window.I18N = I18N;
 
-  // Self-inject language switcher
   function injectSwitcher() {
-    if (document.getElementById('tdq-i18n-switcher')) {
-      return;
-    }
+    if (document.getElementById('tdq-i18n-switcher')) return;
     const btn = document.createElement('button');
     btn.id = 'tdq-i18n-switcher';
     btn.type = 'button';
-    btn.title = I18N.t('language');
     btn.textContent = '🌐';
+    btn.title = I18N.t('language');
     btn.setAttribute('aria-label', I18N.t('language'));
     btn.style.position = 'fixed';
     btn.style.bottom = '12px';
-    btn.style.right = '12px';
+    btn.style.left = '12px';
     btn.style.zIndex = '9999';
     btn.style.background = 'rgba(0,0,0,0.6)';
     btn.style.color = '#fff';
@@ -153,24 +476,16 @@
     btn.style.fontSize = '18px';
     btn.style.lineHeight = '1';
     btn.style.backdropFilter = 'blur(4px)';
-
-    btn.addEventListener('click', function () {
-      I18N.cycleLanguage();
-    });
-
+    btn.addEventListener('click', function () { I18N.cycleLanguage(); });
     document.addEventListener('languageChanged', function () {
       btn.title = I18N.t('language');
       btn.setAttribute('aria-label', I18N.t('language'));
     });
-
     document.body.appendChild(btn);
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      injectSwitcher();
-      I18N.applyDocumentTranslations();
-    });
+    document.addEventListener('DOMContentLoaded', function () { injectSwitcher(); I18N.applyDocumentTranslations(); });
   } else {
     injectSwitcher();
     I18N.applyDocumentTranslations();

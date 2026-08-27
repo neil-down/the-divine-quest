@@ -11,6 +11,10 @@ class SpiritualBattle {
         this.battleTurn = 0;
         this.triggeredEnrages = new Set();
         this.behaviorFlags = {};
+        this.playerDefenseDebuff = 0;
+        this.intercessionActive = false;
+        this.intercessionTurns = 0;
+        this.intercessionHeal = 0;
         this.skills = this.initSkills();
         this.enemies = this.initEnemies();
     }
@@ -66,6 +70,26 @@ class SpiritualBattle {
                 description: "Invoke divine protection and heal wounds",
                 cooldown: 2,
                 heal: 25
+            },
+            intercession: {
+                name: "Divine Intercession",
+                damage: 0,
+                mpCost: 10,
+                type: "faith",
+                description: "Invoke continuous healing for 3 turns",
+                cooldown: 3,
+                heal: 0,
+                hot: 8,
+                hotTurns: 3
+            },
+            sword: {
+                name: "Sword of the Spirit",
+                damage: 30,
+                mpCost: 14,
+                type: "ultimate",
+                description: "The piercing word that shatters all defenses",
+                cooldown: 2,
+                pierce: true
             }
         };
     }
@@ -112,6 +136,7 @@ class SpiritualBattle {
                 description: "The ultimate enemy of hope and faith",
                 weakness: "ultimate",
                 isBoss: true,
+                phase2: false,
                 reward: { faith: 25, wisdom: 25, compassion: 25 }
             },
             {
@@ -179,6 +204,39 @@ class SpiritualBattle {
                 description: "Twists truth to drain the spirit",
                 weakness: "ultimate",
                 reward: { faith: 5, wisdom: 10, compassion: 15 }
+            },
+            {
+                name: "The Deceiver",
+                hp: 130,
+                maxHp: 130,
+                damage: 16,
+                type: "deceiver",
+                description: "Masters of illusion and evasion",
+                weakness: "wisdom",
+                evasion: 0.25,
+                reward: { faith: 8, wisdom: 12, compassion: 5 }
+            },
+            {
+                name: "The Accuser",
+                hp: 150,
+                maxHp: 150,
+                damage: 18,
+                type: "accuser",
+                description: "Whispers condemnations that weaken the spirit",
+                weakness: "compassion",
+                behavior: "debuff",
+                reward: { faith: 5, wisdom: 8, compassion: 15 }
+            },
+            {
+                name: "The Sorrower",
+                hp: 120,
+                maxHp: 120,
+                damage: 14,
+                type: "sorrow",
+                description: "Feeds on compassion, leaving only grief",
+                weakness: "faith",
+                behavior: "drain",
+                reward: { faith: 15, wisdom: 5, compassion: 10 }
             }
         ];
     }
@@ -191,10 +249,14 @@ class SpiritualBattle {
         this.combo = 0;
         this.triggeredEnrages = new Set();
         this.behaviorFlags = {};
+        this.playerDefenseDebuff = 0;
+        this.intercessionActive = false;
+        this.intercessionTurns = 0;
+        this.intercessionHeal = 0;
         
         // Select enemy
         if (enemyType === 'random') {
-            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(10, Math.floor(this.game.currentChapter) + 1))]};
+            this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(13, Math.floor(this.game.currentChapter) + 1))]};
         } else {
             this.currentEnemy = {...this.enemies.find(e => e.type === enemyType)};
         }
@@ -278,6 +340,14 @@ class SpiritualBattle {
                         <div class="font-bold">🛡️ Sanctuary</div>
                         <div class="text-xs">25 Heal | 12 MP</div>
                     </button>
+                    <button onclick="window.battle.useSkill('intercession')" class="bg-pink-600 hover:bg-pink-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
+                        <div class="font-bold">🕊️ Intercession</div>
+                        <div class="text-xs">8 HP/turn x3 | 10 MP</div>
+                    </button>
+                    <button onclick="window.battle.useSkill('sword')" class="bg-orange-600 hover:bg-orange-700 text-white p-3 rounded-lg transition-all transform hover:scale-105">
+                        <div class="font-bold">⚔️ Sword of Spirit</div>
+                        <div class="text-xs">30 DMG | 14 MP</div>
+                    </button>
                 </div>
                 
                 <!-- Battle Log -->
@@ -316,14 +386,14 @@ class SpiritualBattle {
         
         // Check MP
         if (this.playerMP < skill.mpCost) {
-            log.innerHTML += `<div class="text-red-400">Not enough MP! Need ${skill.mpCost} MP</div>`;
+            log.innerHTML += `<div class="text-red-400">${window.I18N.t("Not enough MP! Need")} ${skill.mpCost} MP</div>`;
             log.scrollTop = log.scrollHeight;
             return;
         }
         
         // Check cooldown
         if (skill.cooldown > 0) {
-            log.innerHTML += `<div class="text-red-400">Skill on cooldown for ${skill.cooldown} turns!</div>`;
+            log.innerHTML += `<div class="text-red-400">${window.I18N.t("Skill on cooldown for")} ${skill.cooldown} ${window.I18N.t("turns!")}</div>`;
             log.scrollTop = log.scrollHeight;
             return;
         }
@@ -332,30 +402,49 @@ class SpiritualBattle {
         this.playerMP -= skill.mpCost;
         this.updatePlayerStats();
         
+        // Intercession: heal over time
+        if (skillName === 'intercession') {
+            this.intercessionActive = true;
+            this.intercessionTurns = skill.hotTurns;
+            this.intercessionHeal = skill.hot;
+            log.innerHTML += `<div class="text-pink-400 font-bold">${window.I18N.t("Divine Intercession begins! Healing")} ${skill.hot} ${window.I18N.t("HP per turn for")} ${skill.hotTurns} ${window.I18N.t("turns.")}</div>`;
+            log.scrollTop = log.scrollHeight;
+            setTimeout(() => this.enemyTurn(), 1000);
+            return;
+        }
+        
         // Calculate damage
         let damage = skill.damage;
         
-        // Apply enemy defense
+        // Apply enemy defense (unless piercing)
         const enemyDefense = this.currentEnemy.defense || 0;
-        damage = Math.max(1, damage - Math.floor(enemyDefense / 2));
+        if (!skill.pierce) {
+            damage = Math.max(1, damage - Math.floor(enemyDefense / 2));
+        }
         
         // Weakness bonus
         if (skill.type === this.currentEnemy.weakness) {
             damage *= 2;
-            log.innerHTML += `<div class="text-green-400">💥 SUPER EFFECTIVE! Weakness exploited!</div>`;
+            log.innerHTML += `<div class="text-green-400">${window.I18N.t("💥 SUPER EFFECTIVE! Weakness exploited!")}</div>`;
         }
         
         // Combo bonus
         if (this.combo > 0) {
             damage = Math.floor(damage * (1 + (this.combo * 0.1)));
-            log.innerHTML += `<div class="text-yellow-400">⚡ Combo x${this.combo + 1} bonus!</div>`;
+            log.innerHTML += `<div class="text-yellow-400">${window.I18N.t("⚡ Combo x")}${this.combo + 1}${window.I18N.t(" bonus!")}</div>`;
+        }
+        
+        // Deceiver evasion
+        if (this.currentEnemy.type === 'deceiver' && Math.random() < (this.currentEnemy.evasion || 0)) {
+            damage = 0;
+            log.innerHTML += `<div class="text-purple-400 font-bold">${window.I18N.t("💨 The Deceiver vanishes in a cloud of illusion! Your attack misses!")}</div>`;
         }
         
         // Apply damage
         this.currentEnemy.hp -= damage;
         this.combo++;
         
-        log.innerHTML += `<div class="text-blue-400">You used ${skill.name} for ${damage} damage!</div>`;
+        log.innerHTML += `<div class="text-blue-400">${window.I18N.t("You used")} ${skill.name} ${window.I18N.t("for")} ${damage} ${window.I18N.t("damage!")}</div>`;
         
         // Visual effect hook
         if (skillName === 'smite' && window.visualEffects && window.visualEffects.triggerAttackEffect) {
@@ -365,7 +454,7 @@ class SpiritualBattle {
         // Heal effect
         if (skill.heal) {
             this.playerHP = Math.min(100, this.playerHP + skill.heal);
-            log.innerHTML += `<div class="text-green-400">You healed ${skill.heal} HP!</div>`;
+            log.innerHTML += `<div class="text-green-400">${window.I18N.t("You healed")} ${skill.heal} HP!</div>`;
         }
         
         this.updateEnemyStats();
@@ -384,26 +473,75 @@ class SpiritualBattle {
     enemyTurn() {
         const log = document.getElementById('battle-log');
         
+        // Process Intercession heal over time
+        if (this.intercessionActive) {
+            this.playerHP = Math.min(100, this.playerHP + this.intercessionHeal);
+            this.intercessionTurns--;
+            log.innerHTML += `<div class="text-pink-400">${window.I18N.t("🕊️ Divine Intercession heals you for")} ${this.intercessionHeal} HP! (${this.intercessionTurns} ${window.I18N.t("turns remaining")})</div>`;
+            if (this.intercessionTurns <= 0) {
+                this.intercessionActive = false;
+                log.innerHTML += `<div class="text-gray-400">${window.I18N.t("Divine Intercession fades.")}</div>`;
+            }
+            this.updatePlayerStats();
+            log.scrollTop = log.scrollHeight;
+        }
+        
         // Enemy attack
         let damage = this.currentEnemy.damage;
+        
+        // Player defense debuff
+        if (this.playerDefenseDebuff > 0) {
+            damage += this.playerDefenseDebuff;
+            this.playerDefenseDebuff--;
+            log.innerHTML += `<div class="text-orange-400">${window.I18N.t("Your guard is weakened! +")}${this.playerDefenseDebuff > 0 ? this.playerDefenseDebuff + 1 : 1} ${window.I18N.t("damage taken this turn.")}</div>`;
+        }
+        
+        // Archdemon of Despair Phase 2 special attacks
+        if (this.currentEnemy && this.currentEnemy.type === 'despair' && this.currentEnemy.phase2) {
+            const roll = Math.random();
+            if (roll < 0.35) {
+                // Abyssal Roar - heavy damage
+                damage = Math.floor(damage * 1.5);
+                log.innerHTML += `<div class="text-red-500 text-xl font-bold">${window.I18N.t("🌑 ABYSSAL ROAR! The Archdemon unleashes devastating dark energy for")} ${damage} ${window.I18N.t("damage!")}</div>`;
+            } else if (roll < 0.65) {
+                // Despair Wave - MP drain
+                const mpDrain = 10;
+                this.playerMP = Math.max(0, this.playerMP - mpDrain);
+                log.innerHTML += `<div class="text-purple-400 font-bold">${window.I18N.t("🌊 DESPAIR WAVE! Your spiritual energy is drained! -")}${mpDrain} MP</div>`;
+            } else {
+                log.innerHTML += `<div class="text-red-400">${window.I18N.t("The Archdemon strikes with corrupted fury for")} ${damage} ${window.I18N.t("damage!")}</div>`;
+            }
+        } else {
+            // Normal enemy attack
+            log.innerHTML += `<div class="text-red-400">${this.currentEnemy.name} ${window.I18N.t("attacks for")} ${damage} ${window.I18N.t("damage!")}</div>`;
+        }
         
         // False Prophet debuff
         if (this.currentEnemy.type === 'false-prophet' && Math.random() < 0.3) {
             this.playerMP = Math.max(0, this.playerMP - 5);
-            if (log) {
-                log.innerHTML += `<div class="text-purple-400">The False Prophet saps your spiritual energy! -5 MP</div>`;
-                log.scrollTop = log.scrollHeight;
-            }
+            log.innerHTML += `<div class="text-purple-400">${window.I18N.t("The False Prophet saps your spiritual energy! -5 MP")}</div>`;
+        }
+        
+        // Accuser defense debuff
+        if (this.currentEnemy.type === 'accuser' && Math.random() < 0.3) {
+            this.playerDefenseDebuff += 5;
+            log.innerHTML += `<div class="text-orange-400 font-bold">${window.I18N.t("⚖️ The Accuser's words weigh heavy on your conscience! Defense reduced! (+5 incoming damage)")}</div>`;
+        }
+        
+        // Sorrower compassion drain
+        if (this.currentEnemy.type === 'sorrow' && Math.random() < 0.25) {
+            const drain = 5;
+            this.game.playerStats.compassion = Math.max(0, this.game.playerStats.compassion - drain);
+            this.game.updateStats();
+            log.innerHTML += `<div class="text-gray-400 font-bold">${window.I18N.t("💔 The Sorrower feeds on your compassion! -")}${drain} ${window.I18N.t("Compassion")}</div>`;
         }
         
         this.playerHP -= damage;
         
-        log.innerHTML += `<div class="text-red-400">${this.currentEnemy.name} attacks for ${damage} damage!</div>`;
-        
         // Reset combo
         if (damage > 0) {
             this.combo = 0;
-            log.innerHTML += `<div class="text-gray-400">Combo broken!</div>`;
+            log.innerHTML += `<div class="text-gray-400">${window.I18N.t("Combo broken!")}</div>`;
         }
         
         this.updatePlayerStats();
@@ -417,7 +555,7 @@ class SpiritualBattle {
         
         // Next turn
         this.battleTurn++;
-        document.querySelector('#battle-overlay .text-yellow-400').innerHTML = `Turn ${this.battleTurn + 1} | Combo: <span id="combo">${this.combo}</span>x`;
+        document.querySelector('#battle-overlay .text-yellow-400').innerHTML = `${window.I18N.t("Turn")} ${this.battleTurn + 1} | ${window.I18N.t("Combo:")} <span id="combo">${this.combo}</span>x`;
         
         // Regenerate MP
         this.playerMP = Math.min(50, this.playerMP + 2);
@@ -436,25 +574,28 @@ class SpiritualBattle {
             this.behaviorFlags.legionSummon = true;
             this.currentEnemy.damage += 10;
             if (log) {
-                log.innerHTML += `<div class="text-red-400 font-bold">👥 Legion calls forth shadow minions! Attack surges!</div>`;
+                log.innerHTML += `<div class="text-red-400 font-bold">👥 ${window.I18N.t("Legion calls forth shadow minions! Attack surges!")}</div>`;
                 log.scrollTop = log.scrollHeight;
             }
         }
         
         // Boss enrage phases
         if (this.currentEnemy && this.currentEnemy.isBoss) {
-            if (hpPercent <= 0.3 && !this.triggeredEnrages.has(3)) {
-                this.triggeredEnrages.add(3);
-                this.currentEnemy.damage = Math.floor(this.currentEnemy.damage * 1.5);
+            if (hpPercent < 0.4 && !this.triggeredEnrages.has(4)) {
+                this.triggeredEnrages.add(4);
+                this.currentEnemy.phase2 = true;
+                this.currentEnemy.damage = Math.floor(this.currentEnemy.damage * 1.4);
+                this.currentEnemy.maxHp = Math.floor(this.currentEnemy.maxHp * 1.2);
+                this.currentEnemy.hp = Math.min(this.currentEnemy.hp + 30, this.currentEnemy.maxHp);
                 if (log) {
-                    log.innerHTML += `<div class="text-red-500 text-xl font-bold animate-pulse border-2 border-red-500 p-2 my-2 text-center">⚡ EN RAGE! The Archdemon of Despair enters its Abyssal Fury phase! ⚡</div>`;
+                    log.innerHTML += `<div class="text-red-500 text-xl font-bold animate-pulse border-2 border-red-500 p-2 my-2 text-center">⚡ ${window.I18N.t("EN RAGE! The Archdemon of Despair transforms into its Abyssal Avatar! Phase 2 begins! ⚡")}</div>`;
                     log.scrollTop = log.scrollHeight;
                 }
             } else if (hpPercent <= 0.6 && !this.triggeredEnrages.has(6)) {
                 this.triggeredEnrages.add(6);
                 this.currentEnemy.damage = Math.floor(this.currentEnemy.damage * 1.3);
                 if (log) {
-                    log.innerHTML += `<div class="text-orange-500 text-lg font-bold animate-pulse border-2 border-orange-500 p-2 my-2 text-center">⚠️ EN RAGE! Fading Light phase begins! ⚠️</div>`;
+                    log.innerHTML += `<div class="text-orange-500 text-lg font-bold animate-pulse border-2 border-orange-500 p-2 my-2 text-center">⚠️ ${window.I18N.t("EN RAGE! Fading Light phase begins! ⚠️")}</div>`;
                     log.scrollTop = log.scrollHeight;
                 }
             }
@@ -470,7 +611,7 @@ class SpiritualBattle {
     
     victory() {
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-green-400 text-xl font-bold animate-pulse">🎉 VICTORY! ${this.currentEnemy.name} defeated!</div>`;
+        log.innerHTML += `<div class="text-green-400 text-xl font-bold animate-pulse">🎉 ${window.I18N.t("VICTORY!")} ${this.currentEnemy.name} ${window.I18N.t("defeated!")}</div>`;
         
         // Trigger visual effects
         if (window.visualEffects) {
@@ -484,10 +625,10 @@ class SpiritualBattle {
         this.game.playerStats.compassion += reward.compassion;
         this.game.updateStats();
         
-        log.innerHTML += `<div class="text-yellow-400">Rewards: +${reward.faith} Faith, +${reward.wisdom} Wisdom, +${reward.compassion} Compassion!</div>`;
+        log.innerHTML += `<div class="text-yellow-400">${window.I18N.t("Rewards:")} +${reward.faith} ${window.I18N.t("Faith,")} +${reward.wisdom} ${window.I18N.t("Wisdom,")} +${reward.compassion} ${window.I18N.t("Compassion!")}</div>`;
         
         // Show achievement
-        this.game.showAchievement('Spiritual Warrior', `Defeated ${this.currentEnemy.name}!`);
+        this.game.showAchievement('Spiritual Warrior', `${window.I18N.t("Defeated")} ${this.currentEnemy.name}!`);
         
         // Trigger progression event
         document.dispatchEvent(new CustomEvent('battleVictory'));
@@ -499,7 +640,7 @@ class SpiritualBattle {
     
     defeat() {
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-red-400 text-xl font-bold animate-pulse">💀 DEFEAT! You have been overwhelmed...</div>`;
+        log.innerHTML += `<div class="text-red-400 text-xl font-bold animate-pulse">💀 ${window.I18N.t("DEFEAT! You have been overwhelmed...")}</div>`;
         
         // Penalty
         this.game.playerStats.faith = Math.max(0, this.game.playerStats.faith - 10);
@@ -514,7 +655,7 @@ class SpiritualBattle {
     
     flee() {
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-gray-400">You fled from battle...</div>`;
+        log.innerHTML += `<div class="text-gray-400">${window.I18N.t("You fled from battle...")}</div>`;
         
         // Small penalty
         this.game.playerStats.faith = Math.max(0, this.game.playerStats.faith - 5);
@@ -529,6 +670,9 @@ class SpiritualBattle {
         this.inBattle = false;
         this.playerHP = 100;
         this.playerMP = 50;
+        this.intercessionActive = false;
+        this.intercessionTurns = 0;
+        this.intercessionHeal = 0;
         
         const overlay = document.getElementById('battle-overlay');
         if (overlay) {

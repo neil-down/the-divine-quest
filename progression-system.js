@@ -46,7 +46,8 @@ class ProgressionSystem {
                     { id: "divine_intervention", name: "Divine Intervention", description: "Chance for automatic blessings", unlocked: false, cost: 15 },
                     { id: "resilient_faith", name: "Resilient Faith", description: "Increases maximum faith by 25", unlocked: false, cost: 20, prerequisites: ["prayer"], effect: { type: "faith_cap", value: 25 } },
                     { id: "blessed_guard", name: "Blessed Guard", description: "Reduces battle damage by 10%", unlocked: false, cost: 35, prerequisites: ["divine_intervention"], effect: { type: "damage_reduction", value: 0.1 } },
-                    { id: "miracle", name: "Miracle Worker", description: "Can perform miracles", unlocked: false, cost: 30 }
+                    { id: "discernment", name: "Discernment", description: "Battle XP +20% (pierce enemy deception)", unlocked: false, cost: 30, prerequisites: ["blessed_guard"], effect: { type: "battle_exp", value: 0.2 } },
+                    { id: "miracle", name: "Miracle Worker", description: "Can perform miracles", unlocked: false, cost: 35 }
                 ]
             },
             wisdom: {
@@ -56,7 +57,8 @@ class ProgressionSystem {
                     { id: "prophecy", name: "Prophecy", description: "Foresee future events", unlocked: false, cost: 15 },
                     { id: "scholar_insight", name: "Scholar's Insight", description: "Gain +1 wisdom per chapter", unlocked: false, cost: 20, prerequisites: ["insight"], effect: { type: "wisdom_gain", value: 1 } },
                     { id: "scripture_mastery", name: "Scripture Mastery", description: "Puzzles award 20% more experience", unlocked: false, cost: 25, prerequisites: ["prophecy"], effect: { type: "puzzle_exp", value: 0.2 } },
-                    { id: "enlightenment", name: "Enlightenment", description: "Understand all mysteries", unlocked: false, cost: 30 }
+                    { id: "enlightenment", name: "Enlightenment", description: "Understand all mysteries", unlocked: false, cost: 30 },
+                    { id: "evangelism", name: "Evangelism", description: "Choice XP +15% when sharing the gospel", unlocked: false, cost: 25, prerequisites: ["enlightenment"], effect: { type: "choice_exp", value: 0.15 } }
                 ]
             },
             compassion: {
@@ -66,7 +68,8 @@ class ProgressionSystem {
                     { id: "empathy", name: "Empathy", description: "Feel others' emotions", unlocked: false, cost: 15 },
                     { id: "healer_touch", name: "Healer's Touch", description: "Automatically heal 15 HP after each battle", unlocked: false, cost: 20, prerequisites: ["healing"], effect: { type: "post_battle_heal", value: 15 } },
                     { id: "steadfast", name: "Steadfast", description: "Reduce nightmare escalation by 25%", unlocked: false, cost: 25, prerequisites: ["empathy"], effect: { type: "nightmare_reduction", value: 0.25 } },
-                    { id: "redemption", name: "Redemption", description: "Save lost souls", unlocked: false, cost: 30 }
+                    { id: "redemption", name: "Redemption", description: "Save lost souls", unlocked: false, cost: 30 },
+                    { id: "stewardship", name: "Stewardship", description: "Post-battle heal +10 HP (faithful with little)", unlocked: false, cost: 25, prerequisites: ["redemption"], effect: { type: "post_battle_heal", value: 10 } }
                 ]
             }
         };
@@ -404,13 +407,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalMakeChoice = window.game.makeChoice.bind(window.game);
             window.game.makeChoice = function(choiceIndex) {
                 const result = originalMakeChoice(choiceIndex);
-                window.progressionSystem.addExperienceForAction('choice');
+                const bonus = window.progressionSystem.getPassiveBonus('choice_exp');
+                window.progressionSystem.addExperienceForAction('choice', Math.floor(10 * bonus));
                 return result;
             };
             
             // Battle victories
             document.addEventListener('battleVictory', () => {
-                window.progressionSystem.addExperienceForAction('battle_win');
+                const bonus = window.progressionSystem.getPassiveBonus('battle_exp');
+                window.progressionSystem.addExperienceForAction('battle_win', Math.floor(50 * bonus));
             });
             
             // Puzzle solutions

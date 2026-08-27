@@ -19,7 +19,7 @@ class DivineQuest {
             "0-0-2": 3,
             "1-0-0": 2,
             "1-0-1": 3,
-            "1-0-2": 4,
+            "1-0-2": 8,
             "2-0-0": 4,
             "2-0-1": 4,
             "2-0-2": 4,
@@ -33,11 +33,20 @@ class DivineQuest {
             "5-0-1": 6,
             "5-0-2": 6,
             "6-0-0": 7,
-            "6-0-1": 7,
+            "6-0-1": 9,
             "6-0-2": 7,
-            "7-0-0": 0,
+            "7-0-0": 10,
             "7-0-1": 0,
-            "7-0-2": 0
+            "7-0-2": 0,
+            "8-0-0": 5,
+            "8-0-1": 4,
+            "8-0-2": 6,
+            "9-0-0": 4,
+            "9-0-1": 5,
+            "9-0-2": 7,
+            "10-0-0": 0,
+            "10-0-1": 1,
+            "10-0-2": 2
         };
         
         this.wisdomQuotes = [
@@ -308,7 +317,7 @@ class DivineQuest {
                                 text: "Pray and wait for the Spirit",
                                 description: "Join in persistent prayer, surrendering to the Spirit's timing.",
                                 effects: { faith: 10, wisdom: 5, compassion: 10 },
-                                nextChapter: 0
+                                nextChapter: 10
                             },
                             {
                                 text: "Teach the gathered crowd",
@@ -320,6 +329,90 @@ class DivineQuest {
                                 text: "Break bread in fellowship",
                                 description: "Share a meal in unity, remembering Christ's sacrifice together.",
                                 effects: { faith: 5, wisdom: 5, compassion: 10 },
+                                nextChapter: 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Valley of Doubt",
+                scenes: [
+                    {
+                        text: "The path leads you into a shadowed valley where every step feels heavy with uncertainty. The air is cool and still, and for a moment it seems as though God has hidden His face. Yet even here, the Reformers taught, grace abounds. A narrow stream runs through the valley floor, and faint light breaks through the clouds above. You realize that doubt is not the opposite of faith—it is the terrain where faith learns to walk by trust, not by sight.",
+                        choices: [
+                            {
+                                text: "Cry out to God in honesty",
+                                description: "Pour out your doubt before the Lord, trusting that He hears even the faintest whisper.",
+                                effects: { faith: 15, wisdom: 10, compassion: 5 },
+                                nextChapter: 4
+                            },
+                            {
+                                text: "Search for answers in Scripture",
+                                description: "Open the Word to find the promises that hold firm when feelings fade.",
+                                effects: { faith: 5, wisdom: 20, compassion: 0 },
+                                nextChapter: 2
+                            },
+                            {
+                                text: "Wait in silence before the Lord",
+                                description: "Sit quietly and let God renew your strength as you rest in His presence.",
+                                effects: { faith: 10, wisdom: 5, compassion: 10 },
+                                nextChapter: 5
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Warfare of Prayer",
+                scenes: [
+                    {
+                        text: "A spiritual battle unfolds around you, visible now only to the eyes of faith. The enemy schemes, but the Lord Jesus has already won the victory. You are called not to retreat, but to stand in the authority of Christ and pray with perseverance. The air thrums with sacred energy, and the saints of old stand beside you, interceding without ceasing.",
+                        choices: [
+                            {
+                                text: "Put on the full armor of God",
+                                description: "Clothe yourself in truth, righteousness, faith, and the Word of God.",
+                                effects: { faith: 20, wisdom: 5, compassion: 5 },
+                                nextChapter: 4
+                            },
+                            {
+                                text: "Intercede for others in prayer",
+                                description: "Lift up the needs of the world, standing in the gap through persistent prayer.",
+                                effects: { faith: 10, wisdom: 10, compassion: 20 },
+                                nextChapter: 6
+                            },
+                            {
+                                text: "Stand firm in the authority of Christ",
+                                description: "Exercise the authority of Jesus' name over every scheme of darkness.",
+                                effects: { faith: 15, wisdom: 15, compassion: 10 },
+                                nextChapter: 7
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Hope of Glory",
+                scenes: [
+                    {
+                        text: "The veil between earth and heaven grows thin, and you glimpse the glory that awaits all who are in Christ. The scene exceeds every earthly joy, yet it is not a distant fantasy—it is the promised inheritance sealed by the blood of Jesus. Every trial of this present age is being woven into a crown of glory that will never fade. Your heart leaps with a hope that does not disappoint because the love of God has been poured out through the Holy Spirit.",
+                        choices: [
+                            {
+                                text: "Worship the risen Christ",
+                                description: "Fall before the Lord in adoration, for He is worthy of all praise.",
+                                effects: { faith: 15, wisdom: 10, compassion: 15 },
+                                nextChapter: 5
+                            },
+                            {
+                                text: "Share the hope of glory with others",
+                                description: "Tell the world about the living hope found in Christ's resurrection.",
+                                effects: { faith: 10, wisdom: 5, compassion: 20 },
+                                nextChapter: 3
+                            },
+                            {
+                                text: "Live in light of eternity",
+                                description: "Return to your journey with renewed purpose, keeping your eyes on the prize.",
+                                effects: { faith: 10, wisdom: 15, compassion: 5 },
                                 nextChapter: 0
                             }
                         ]

@@ -39,77 +39,47 @@ These failures do not stop the core story from playing, but they mean the nightm
 
 ### Critical: Class Mismatch in `nightmare-system.js`
 
-The file defines `class ChallengeMode` at line 3, but its `DOMContentLoaded` listener tries to instantiate a non-existent class:
+**Status: RESOLVED**
 
-```javascript
-// nightmare-system.js line 590
-window.nightmareMode = new NightmareMode(window.game);
-```
-
-This throws an uncaught `ReferenceError: NightmareMode is not defined`, so the entire nightmare system is dead.
+The file defines `class ChallengeMode` at line 3, but its `DOMContentLoaded` listener tried to instantiate a non-existent class. Fixed to instantiate `ChallengeMode` correctly.
 
 ### Critical: Missing Method in `ChallengeMode`
 
-Even if the class name above were fixed, `init()` calls a method that does not exist on the class:
+**Status: RESOLVED**
 
-```javascript
-// nightmare-system.js line 16
-init() {
-    this.createNightmareUI();  // method does not exist
-    ...
-}
-```
-
-The only UI constructor in the class is `createChallengeUI()`. This would throw a `TypeError`.
+Even with the class name fixed, `init()` called a method that did not exist on the class. Fixed `createNightmareUI()` to `createChallengeUI()`.
 
 ### High: Wrong Global Variable in `visual-effects.js`
 
-The battle system stores its instance on `window.battleEncounters` (set in `battle-system.js` line 415):
+**Status: RESOLVED**
 
-```javascript
-// battle-system.js line 415
-window.battleEncounters = new BattleEncounters(window.game);
-```
-
-But `visual-effects.js` checks the wrong global:
-
-```javascript
-// visual-effects.js lines 496–497
-if (window.battleSystem) {
-    const originalUseSkill = window.battleSystem.useSkill.bind(window.battleSystem);
-```
-
-`window.battleSystem` is never defined, so the visual-effects hook is skipped entirely. Attack damage numbers, slash effects, and screen shakes never run.
+The battle system stores its instance on `window.battleEncounters`, but `visual-effects.js` checked the wrong global. Fixed to use the correct global variable.
 
 ### Medium: Achievement Spam in `game.js`
 
-`checkAchievements()` is called on every `updateStats()` and has no deduplication. Once a stat crosses the threshold, the notification fires on every subsequent stat update (every choice). `progression-system.js` correctly tracks earned titles in `this.achievements`, but `game.js` does not.
+**Status: RESOLVED**
 
-```javascript
-// game.js lines 389–409
-checkAchievements() {
-    if (this.playerStats.faith >= 80 && ...) {
-        this.showAchievement('Enlightened Master', ...); // fires every update while true
-    }
-    ...
-}
-```
+`checkAchievements()` is called on every `updateStats()` and now has deduplication.
 
 ### Low: Unreachable Boss Enemy
 
-In `battle-system.js` line 108:
+**Status: RESOLVED**
 
-```javascript
-this.currentEnemy = {...this.enemies[Math.floor(Math.random() * Math.min(3, Math.floor(this.game.currentChapter) + 1))]};
-```
-
-`Math.min(3, ...)` returns at most 3, and `Math.random() * 3` is always strictly less than 3, so `Math.floor(...)` yields only 0, 1, or 2. The 4th enemy (index 3, Archdemon of Despair) can never be selected.
+The 4th enemy can now be selected correctly.
 
 ### Low: Background Animation Conflict
 
-`enhancements.js` continuously overwrites `document.body.style.background` every 100 ms, while `game.js` `triggerSpecialEffect()` sets the same property directly for 2 seconds when choosing a portal. The two fight, causing visual flicker.
+**Status: RESOLVED**
+
+The background animation conflict between `enhancements.js` and `game.js` has been fixed.
 
 ---
+
+## Post-Layer-3 Status
+
+All pre-Layer-1 wiring bugs are resolved. Layers 1–3 features are complete: sound design, mobile/touch polish, i18n (en/es/fr), study guide, skill-tree expansion, settings menu, enemy archetypes + boss enrage, nightmare meta-progression, and deeper endings. Layer 4 work (new chapters, combat depth, puzzles, study-guide expansion, visuals/accessibility, settings/progression, audio) is in progress.
+
+## Summary
 
 ## 4. Highest-Value Next Build Step
 

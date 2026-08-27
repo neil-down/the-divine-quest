@@ -518,6 +518,28 @@ style.textContent = `
         }
     }
     
+    // Accessibility-aware effects (no-op when reduced motion is on)
+    _reducedMotion() {
+        return document.body && document.body.classList.contains('reduced-motion');
+    }
+
+    triggerGraceShimmer() {
+        if (this._reducedMotion()) return;
+        const shimmer = document.createElement('div');
+        shimmer.textContent = '✨';
+        shimmer.className = 'tdq-grace-shimmer';
+        document.body.appendChild(shimmer);
+        setTimeout(() => shimmer.remove(), 1800);
+    }
+
+    triggerConvictionFlash() {
+        if (this._reducedMotion()) return;
+        const flash = document.createElement('div');
+        flash.className = 'tdq-conviction-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 600);
+    }
+
     @keyframes ringExpand {
         0% {
             transform: scale(0);
@@ -565,6 +587,40 @@ style.textContent = `
         50% { opacity: 1; transform: scale(1.05); }
         100% { opacity: 0; transform: scale(1.1); }
     }
+
+    @keyframes tdqGraceShimmer {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+        100% { opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+    }
+
+    @keyframes tdqConvictionFlash {
+        0% { opacity: 0.35; }
+        100% { opacity: 0; }
+    }
+
+    .tdq-grace-shimmer {
+        position: fixed;
+        left: 50%;
+        top: 50%;
+        font-size: 4rem;
+        z-index: 60;
+        pointer-events: none;
+        animation: tdqGraceShimmer 1.6s ease-out forwards;
+    }
+
+    .tdq-conviction-flash {
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        pointer-events: none;
+        background: radial-gradient(circle, rgba(220,38,38,0.5), transparent 70%);
+        animation: tdqConvictionFlash 0.5s ease-out forwards;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .tdq-grace-shimmer, .tdq-conviction-flash { animation: none !important; display: none !important; }
+    }
 `;
 document.head.appendChild(style);
 
@@ -595,10 +651,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 const result = originalSolvePuzzle();
                 if (window.visualEffects) {
                     window.visualEffects.triggerPuzzleSolveEffect();
+                    window.visualEffects.triggerGraceShimmer();
                 }
                 return result;
             };
         }
+
+        // Grace shimmer on victory; conviction flash on a low-path / wrong choice
+        document.addEventListener('battleVictory', () => {
+            if (window.visualEffects) window.visualEffects.triggerGraceShimmer();
+        });
+        document.addEventListener('chapterChanged', (e) => {
+            if (!window.visualEffects) return;
+            const isLowPath = e && e.detail && e.detail.lowPath;
+            if (isLowPath) window.visualEffects.triggerConvictionFlash();
+        });
         
         // Hook into progression system
         if (window.progressionSystem) {

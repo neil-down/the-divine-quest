@@ -125,17 +125,28 @@ This game serves as:
 
 ## Future Enhancements
 
-### Planned Features
+### Completed
 - **Sound Design**: Ambient music and spiritual soundscapes
-- **Extended Narrative**: Additional chapters and story branches
-- **Multi-language Support**: Translations for global accessibility
+- **Multi-language Support**: Translations for global accessibility (en/es/fr)
 - **Mobile Optimization**: Touch-friendly interface for mobile devices
+- **Extended Narrative**: Additional chapters and story branches
+- **Study Guide**: Companion materials for deeper learning
+- **Skill Tree**: Progression and skill tree system
+- **PWA/Deploy**: Progressive web app packaging and deployment
+
+### Planned Features
 - **Community Features**: Share achievements and spiritual insights
 
 ### Educational Extensions
-- **Study Guide**: Companion materials for deeper learning
 - **Discussion Questions**: Prompts for group reflection
 - **Theological Commentary**: Expert insights on game themes
+
+## Layers / Changelog
+
+- **Layer 1**: Sound design, mobile optimization, study guide, skill-tree expansion, branching router + reachability
+- **Layer 2**: Settings menu, enemy archetypes + boss enrage, i18n scaffold, nightmare meta-progression + deeper endings
+- **Layer 3**: i18n en/es/fr completion, mobile/touch polish
+- **Layer 4 (in progress)**: New chapters, combat depth, puzzles, study-guide expansion, visuals/accessibility, settings/progression, audio
 
 ## Contributing
 

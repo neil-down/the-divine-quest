@@ -93,6 +93,33 @@ class DivinePuzzles {
                 symbols: ['🌅', '🌊', '🌿', '⭐', '🔥'],
                 sequence: [0, 1, 2, 3, 4],
                 reward: { wisdom: 30, faith: 20 }
+            },
+            {
+                id: 'verse_scramble',
+                name: 'Verse Scramble',
+                description: 'Unscramble the sacred scripture phrase to reveal divine truth',
+                type: 'verse-scramble',
+                difficulty: 'easy',
+                phrase: 'For God so loved the world that He gave His one and only Son',
+                scrambled: 'Son His only and one His gave He world the that loved so God For',
+                solution: 'For God so loved the world that He gave His one and only Son',
+                reward: { faith: 15, wisdom: 10 }
+            },
+            {
+                id: 'theme_match',
+                name: 'Theme Match',
+                description: 'Match the sacred verse to its correct book and theme',
+                type: 'theme-match',
+                difficulty: 'medium',
+                verse: 'In the beginning God created the heavens and the earth',
+                options: [
+                    { text: 'Genesis - The Beginning of Creation', correct: true },
+                    { text: 'Exodus - The Escape from Egypt', correct: false },
+                    { text: 'Psalms - Songs of Praise', correct: false },
+                    { text: 'Matthew - The Gospel of the King', correct: false }
+                ],
+                hint: 'This verse opens the very first book of the sacred text...',
+                reward: { wisdom: 20, faith: 15 }
             }
         ];
     }
@@ -136,6 +163,12 @@ class DivinePuzzles {
                 break;
             case 'sequence_memory':
                 puzzleContent = this.createSequenceMemoryPuzzle(puzzle);
+                break;
+            case 'verse-scramble':
+                puzzleContent = this.createVerseScramblePuzzle(puzzle);
+                break;
+            case 'theme-match':
+                puzzleContent = this.createThemeMatchPuzzle(puzzle);
                 break;
         }
         
@@ -342,6 +375,46 @@ class DivinePuzzles {
             </div>
         `;
     }
+
+    createVerseScramblePuzzle(puzzle) {
+        return `
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="text-center mb-6">
+                    <p class="text-gray-300 mb-4">Unscramble the sacred scripture phrase:</p>
+                    <div class="bg-black p-4 rounded-lg mb-4">
+                        <p class="text-xl font-mono text-yellow-400">${puzzle.scrambled}</p>
+                    </div>
+                    <input type="text" id="verse-answer" placeholder="Enter the unscrambled phrase..."
+                           class="w-full bg-gray-700 text-white p-3 rounded-lg text-center">
+                </div>
+                <div class="text-center">
+                    <button onclick="window.puzzles.checkVerseScramble()" class="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg font-bold">
+                        Submit Solution
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    createThemeMatchPuzzle(puzzle) {
+        return `
+            <div class="bg-gray-800 rounded-lg p-6">
+                <div class="text-center mb-6">
+                    <p class="text-gray-300 mb-4">Identify the book and theme of this sacred verse:</p>
+                    <div class="bg-black p-4 rounded-lg mb-4">
+                        <p class="text-xl italic text-white">"${puzzle.verse}"</p>
+                    </div>
+                    <div class="space-y-3">
+                        ${puzzle.options.map((option, index) => `
+                            <button onclick="window.puzzles.checkThemeMatch(${index})" class="w-full text-left bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg transition-all">
+                                <div class="font-bold">${String.fromCharCode(65 + index)}. ${option.text}</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
     
     getRuneEmoji(rune) {
         const emojis = {
@@ -456,6 +529,24 @@ class DivinePuzzles {
             this.solvePuzzle();
         } else {
             this.showError('Incorrect riddle. Listen closely and try again...');
+        }
+    }
+
+    checkVerseScramble() {
+        const answer = document.getElementById('verse-answer').value.trim();
+        if (answer === this.currentPuzzle.solution) {
+            this.solvePuzzle();
+        } else {
+            this.showError('Incorrect verse. Try again!');
+        }
+    }
+
+    checkThemeMatch(index) {
+        const option = this.currentPuzzle.options[index];
+        if (option.correct) {
+            this.solvePuzzle();
+        } else {
+            this.showError('Incorrect match. Consider the verse more carefully...');
         }
     }
     
@@ -615,6 +706,12 @@ class DivinePuzzles {
                     break;
                 case 'sequence_memory':
                     hint = 'Watch carefully: the sequence follows the rhythm of creation...';
+                    break;
+                case 'verse-scramble':
+                    hint = this.currentPuzzle.hint || 'Read the scrambled words aloud and look for familiar phrases...';
+                    break;
+                case 'theme-match':
+                    hint = this.currentPuzzle.hint || 'Think about the major themes and opening books of the sacred text...';
                     break;
             }
             

@@ -643,3 +643,31 @@ body.touch button:active {
         background: white !important;
     }
 }
+
+/* Accessibility: visible keyboard focus for all interactive elements */
+:focus-visible {
+    outline: 3px solid #fbbf24 !important;
+    outline-offset: 2px !important;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+.choice-button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[role="switch"]:focus-visible {
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.6);
+}
+
+/* Reduced-motion: disable non-essential animations globally when requested */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -6,6 +6,7 @@ class DivineAudio {
   constructor() {
     this.ctx = null;
     this.muted = false;
+    this.ambientEnabled = true;
     this.masterGain = null;
     this.ambientGain = null;
     this.sfxGain = null;
@@ -30,7 +31,9 @@ class DivineAudio {
     this.sfxGain.gain.value = 0.6;
     this.sfxGain.connect(this.masterGain);
 
-    this._startAmbient();
+    if (this.ambientEnabled) {
+      this._startAmbient();
+    }
     window.removeEventListener('click', this._ensureStarted);
     window.removeEventListener('keydown', this._ensureStarted);
   }
@@ -88,10 +91,40 @@ class DivineAudio {
     this.ambientNodes = [];
   }
 
+  // Ambient toggle API — respects existing mute/volume model
+  isAmbientEnabled() {
+    return this.ambientEnabled;
+  }
+
+  setAmbientEnabled(enabled) {
+    this.ambientEnabled = !!enabled;
+    if (!this.started) return;
+    if (this.ambientEnabled && !this.muted) {
+      if (this.ambientNodes.length === 0) {
+        this._startAmbient();
+      }
+    } else {
+      this.stopAmbient();
+    }
+    this._safeCallback(this._onAmbientChanged, this.ambientEnabled);
+  }
+
+  toggleAmbient() {
+    this.setAmbientEnabled(!this.ambientEnabled);
+    return this.ambientEnabled;
+  }
+
+  // Callback hook for UI to react to ambient changes (e.g., update button icon)
+  _onAmbientChanged() {}
+
   setMute(muted) {
     this.muted = muted;
     if (this.masterGain) {
       this.masterGain.gain.setTargetAtTime(muted ? 0 : 0.35, this.ctx.currentTime, 0.3);
+    }
+    // If unmuting and ambient is enabled, start ambient if it's not running
+    if (!muted && this.ambientEnabled && this.ambientNodes.length === 0 && this.started) {
+      this._startAmbient();
     }
   }
 
@@ -214,6 +247,54 @@ class DivineAudio {
         osc.stop(now + 2.1);
         break;
       }
+      case 'prayer': {
+        // Soft bell-like chime — reverent, gentle
+        [523.25, 659.25, 783.99].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = now + i * 0.06;
+          osc.frequency.value = freq;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.12, t + 0.02);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.8);
+          out(osc, g);
+          osc.start(t);
+          osc.stop(t + 0.85);
+        });
+        break;
+      }
+      case 'revelation': {
+        // Rising shimmer — ascending gentle sparkle
+        [880, 1108.73, 1318.51, 1760].forEach((freq, i) => {
+          const osc = this.ctx.createOscillator();
+          const g = this.ctx.createGain();
+          osc.type = 'sine';
+          const t = now + i * 0.07;
+          osc.frequency.value = freq;
+          g.gain.setValueAtTime(0.0001, t);
+          g.gain.exponentialRampToValueAtTime(0.10, t + 0.03);
+          g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+          out(osc, g);
+          osc.start(t);
+          osc.stop(t + 0.75);
+        });
+        break;
+      }
+      case 'scripture': {
+        // Deep resonant tone — warm, grounding
+        const osc = this.ctx.createOscillator();
+        const g = this.ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.value = 146.83; // D3
+        g.gain.setValueAtTime(0.0001, now);
+        g.gain.exponentialRampToValueAtTime(0.18, now + 0.05);
+        g.gain.exponentialRampToValueAtTime(0.0001, now + 1.2);
+        out(osc, g);
+        osc.start(now);
+        osc.stop(now + 1.3);
+        break;
+      }
       default:
         break;
     }
@@ -223,15 +304,61 @@ class DivineAudio {
 // Singleton
 window.divineAudio = new DivineAudio();
 
-// Toggle button
+// Ambient toggle button
+(function () {
+  function injectAmbientToggle() {
+    if (document.getElementById('divine-ambient-toggle')) return;
+    const btn = document.createElement('button');
+    btn.id = 'divine-ambient-toggle';
+    btn.textContent = '🎵';
+    btn.title = window.I18N ? window.I18N.t('Ambient music') : 'Ambient music';
+    btn.setAttribute('aria-label', window.I18N ? window.I18N.t('Ambient music') : 'Toggle ambient music');
+    Object.assign(btn.style, {
+      position: 'fixed',
+      bottom: '16px',
+      right: '72px',
+      zIndex: '9999',
+      background: 'rgba(0,0,0,0.55)',
+      color: '#fff',
+      border: '1px solid rgba(255,255,255,0.2)',
+      borderRadius: '8px',
+      padding: '10px 14px',
+      cursor: 'pointer',
+      backdropFilter: 'blur(4px)',
+      fontSize: '18px',
+      lineHeight: '1',
+      userSelect: 'none'
+    });
+    const audio = window.divineAudio;
+    btn.addEventListener('click', () => {
+      const enabled = audio.toggleAmbient();
+      btn.textContent = enabled ? '🎵' : '🔇';
+      btn.title = window.I18N ? window.I18N.t('Ambient music') : 'Ambient music';
+      btn.setAttribute('aria-label', window.I18N ? window.I18N.t('Ambient music') : 'Toggle ambient music');
+    });
+    // Sync initial state
+    if (!audio.isAmbientEnabled()) {
+      btn.textContent = '🔇';
+    }
+    document.body.appendChild(btn);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', injectAmbientToggle);
+  } else {
+    injectAmbientToggle();
+  }
+})();
+
+// Mute toggle button
 (function () {
   function injectToggle() {
     if (document.getElementById('divine-audio-toggle')) return;
     const btn = document.createElement('button');
     btn.id = 'divine-audio-toggle';
     btn.textContent = '🔊';
-    btn.title = 'Mute / Unmute';
-    btn.setAttribute('aria-label', 'Toggle audio');
+    btn.title = window.I18N ? window.I18N.t('Mute / Unmute') : 'Mute / Unmute';
+    btn.setAttribute('aria-label', window.I18N ? window.I18N.t('Mute / Unmute') : 'Toggle audio');
     Object.assign(btn.style, {
       position: 'fixed',
       bottom: '16px',

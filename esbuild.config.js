@@ -18,6 +18,7 @@ const files = [
   'study-guide.js',
   'settings.js',
   'audio.js',
+  'faction-system.js',
 ];
 
 const outDir = `${__dirname}/dist`;

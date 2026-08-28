@@ -237,6 +237,40 @@ class SpiritualBattle {
                 weakness: "faith",
                 behavior: "drain",
                 reward: { faith: 15, wisdom: 5, compassion: 10 }
+            },
+            {
+                name: "The Rationalist",
+                hp: 110,
+                maxHp: 110,
+                damage: 16,
+                type: "rationalist",
+                description: "Denies the supernatural, explaining away every miracle",
+                weakness: "faith",
+                behavior: "reduce-wisdom-gain",
+                reward: { faith: 12, wisdom: 5, compassion: 8 }
+            },
+            {
+                name: "The Scoffer",
+                hp: 100,
+                maxHp: 100,
+                damage: 14,
+                type: "scoffer",
+                description: "Mocks your beliefs and amplifies doubt",
+                weakness: "compassion",
+                behavior: "scoffer-debuff",
+                reward: { faith: 10, wisdom: 8, compassion: 12 }
+            },
+            {
+                name: "The Indoctrinator",
+                hp: 130,
+                maxHp: 130,
+                damage: 12,
+                defense: 8,
+                type: "indoctrinator",
+                description: "Charms and confuses the faithful into error",
+                weakness: "wisdom",
+                behavior: "indoctrinate",
+                reward: { faith: 5, wisdom: 18, compassion: 5 }
             }
         ];
     }
@@ -535,7 +569,20 @@ class SpiritualBattle {
             this.game.updateStats();
             log.innerHTML += `<div class="text-gray-400 font-bold">${window.I18N.t("💔 The Sorrower feeds on your compassion! -")}${drain} ${window.I18N.t("Compassion")}</div>`;
         }
-        
+
+        // Scoffer amplifies doubt
+        if (this.currentEnemy.type === 'scoffer' && Math.random() < 0.3) {
+            this.playerDefenseDebuff += 3;
+            log.innerHTML += `<div class="text-orange-400 font-bold">${window.I18N.t("😏 The Scoffer's words breed doubt! Defense weakened further!")}</div>`;
+        }
+
+        // Indoctrinator charms/confuses
+        if (this.currentEnemy.type === 'indoctrinator' && Math.random() < 0.25) {
+            const confusionDrain = 8;
+            this.playerMP = Math.max(0, this.playerMP - confusionDrain);
+            log.innerHTML += `<div class="text-purple-400 font-bold">${window.I18N.t("🌀 The Indoctrinator clouds your mind! You lose")} ${confusionDrain} MP!</div>`;
+        }
+
         this.playerHP -= damage;
         
         // Reset combo
@@ -619,7 +666,14 @@ class SpiritualBattle {
         }
         
         // Apply rewards
-        const reward = this.currentEnemy.reward;
+        const reward = { ...this.currentEnemy.reward };
+
+        // The Rationalist reduces wisdom gain
+        if (this.currentEnemy.type === 'rationalist') {
+            reward.wisdom = Math.max(0, Math.floor(reward.wisdom * 0.5));
+            log.innerHTML += `<div class="text-gray-400">${window.I18N.t("The Rationalist's arguments linger... Wisdom reward reduced!")}</div>`;
+        }
+
         this.game.playerStats.faith += reward.faith;
         this.game.playerStats.wisdom += reward.wisdom;
         this.game.playerStats.compassion += reward.compassion;

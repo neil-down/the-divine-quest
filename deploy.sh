@@ -63,6 +63,13 @@ find "$worktree_dir" -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
 # Copy built artifacts
 cp -a dist/. "$worktree_dir"/
 
+# SPA fallback: copy index.html to 404.html so GitHub Pages serves the app
+# on deep links / refreshes of unknown routes.
+if [[ -f "$worktree_dir/index.html" ]]; then
+  cp "$worktree_dir/index.html" "$worktree_dir/404.html"
+  echo "-> Created 404.html fallback for SPA routing"
+fi
+
 # 5) Commit and push
 pushd "$worktree_dir" >/dev/null
 

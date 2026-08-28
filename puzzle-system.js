@@ -183,6 +183,22 @@ class DivinePuzzles {
                 ],
                 hint: 'Consider the earthly ministry of Christ: His baptism, His death, His ascension, and the Spirit\'s coming...',
                 reward: { faith: 25, wisdom: 25 }
+            },
+            {
+                id: 'creed_match',
+                name: 'Creed Match',
+                description: 'Match the Scripture/creed fragment to its correct source',
+                type: 'creed-match',
+                difficulty: 'medium',
+                verse: 'In the beginning God created the heavens and the earth.',
+                options: [
+                    { text: 'Genesis 1:1', correct: true },
+                    { text: 'John 1:1', correct: false },
+                    { text: 'Psalm 23:1', correct: false },
+                    { text: 'Isaiah 40:8', correct: false }
+                ],
+                hint: 'This is the very first verse of the very first book of the sacred text...',
+                reward: { wisdom: 20, faith: 15 }
             }
         ];
     }

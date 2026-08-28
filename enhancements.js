@@ -16,9 +16,51 @@ class EnhancedGameplay {
         this.createDivinePresence();
         this.addTouchSupport();
         this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        this._syncReducedMotionClass();
+        this._motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this._motionQuery.addEventListener('change', () => this._syncReducedMotionClass());
+        this._observeDynamicInteractives();
+    }
+
+    _observeDynamicInteractives() {
+        const interactiveSelectors = '.rune-tile, .symbol-tile, [data-row][data-col], #loop-puzzle > div, .nightmare-entity, [onclick]';
+        const observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                    if (node.nodeType !== Node.ELEMENT_NODE) continue;
+                    if (node.matches && node.matches(interactiveSelectors)) {
+                        this._ensureFocusable(node);
+                    }
+                    const descendants = node.querySelectorAll && node.querySelectorAll(interactiveSelectors);
+                    if (descendants) {
+                        descendants.forEach(el => this._ensureFocusable(el));
+                    }
+                }
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    _ensureFocusable(el) {
+        if (el.hasAttribute('tabindex')) return;
+        if (el.tagName === 'BUTTON' || el.tagName === 'A' || el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA') return;
+        el.setAttribute('tabindex', '0');
+        if (!el.getAttribute('role')) {
+            el.setAttribute('role', 'button');
+        }
+    }
+
+    _syncReducedMotionClass() {
+        const motionMatches = (this._motionQuery && this._motionQuery.matches) || this.prefersReducedMotion;
+        if (motionMatches) {
+            document.body.classList.add('reduced-motion');
+        } else {
+            document.body.classList.remove('reduced-motion');
+        }
     }
     
     createAmbientParticles() {
+        if (this.prefersReducedMotion) return;
         const particleContainer = document.createElement('div');
         particleContainer.className = 'divine-particles';
         particleContainer.id = 'particles';
@@ -60,12 +102,29 @@ class EnhancedGameplay {
     }
     
     addKeyboardNavigation() {
+        // Number keys 1-3 for story choices
         document.addEventListener('keydown', (e) => {
             if (e.key >= '1' && e.key <= '3') {
                 const choiceIndex = parseInt(e.key) - 1;
                 const choices = document.querySelectorAll('.choice-button');
                 if (choices[choiceIndex]) {
                     choices[choiceIndex].click();
+                }
+            }
+        });
+
+        // Enter/Space activation for any focusable non-button element
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'Enter' || e.key === ' ') && document.activeElement) {
+                const el = document.activeElement;
+                // If it's a button, input, select, textarea, or has role=button, let the browser handle it
+                if (el.tagName === 'BUTTON' || el.tagName === 'INPUT' || el.tagName === 'SELECT' || el.tagName === 'TEXTAREA' || el.getAttribute('role') === 'button' || el.getAttribute('role') === 'switch') {
+                    return;
+                }
+                // For tabindex elements that look interactive (rune tiles, symbol tiles, pattern cells, etc.)
+                if (el.hasAttribute('tabindex') && (el.classList.contains('rune-tile') || el.classList.contains('symbol-tile') || el.hasAttribute('data-row') || el.classList.contains('verse-fragment-btn') || el.classList.contains('nightmare-entity') || el.closest('#loop-puzzle'))) {
+                    e.preventDefault();
+                    el.click();
                 }
             }
         });
@@ -146,6 +205,7 @@ class EnhancedGameplay {
     }
     
     addDynamicBackground() {
+        if (this.prefersReducedMotion) return;
         let hue = 250;
         setInterval(() => {
             hue = (hue + 0.5) % 360;
@@ -156,6 +216,7 @@ class EnhancedGameplay {
     }
     
     createDivinePresence() {
+        if (this.prefersReducedMotion) return;
         const presence = document.createElement('div');
         presence.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-30';
         presence.innerHTML = `
@@ -287,6 +348,9 @@ class EnhancedGameplay {
                 orb.className = 'absolute w-12 h-12 bg-gradient-to-br from-purple-400 to-blue-400 rounded-full cursor-pointer hover:scale-110 transition-transform';
                 orb.style.left = Math.random() * 80 + 10 + '%';
                 orb.style.top = Math.random() * 80 + 10 + '%';
+                orb.setAttribute('tabindex', '0');
+                orb.setAttribute('role', 'button');
+                orb.setAttribute('aria-label', 'Meditation orb');
                 
                 orb.onclick = () => {
                     score += 5;
@@ -306,6 +370,13 @@ class EnhancedGameplay {
                     
                     setTimeout(() => feedback.remove(), 1000);
                 };
+
+                orb.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        orb.click();
+                    }
+                });
                 
                 area.appendChild(orb);
                 

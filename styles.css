@@ -177,7 +177,51 @@
     text-align: center;
 }
 
-/* Responsive Design Enhancements */
+/* ============================================
+   Global Overflow & Focus Foundations
+   ============================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Accessibility: visible keyboard focus for all interactive elements */
+:focus-visible {
+    outline: 3px solid #fbbf24 !important;
+    outline-offset: 2px !important;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+.choice-button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[role="switch"]:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+.rune-tile:focus-visible,
+.symbol-tile:focus-visible,
+[data-row][data-col]:focus-visible,
+#loop-puzzle > div:focus-visible,
+.nightmare-entity:focus-visible {
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.6);
+}
+
+/* Ensure interactive divs get a sensible default cursor when focused */
+[tabindex="0"]:focus {
+    cursor: pointer;
+}
+
+/* ============================================
+   Responsive Design Enhancements
+   ============================================ */
+
+/* Tablet - 768px and below */
 @media (max-width: 768px) {
     .container {
         padding: 0 10px;
@@ -198,170 +242,7 @@
     .choice-button p {
         font-size: 13px;
     }
-}
 
-/* Mobile - 480px and below */
-@media (max-width: 480px) {
-    html, body {
-        overflow-x: hidden;
-        max-width: 100vw;
-    }
-
-    .container {
-        max-width: 100%;
-        padding: 0 12px;
-    }
-
-    .theology-card {
-        padding: 16px;
-        border-radius: 10px;
-    }
-
-    .choice-button {
-        display: flex;
-        width: 100%;
-        min-height: 48px;
-        padding: 14px;
-        font-size: 15px;
-        text-align: left;
-    }
-
-    .choice-button h4 {
-        font-size: 14px;
-    }
-
-    .choice-button p {
-        font-size: 12px;
-    }
-
-    header h1 {
-        font-size: 22px;
-    }
-
-    .cinzel.text-2xl {
-        font-size: 18px;
-    }
-
-    main {
-        padding: 16px 0;
-    }
-}
-
-/* High Contrast Mode */
-@media (prefers-contrast: high) {
-    .choice-button {
-        border: 2px solid #fbbf24;
-    }
-    
-    .theology-card {
-        border: 2px solid #fbbf24;
-    }
-}
-
-/* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
-}
-
-/* Print Styles */
-@media print {
-    body {
-        background: white !important;
-        color: black !important;
-    }
-    
-    .choice-button,
-    .achievement-notification,
-    .divine-particles {
-        display: none !important;
-    }
-    
-    .theology-card {
-        border: 1px solid #ccc !important;
-        background: white !important;
-    }
-}
-
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 12px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-}
-
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    border-radius: 6px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-}
-
-/* ============================================
-   Mobile & Touch Enhancements
-   ============================================ */
-
-/* Touch device detection class - added via enhancements.js */
-body.touch .choice-button:hover {
-    transform: none;
-    box-shadow: none;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-}
-
-body.touch .choice-button::before {
-    width: 0;
-    height: 0;
-    background: transparent;
-    transition: none;
-}
-
-body.touch .choice-button:active {
-    transform: translateY(-1px) scale(1.01);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-}
-
-body.touch .choice-button:active::before {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
-}
-
-/* Tap feedback for all interactive elements on touch */
-body.touch button:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
-}
-
-/* Choice button touch optimization */
-.choice-button {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-    cursor: pointer;
-    min-height: 44px;
-}
-
-.choice-button:active {
-    transform: translateY(-1px) scale(1.01);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
-    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
-}
-
-.choice-button:active::before {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
-}
-
-/* Header stacking on small screens */
-@media (max-width: 768px) {
     header .flex.justify-between {
         flex-direction: column;
         gap: 12px;
@@ -397,6 +278,7 @@ body.touch button:active {
         max-height: 90vh;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        max-width: 100vw;
     }
 
     /* Battle / puzzle / skill-tree / nightmare overlays */
@@ -409,6 +291,12 @@ body.touch button:active {
         padding: 16px;
     }
 
+    /* Loop puzzle overlay */
+    #loop-puzzle {
+        max-width: 100vw;
+        overflow-x: auto;
+    }
+
     /* Study guide panel */
     #study-guide-panel {
         width: calc(100vw - 32px) !important;
@@ -417,15 +305,15 @@ body.touch button:active {
         bottom: 80px !important;
         max-height: 70vh !important;
     }
+
+    /* Ensure all interactive elements have adequate tap targets on touch/tablet */
+    button, [role="button"], [tabindex="0"] {
+        min-height: 44px;
+    }
 }
 
 /* Mobile - 480px and below */
 @media (max-width: 480px) {
-    html, body {
-        overflow-x: hidden;
-        max-width: 100vw;
-    }
-
     body {
         font-size: 16px;
         -webkit-text-size-adjust: 100%;
@@ -559,6 +447,15 @@ body.touch button:active {
         max-width: 100% !important;
         margin: 0 8px !important;
         padding: 16px !important;
+        width: auto !important;
+    }
+
+    /* Ensure overlays don't cause horizontal overflow */
+    .fixed.inset-0 [class*="max-w-"] {
+        max-width: 100% !important;
+        width: auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
     }
 
     /* Battle UI skill buttons - stack in 2 cols on very small screens */
@@ -603,6 +500,11 @@ body.touch button:active {
         min-height: 44px;
         font-size: 16px !important; /* prevent iOS zoom on focus */
     }
+
+    /* Ensure all interactive elements have adequate tap targets */
+    button, [role="button"], [tabindex="0"] {
+        min-height: 44px;
+    }
 }
 
 /* High Contrast Mode */
@@ -618,10 +520,20 @@ body.touch button:active {
 
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-    * {
-        animation-duration: 0.01ms !important;
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Hide non-essential motion containers when reduced motion is preferred */
+    .divine-particles,
+    #visual-effects-container,
+    #particles {
+        display: none !important;
     }
 }
 
@@ -634,7 +546,9 @@ body.touch button:active {
     
     .choice-button,
     .achievement-notification,
-    .divine-particles {
+    .divine-particles,
+    #visual-effects-container,
+    #particles {
         display: none !important;
     }
     
@@ -644,30 +558,106 @@ body.touch button:active {
     }
 }
 
-/* Accessibility: visible keyboard focus for all interactive elements */
-:focus-visible {
-    outline: 3px solid #fbbf24 !important;
-    outline-offset: 2px !important;
-    border-radius: 4px;
+/* ============================================
+   Mobile & Touch Enhancements
+   ============================================ */
+
+/* Touch device detection class - added via enhancements.js */
+body.touch .choice-button:hover {
+    transform: none;
+    box-shadow: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
 }
 
-button:focus-visible,
-.choice-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible,
-[role="switch"]:focus-visible {
-    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.6);
+body.touch .choice-button::before {
+    width: 0;
+    height: 0;
+    background: transparent;
+    transition: none;
 }
 
-/* Reduced-motion: disable non-essential animations globally when requested */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-        scroll-behavior: auto !important;
-    }
+body.touch .choice-button:active {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+body.touch .choice-button:active::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+}
+
+/* Tap feedback for all interactive elements on touch */
+body.touch button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Choice button touch optimization */
+.choice-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.choice-button:active {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+.choice-button:active::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+}
+
+/* ============================================
+   Puzzle & Dynamic Interactive Elements
+   ============================================ */
+
+/* Puzzle rune tiles */
+.rune-tile {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Pattern grid cells */
+[data-row][data-col] {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 32px;
+    min-width: 32px;
+}
+
+/* Memory sequence tiles */
+.symbol-tile {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 64px;
+    min-width: 64px;
+}
+
+/* Verse fragment buttons */
+.verse-fragment-btn {
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+/* Loop puzzle pieces */
+#loop-puzzle > div {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Nightmare interactive entities */
+.nightmare-entity {
+    cursor: pointer;
+    touch-action: manipulation;
 }

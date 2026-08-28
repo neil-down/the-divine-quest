@@ -20,15 +20,15 @@ class DivineQuest {
             "1-0-0": 2,
             "1-0-1": 3,
             "1-0-2": 8,
-            "2-0-0": 4,
+            "2-0-0": 13,
             "2-0-1": 4,
             "2-0-2": 4,
-            "3-0-0": 4,
+            "3-0-0": 14,
             "3-0-1": 4,
             "3-0-2": 4,
             "4-0-0": 5,
             "4-0-1": 5,
-            "4-0-2": 5,
+            "4-0-2": 15,
             "5-0-0": 6,
             "5-0-1": 11,
             "5-0-2": 6,
@@ -52,7 +52,16 @@ class DivineQuest {
             "11-0-2": 3,
             "12-0-0": 1,
             "12-0-1": 4,
-            "12-0-2": 6
+            "12-0-2": 6,
+            "13-0-0": 14,
+            "13-0-1": 15,
+            "13-0-2": 13,
+            "14-0-0": 15,
+            "14-0-1": 13,
+            "14-0-2": 13,
+            "15-0-0": 11,
+            "15-0-1": 12,
+            "15-0-2": 13
         };
         
         this.wisdomQuotes = [
@@ -480,6 +489,90 @@ class DivineQuest {
                         ]
                     }
                 ]
+            },
+            {
+                title: "The Reformation",
+                scenes: [
+                    {
+                        text: "The cry of the Reformation echoes through the centuries: Sola Fide, Sola Scriptura, Solus Christus, Sola Gratia, Soli Deo Gloria. You stand in Wittenberg as the truth of God's Word is recovered from centuries of human tradition. The five solae shine like beacons — justification by faith alone, Scripture alone as the final authority, Christ alone as the mediator, grace alone as the means of salvation, and glory to God alone as the ultimate end. The air crackles with the power of the Gospel restored, and you realize that the Reformers did not invent new doctrine but unearthed the ancient faith buried beneath layers of ecclesiastical corruption.",
+                        choices: [
+                            {
+                                text: "Stand upon Sola Scriptura",
+                                description: "Receive the Word of God alone as your supreme authority, rejecting all human traditions that contradict Scripture.",
+                                effects: { faith: 15, wisdom: 20, compassion: 5 },
+                                nextChapter: 14
+                            },
+                            {
+                                text: "Embrace Sola Fide",
+                                description: "Rest in the blessed truth that you are justified by faith alone in Christ alone, not by any work of your own.",
+                                effects: { faith: 25, wisdom: 5, compassion: 10 },
+                                nextChapter: 15
+                            },
+                            {
+                                text: "Live for Soli Deo Gloria",
+                                description: "Dedicate every thought, word, and deed to the glory of God alone, the ultimate end of all things.",
+                                effects: { faith: 10, wisdom: 10, compassion: 20 },
+                                nextChapter: 0
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "The Church Fathers",
+                scenes: [
+                    {
+                        text: "The ancient witnesses surround you: Athanasius, who championed the full deity of Christ against Arianism; Augustine, who confessed the grace of God in his own heart and formulated the doctrines of original sin and irresistible grace; Irenaeus, who defended the faith once for all delivered to the saints against Gnostic heresy; and the Council of Chalcedon, which declared Christ to be one person in two natures, without confusion, without change, without division, without separation. Their writings are not equal to Scripture, yet they shine as faithful lamps that illuminate the biblical text. You see that the Reformed faith is not a novelty but the ancient catholic faith recovered and purified.",
+                        choices: [
+                            {
+                                text: "Defend the deity of Christ with Athanasius",
+                                description: "Stand firm for the full divinity of the Son against every reduction of His glory.",
+                                effects: { faith: 20, wisdom: 10, compassion: 5 },
+                                nextChapter: 13
+                            },
+                            {
+                                text: "Confess grace with Augustine",
+                                description: "Admit your dependence on God's sovereign grace, as Augustine did in his Confessions.",
+                                effects: { faith: 15, wisdom: 15, compassion: 10 },
+                                nextChapter: 15
+                            },
+                            {
+                                text: "Contend for the faith once delivered",
+                                description: "Follow Irenaeus in guarding the apostolic teaching against every false philosophy.",
+                                effects: { faith: 10, wisdom: 20, compassion: 5 },
+                                nextChapter: 11
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                title: "Perseverance & Glory",
+                scenes: [
+                    {
+                        text: "The final chapter of the pilgrimage unfolds: the saints persevere not by their own grip but by the power of God who keeps them. The New Heavens and New Earth descend as the final dwelling place of God with man, where every tear is wiped away and death is no more. The consummation of all things arrives — not as an escape from creation but as its redemption, when the whole groaning world is liberated into the freedom of the glory of the children of God. You understand now that the Reformed hope is not pie in the sky but the renewal of all things in Christ, who is the Alpha and the Omega, the Beginning and the End.",
+                        choices: [
+                            {
+                                text: "Persevere in the power of the Spirit",
+                                description: "Trust that He who began a good work in you will carry it on to completion until the day of Christ Jesus.",
+                                effects: { faith: 25, wisdom: 5, compassion: 10 },
+                                nextChapter: 12
+                            },
+                            {
+                                text: "Anticipate the New Heavens & New Earth",
+                                description: "Set your hope fully on the grace to be revealed when the heavens are renewed and all things are made new.",
+                                effects: { faith: 10, wisdom: 20, compassion: 10 },
+                                nextChapter: 0
+                            },
+                            {
+                                text: "Surrender to the consummation",
+                                description: "Yield the final chapter of your story into the hands of the Author and Finisher of faith.",
+                                effects: { faith: 10, wisdom: 10, compassion: 25 },
+                                nextChapter: 5
+                            }
+                        ]
+                    }
+                ]
             }
         ];
         
@@ -852,7 +945,7 @@ let game;
 // Initialize game when page loads
 document.addEventListener('DOMContentLoaded', () => {
     game = new DivineQuest();
-    
+    window.game = game;
     // Re-render on-screen narrative when language changes
     document.addEventListener('languageChanged', () => {
         if (game && typeof game.loadChapter === 'function') {

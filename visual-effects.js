@@ -22,8 +22,11 @@ class VisualEffectsEngine {
     }
     
     startContinuousEffects() {
+        // Accessibility: skip ambient particles when reduced motion is preferred
+        if (this._reducedMotion()) return;
+        
         // Ambient particles
-        setInterval(() => this.createAmbientParticle(), 500);
+        setInterval(() => this.createAmbientParticle(), 1500);
         
         // Cleanup old particles
         setInterval(() => this.cleanupParticles(), 2000);
@@ -520,7 +523,8 @@ style.textContent = `
     
     // Accessibility-aware effects (no-op when reduced motion is on)
     _reducedMotion() {
-        return document.body && document.body.classList.contains('reduced-motion');
+        if (document.body && document.body.classList.contains('reduced-motion')) return true;
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }
 
     triggerGraceShimmer() {

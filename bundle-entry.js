@@ -12,3 +12,4 @@ import './i18n.js';
 import './study-guide.js';
 import './settings.js';
 import './audio.js';
+import './faction-system.js';

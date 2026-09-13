@@ -61,114 +61,114 @@ class StudyGuide {
                 scripture: { reference: " Revelation 21:3-4", text: "And I heard a loud voice from the throne saying, 'Behold, the dwelling place of God is with man. He will dwell with them, and they will be his people, and God himself will be with them as their God. He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning, nor crying, nor pain anymore, for the former things have passed away.'" }
             },
             5: {
-                title: "The Refiner's Fire",
+                title: "The Christian Life",
                 questions: [
-                    "How does suffering refine faith rather than destroy it?",
-                    "What biblical examples show God using trials to deepen trust and character?",
-                    "How can a believer distinguish between God's loving discipline and random suffering?"
+                    "What does it mean that theology is for living, not merely for knowing?",
+                    "How do grace, gratitude, and obedience fit together in the daily Christian walk?",
+                    "Why does the game present 'continue,' 'share,' and 'glorify' as three facets of one life rather than three separate endings?"
                 ],
-                commentary: "Trials are the refiner's fire, burning away dross to reveal gold. Peter writes that suffering tests the genuineness of faith (1 Peter 1:7). The game's imagery of fire echoes Malachi's purification and the refining work of the Holy Spirit. Importantly, Reformed theology rejects the idea that suffering is always punishment for sin. Rather, it is a means of sanctification—God in His sovereignty brings good from evil (Genesis 50:20). The Refiner's Fire chapter teaches that endurance is not passive resignation but active trust in a sovereign, loving God.",
-                scripture: { reference: "1 Peter 1:6-7", text: "In this you rejoice, though now for a little while, if necessary, you have been grieved by various trials, so that the tested genuineness of your faith—more precious than gold that perishes though it is tested by fire—may be found to result in praise and glory and honor at the revelation of Jesus Christ." }
+                commentary: "This chapter gathers the whole journey into a single conviction: knowing Christ is a relationship to be nurtured daily, not a destination to be reached. The three closing choices mirror the three portals of the opening—grace received, gospel shared, glory pursued—showing that the Christian life is faith working through love in ordinary time. Reformed theology calls this sanctification by gratitude: because God has already accepted us in Christ, obedience becomes joy rather than bargain. Paul urges believers to walk in Christ just as they received Him—rooted, built up, established. Doubts faced, battles prayed, and glimpses of glory all serve this end: a life where every choice, struggle, and moment of rest belongs to God's sovereign plan to draw His people closer to Himself.",
+                scripture: { reference: "Colossians 2:6-7", text: "Therefore, as you received Christ Jesus the Lord, so walk in him, rooted and built up in him and established in the faith, just as you were taught, abounding in thanksgiving." }
             },
             6: {
-                title: "The Community of Believers",
+                title: "The Well of Living Water",
                 questions: [
-                    "Why is the Church called the 'body of Christ' and how does that shape our relationships?",
-                    "How do spiritual gifts contribute to the health and mission of the church?",
-                    "What does biblical fellowship look like when it is genuinely centered on Christ?"
+                    "Why does Jesus offer 'living water' to a Samaritan woman—an outsider by every social measure?",
+                    "What does it mean that grace satisfies 'forever' rather than merely relieving temporary thirst?",
+                    "How do the three responses—drink, listen, share—model receiving, learning, and giving?"
                 ],
-                commentary: "The Church is not an optional accessory to faith; it is the very Bride of Christ, the new covenant community. Paul's body metaphor (1 Corinthians 12) underscores diversity and interdependence: each member has a role, and all are necessary. The game's emphasis on compassion reflects the communal ethic of the early church in Acts 2:44-47. Fellowship is not mere socializing but a shared participation in the divine life, nourished by Word and sacrament. A Christianity that thrives in isolation is, paradoxically, a weakened Christianity—because God designed us for mutual edification.",
-                scripture: { reference: "Acts 2:42-47", text: "And they devoted themselves to the apostles' teaching and the fellowship, to the breaking of bread and the prayers. And awe came upon every soul, and many wonders and signs were being done through the apostles. And all who believed were together and had all things in common. And they were selling their possessions and belongings and distributing the proceeds to all, as any had need. And day by day, as they spent much time together in the temple, and breaking bread in their homes, they received their food with glad and generous hearts, praising God and having favor with all the people." }
+                commentary: "The well recalls John 4, where Christ meets the Samaritan woman in her ordinary thirst and exposes her deeper one. Living water is the Spirit Himself, given through Christ, welling up to eternal life. Note the order the game preserves: first drink deeply—grace must be received before it can be shared; then listen in humility—disciples sit before they stand; then share with a neighbor—grace received becomes grace extended. Reformed theology sees here effectual calling in miniature: Christ seeks, convicts, and satisfies, and the sinner who came alone leaves as a witness to the town. No one is beyond the reach of the well.",
+                scripture: { reference: "John 4:14", text: "Whoever drinks of the water that I will give him will never be thirsty again. The water that I will give him will become in him a spring of water welling up to eternal life." }
             },
             7: {
-                title: "The New Creation",
+                title: "The Upper Room",
                 questions: [
-                    "How does the hope of the new creation affect how Christians live in the present age?",
-                    "What does it mean that 'the former things have passed away'?",
-                    "How can we live now as citizens of heaven while remaining engaged in earthly life?"
+                    "Why did the disciples have to wait in prayer before the Spirit came—could the mission have begun without Pentecost?",
+                    "How does the Spirit turn fear into boldness, as the scene of 'tongues of flame' depicts?",
+                    "What do praying, proclaiming, and breaking bread together teach about the Spirit's ordinary work in the church?"
                 ],
-                commentary: "The game concludes where Scripture concludes: not with destruction, but with renewal. The new creation is not a replacement of earth but its redemption—a new heaven and a new earth where righteousness dwells (2 Peter 3:13). This eschatological hope does not encourage escapism; instead, it energizes faithful presence in the world. As Augustine noted, we are pilgrims on the way to our true homeland. The 'keys' in the game's earlier chapters find their fulfillment in the new Jerusalem, where the King Himself shepherds His people. Every act of love, every deed of mercy, echoes forward into the age to come.",
-                scripture: { reference: "Revelation 21:5-6", text: "And he who was seated on the throne said, 'Behold, I am making all things new.' Also he said, 'Write this down, for these words are trustworthy and true.' And he said to me, 'It is done! I am the Alpha and the Omega, the beginning and the end. To the thirsty I will give from the spring of the water of life without payment.'" }
+                commentary: "The upper room is Pentecost: the ascended Christ pours out the promised Spirit, and a frightened band becomes a bold church. The rushing wind and tongues of flame are not decoration; they mark the arrival of the age of the Spirit, in which God dwells not merely among His people but within them. The game's three responses trace Acts faithfully: persistent prayer that waits on God's timing, bold proclamation that announces Christ, and table fellowship that remembers His death. Reformed theology insists the same Spirit who fell at Pentecost ordinarily works through these same means—Word, prayer, and sacrament—so that every Lord's Day is a small upper room where Christ builds His church.",
+                scripture: { reference: "Acts 1:8", text: "But you will receive power when the Holy Spirit has come upon you, and you will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the age." }
             },
             8: {
-                title: window.I18N.t("Sola Fide (Faith Alone)"),
+                title: window.I18N.t("The Valley of Doubt"),
                 questions: [
-                    "Why does Reformed theology insist that justification comes 'by faith alone' rather than through faith plus good works?",
-                    "How does the Reformation distinction between 'justification' and 'sanctification' protect the gospel from confusion?",
-                    "What does it mean that Christ's righteousness is 'imputed' to the believer, and why does that matter for assurance?"
+                    "Is doubt the opposite of faith, or can it be the terrain where faith learns to walk?",
+                    "What do the psalms of lament teach about bringing honest questions to God?",
+                    "Why do the game's paths lead back to Scripture, worship, and rest rather than to immediate answers?"
                 ],
-                commentary: window.I18N.t("Sola fide—justification by faith alone—stands as one of the five great solas of the Reformation. The doctrine declares that a sinner is declared righteous before God not on the basis of any merit or work within them, but solely on the basis of the imputed righteousness of Jesus Christ, received through faith alone. Faith itself is a gift from God; it is not a human achievement that earns salvation, but the empty hand that receives the finished work of Christ. The Reformers sharply distinguished between justification, which is God's forensic declaration, and sanctification, which is His progressive work of transformation. Because justification rests entirely on Christ, the believer's assurance rests not on their own variable faithfulness, but on the unchanging merit of their Savior. Good works are the necessary fruit of genuine faith, not its root. Luther called this article the one by which the church stands or falls, and Calvin emphasized the duplex gratia: believers have Christ's righteousness imputed to them while being united to Him in mystical union. The game's stat-boost mechanic echoes this truth: the reward is not earned by the player's effort alone, but graciously bestowed upon completion of the quest."),
-                scripture: { reference: "Romans 3:28", text: "For we hold that one is justified by faith apart from works of the law." }
+                commentary: window.I18N.t("The valley names an experience every believer knows: the sense that God has hidden His face. Scripture does not rebuke this honesty—it canonizes it; nearly a third of the psalms are laments. The Reformers taught that faith is not the absence of questions but trust in the dark: walking by faith, not by sight. Notice where each choice leads: crying out ends in worship, searching the Word ends in wisdom, waiting in silence ends in renewed pilgrimage. Doubt addressed to God becomes prayer; doubt nursed alone becomes despair. The narrow stream through the valley floor is grace itself—small, steady, and sufficient until the light breaks."),
+                scripture: { reference: "2 Corinthians 5:7", text: "For we walk by faith, not by sight." }
             },
             9: {
-                title: window.I18N.t("The Trinity"),
+                title: window.I18N.t("The Warfare of Prayer"),
                 questions: [
-                    "How can Christians believe in 'one God' while also confessing Father, Son, and Holy Spirit as each fully God?",
-                    "Why is Trinitarian doctrine essential to the gospel—what is lost if Jesus is not fully God?",
-                    "How does the internal relationship of the Trinity help us understand God's love and invitation to relationship?"
+                    "If Christ has already won the victory, why must believers still 'stand' and 'wrestle' in prayer?",
+                    "What is the 'full armor of God,' and why is every piece defensive except one?",
+                    "How does interceding for others turn spiritual warfare from anxiety into love?"
                 ],
-                commentary: window.I18N.t("The doctrine of the Trinity confesses that the one true God eternally exists in three persons: Father, Son, and Holy Spirit. Each person is fully, completely, and eternally God; yet there are not three Gods, but one God, indivisible in essence and equal in glory. This is not a logical contradiction but a revealed mystery—Scripture clearly teaches monotheism while also ascribing divine attributes, worship, and works to each person. The Father is not the Son, the Son is not the Spirit, and the Spirit is not the Father; yet they are one in substance and purpose. The Nicene Creed gave the church its classic language: the Son is 'begotten, not made, consubstantial with the Father,' and the Holy Spirit 'proceeds from the Father and the Son.' The Trinity is not an abstract doctrine but the very shape of the gospel: the Father sends the Son, the Son accomplishes redemption, and the Spirit applies it. Without the full deity of Christ, the atonement would be insufficient—an infinite debt demands infinite payment. Without the deity of the Spirit, the believer could not be regenerated or sealed. The Trinity reveals a God who is eternally love, not solitary, but a communion of persons inviting us into fellowship."),
-                scripture: { reference: "Matthew 28:19", text: "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit." }
+                commentary: window.I18N.t("This chapter confesses the already-but-not-yet of redemption: the decisive battle is won at the cross, yet skirmishes continue until Christ returns. Paul's armor in Ephesians 6 is telling—truth, righteousness, gospel-readiness, faith, salvation, and the Word—equipment for standing firm, not for anxious striving. Prayer is the battlefield posture: intercession wields Christ's finished victory on behalf of others, and authority in His name is exercised, never presumed. The saints of old surrounding the player picture the cloud of witnesses—not mediators, but encouragers. Reformed theology holds both truths together: Satan is a defeated foe, and prayer is the ordained means by which God applies that defeat in time."),
+                scripture: { reference: "Ephesians 6:11", text: "Put on the whole armor of God, that you may be able to stand against the schemes of the devil." }
             },
             10: {
-                title: window.I18N.t("Sanctification"),
+                title: window.I18N.t("The Hope of Glory"),
                 questions: [
-                    "How does sanctification differ from justification, and why must Reformed theology hold them distinct?",
-                    "If sanctification is God's work, what responsibility does the believer have to pursue holiness?",
-                    "What does it look like to grow in grace when the process is lifelong and never fully complete in this life?"
+                    "What is the difference between worldly optimism and the Christian 'hope that does not disappoint'?",
+                    "How does a future inheritance change present suffering?",
+                    "Why do the game's responses pair worship and witness—adoration of Christ and proclamation to the world?"
                 ],
-                commentary: window.I18N.t("Sanctification is the Holy Spirit's work of progressively conforming the justified believer to the image of Jesus Christ. It is inseparably connected to justification—the same God who declares a sinner righteous begins at once to make him holy—yet the two must never be conflated. Justification is a once-for-all forensic act: God declares the sinner righteous on the basis of Christ's imputed merit. Sanctification is an ongoing, Spirit-wrought process: God gradually renews the heart, enabling the believer to die to sin and live to righteousness. The Reformers rejected both perfectionism—the idea that Christians can achieve sinless status in this life—and antinomianism, the idea that justification makes moral effort irrelevant. The believer is called to 'work out' salvation with fear and trembling precisely because God is 'at work' within them (Philippians 2:12-13). Spiritual disciplines—prayer, Scripture, worship, and fellowship—are the means the Spirit ordinarily uses. Progress is real but gradual; failures and setbacks are inevitable, but God's preserving grace ensures ultimate completion. The Westminster Larger Catechism teaches that sanctification is imperfect in this life, with remnants of corruption remaining, yet the believer grows in grace and in the knowledge of Christ."),
-                scripture: { reference: "1 Thessalonians 4:3-4", text: "For this is the will of God, your sanctification: that you abstain from sexual immorality; that each one of you know how to control his own body in holiness and honor." }
+                commentary: window.I18N.t("Hope here is not wishful thinking but the assured inheritance sealed by Christ's blood and resurrection. Peter calls it a living hope; Paul says suffering produces endurance, endurance produces character, and character produces a hope that does not put us to shame, because God's love is poured into our hearts through the Spirit. The veil grows thin in this chapter because glory is not distant compensation for a wasted life—it is the revealed meaning of the life already being lived. Worship answers what witness announces: the risen Christ is worthy, and the world must hear it. To live in light of eternity is not to despise the present but to weigh it rightly—every trial woven into an unfading crown."),
+                scripture: { reference: "Romans 8:18", text: "For I consider that the sufferings of this present time are not worth comparing with the glory that is to be revealed to us." }
             },
             11: {
-                title: window.I18N.t("The Lord's Supper"),
+                title: window.I18N.t("The Communion of Saints"),
                 questions: [
-                    "How does Reformed theology understand Christ's presence in the Lord's Supper, and how does this differ from the Catholic and Zwinglian views?",
-                    "Why is faith essential for truly partaking of Christ in the Supper?",
-                    "What does it mean to 'feed on Christ' in a spiritual manner, and how does this nourish the soul?"
+                    "Who belongs to the 'communion of saints,' and why does the game include patriarchs, prophets, apostles, and martyrs?",
+                    "What is the Reformed objection to praying to saints, and how should believers properly honor them?",
+                    "How does the unity of Christ's body across time and tongue comfort a lonely pilgrim?"
                 ],
-                commentary: window.I18N.t("The Lord's Supper is a sacrament instituted by Christ on the night of His betrayal, in which believers partake of bread and wine in remembrance of Him until He comes. Reformed theology rejects the Roman Catholic doctrine of transubstantiation—which holds that the elements are transformed into the literal body and blood of Christ—and also rejects a purely symbolic memorialism. Instead, it confesses a real spiritual presence of Christ in the Supper. The Westminster Confession states that Christ is 'really, yet spiritually, present to the faith of the receiver in that ordinance.' The bread and wine remain truly bread and wine, but through the power of the Holy Spirit, Christ is spiritually offered and received by faith. The Supper is not a re-sacrifice but a thankful memorial and a means of grace: believers are spiritually nourished and grow in union with Christ. Calvin described it as a wondrous exchange in which we are fed on Christ by the Spirit, even as He remains bodily in heaven. The call to self-examination before partaking is pastoral: the Supper is for believers, not unbelievers, and it nourishes faith rather than creating it."),
-                scripture: { reference: "1 Corinthians 11:23-26", text: "For I received from the Lord what I also delivered to you, that the Lord Jesus on the night when he was betrayed took bread, and when he had given thanks, he broke it, and said, 'This is my body, which is for you. Do this in remembrance of me.' In the same way also he took the cup, after supper, saying, 'This cup is the new covenant in my blood. Do this, as often as you drink it, in remembrance of me.' For as often as you eat this bread and drink the cup, you proclaim the Lord's death until he comes." }
+                commentary: window.I18N.t("The communion of saints is the whole company of the elect in every age—militant on earth, triumphant in heaven—united to one Head by one Spirit. Hebrews pictures them as a cloud of witnesses cheering the pilgrim on. The chapter also issues the Reformed warning: Rome blurred this fellowship by invoking saints as mediators, but Scripture names one mediator between God and men, the man Christ Jesus. We honor the saints the biblical way—by imitating their faith, not by praying to them. Their lives point beyond themselves to Christ. For the lonely believer, this doctrine is pure comfort: no pilgrim ever walks alone; the same Spirit who sustained the martyrs dwells in every ordinary saint today."),
+                scripture: { reference: "1 Timothy 2:5", text: "For there is one God, and there is one mediator between God and men, the man Christ Jesus." }
             },
             12: {
-                title: window.I18N.t("Perseverance of the Saints"),
+                title: window.I18N.t("The New Heavens and New Earth"),
                 questions: [
-                    "If salvation is entirely God's work from start to finish, what guarantee do believers have that they will not fall away?",
-                    "Does perseverance mean a believer will never struggle with doubt or sin, and if not, how can they have assurance?",
-                    "How does the doctrine of perseverance encourage holy living rather than complacency?"
+                    "Why is the Christian hope the renewal of creation rather than escape from it?",
+                    "What does it mean that 'the dwelling place of God is with man'?",
+                    "How does the quest's end—union with Christ—reframe everything the player did to get here?"
                 ],
-                commentary: window.I18N.t("Perseverance of the saints is the fifth article of the TULIP summary of Reformed soteriology: those whom God has effectually called and justified will, by His preserving power, persevere in faith to the end and cannot finally fall away. This is not a statement about human stamina, but about divine faithfulness. The same God who initiates salvation carries it to completion (Philippians 1:6). Believers are kept by God's power through faith for a salvation ready to be revealed in the last time. True Christians may stumble into serious sin—Peter denied Christ, David fell into adultery—but they will not make a final and complete apostasy, because God's preserving work is stronger than any created power. Assurance rests not on the fluctuation of one's feelings or the perfection of one's obedience, but on the objective ground of Christ's finished work and the Spirit's indwelling seal. At the same time, Scripture calls believers to examine themselves, to press on, and to grow in holiness. Perseverance does not encourage complacency; it grounds the believer's striving in divine security. The elect are preserved not to be idle, but to abound in the work of the Lord."),
-                scripture: { reference: "Philippians 1:6", text: "And I am sure of this, that he who began a good work in you will bring it to completion at the day of Jesus Christ." }
+                commentary: window.I18N.t("The vision reaches its biblical culmination: not disembodied escape but a new heaven and new earth where righteousness dwells. Peter promises it; John beholds it; Paul says creation itself will be liberated from bondage into the freedom of the glory of God's children. The Reformed hope is cosmic because the curse was cosmic—Christ redeems the world He made. 'Behold, the dwelling place of God is with man' reverses Eden's exile: God with us, tears wiped away, death undone. The chapter's closing insight is the game's thesis: the quest was never moral striving but union with Christ, from whom all grace flows and to whom all glory returns. The Author and Finisher completes what He began."),
+                scripture: { reference: "2 Peter 3:13", text: "But according to his promise we are waiting for new heavens and a new earth in which righteousness dwells." }
             },
             13: {
-                title: window.I18N.t("Providence"),
+                title: window.I18N.t("The Reformation"),
                 questions: [
-                    "If God ordains everything that comes to pass, does that mean human choices and actions are not real or responsible?",
-                    "How can believers trust God's providence when they experience suffering, injustice, or apparent randomness?",
-                    "What does it mean that God's providence is 'universal, particular, and efficacious'?"
+                    "What are the five solas, and why did the Reformers consider each one non-negotiable?",
+                    "Did the Reformers invent new doctrine, or recover something older—and why does that matter?",
+                    "How do the game's three responses—Scripture, faith, glory—summarize the whole Reformation?"
                 ],
-                commentary: window.I18N.t("Providence is the doctrine that God sovereignly upholds, directs, and governs all creatures and events in the universe according to His infallible will and wise purpose. Nothing happens outside His ordination—from the rising of empires to the falling of sparrows, from the paths of planets to the details of daily life. Yet Reformed theology carefully distinguishes God's ordination from being the author of sin: God ordains all things that come to pass, but the sinfulness of human acts proceeds from the creature, not from God, who in His infinite wisdom turns evil deeds toward redemptive ends. Secondary causes—natural laws, human choices, moral agency—are real and active; God's governance does not override but rather works through them. The Heidelberg Catechism teaches that nothing happens to us by chance but only by the appointment of our gracious heavenly Father, who tempers all things for our salvation. This is a doctrine of immense pastoral comfort: in prosperity, we receive with gratitude; in adversity, we rest in trust; in every circumstance, we know that our God is working all things together for good for those who love Him and are called according to His purpose."),
-                scripture: { reference: "Romans 8:28", text: "And we know that for those who love God all things work together for good, for those who are called according to his purpose." }
+                commentary: window.I18N.t("Wittenberg recovered what human tradition had buried: Scripture alone as supreme authority, faith alone as the instrument of justification, Christ alone as mediator, grace alone as the ground of salvation, glory to God alone as the end of all things. The chapter rightly stresses recovery over invention—the Reformers unearthed the ancient apostolic faith, appealing over medieval accretions to the Word itself. Sola Scriptura guards the other solas: take it away and tradition, reason, or experience quietly become co-authorities. The three closing choices preach the Reformation in miniature: submit every tradition to the Word, rest from self-justifying works, and aim the whole of life at God's glory."),
+                scripture: { reference: "Romans 1:17", text: "For in it the righteousness of God is revealed from faith for faith, as it is written, 'The righteous shall live by faith.'" }
             },
             14: {
-                title: window.I18N.t("Covenant"),
+                title: window.I18N.t("The Church Fathers"),
                 questions: [
-                    "What is the covenant of grace, and how does it structure God's relationship with His people from Genesis to Revelation?",
-                    "How do the covenant promises to Abraham find their fulfillment in Christ and the church?",
-                    "What does it mean that God's covenants are 'unconditional' on His part yet require faith and obedience from us?"
+                    "Why should Reformed believers—committed to Scripture alone—still read Athanasius, Augustine, and Irenaeus?",
+                    "What did Athanasius defend at Nicaea, and why did the deity of Christ hang in the balance?",
+                    "How does Augustine's Confessions illustrate the doctrines of grace the Reformation later recovered?"
                 ],
-                commentary: window.I18N.t("The covenant is the central framework of redemptive history. God initiates covenant relationship with His people, binding Himself to promises that cannot fail. The covenant of grace, first announced after the fall and progressively revealed through Noah, Abraham, Moses, David, and ultimately in Christ, shows God's faithfulness across generations. In Reformed theology, the covenant is not merely a contract but a bond of sovereign grace: God freely gives Himself to His people, seals the relationship with oath and sacrament, and preserves the elect to the end. Baptism and the Lord's Supper are covenant signs, visible seals of the promises of the gospel. Understanding covenant theology protects against treating the Bible as a disconnected set of moral lessons; instead, it reveals the unity of God's redemptive plan from the promise of the Seed to the marriage supper of the Lamb."),
-                scripture: { reference: "Genesis 17:7", text: "And I will establish my covenant between me and you and your offspring after you throughout their generations for an everlasting covenant, to be God to you and to your offspring after you." }
+                commentary: window.I18N.t("Sola Scriptura never meant Scripture in isolation. The fathers are faithful lamps, not rival lights: Athanasius contending that the Son is consubstantial with the Father, without whom no atonement of infinite worth is possible; Augustine confessing that grace precedes, enables, and completes every human turning, laying the rails the Reformers would run on; Irenaeus guarding the apostolic deposit against Gnostic novelty, modeling the call to contend for the faith once delivered. Chalcedon's formula—one person in two natures, without confusion, change, division, or separation—remains the church's grammar for speaking of Christ. The Reformed faith is not a sixteenth-century novelty but the ancient catholic faith, purified."),
+                scripture: { reference: "Jude 3", text: "Beloved, although I was very eager to write to you about our common salvation, I found it necessary to write appealing to you to contend for the faith that was once for all delivered to the saints." }
             },
             15: {
-                title: window.I18N.t("Atonement"),
+                title: window.I18N.t("Perseverance & Glory"),
                 questions: [
-                    "What does 'penal substitutionary atonement' mean, and why do Reformed theologians insist Christ died in the place of sinners?",
-                    "How does the infinite worth of Christ make His sacrifice sufficient for the sins of the whole world?",
-                    "If Christ's death actually secures salvation for the elect, what does that mean for the scope and effectiveness of the atonement?"
+                    "What keeps the saints persevering—their grip on God, or His grip on them?",
+                    "How does Paul's 'golden chain' move from foreknowledge to glorification without a broken link?",
+                    "Why does the game end with surrender rather than achievement?"
                 ],
-                commentary: window.I18N.t("The atonement is the heart of the gospel: Christ, the sinless Son of God, took upon Himself the guilt, punishment, and curse that sinners deserved, satisfying divine justice and reconciling a holy God to His people. Reformed theology confesses the doctrine of penal substitution—Christ bore the penalty we deserved, stood in our place, and by His death propitiated the wrath of God. Because He is infinite in worth, His sacrifice has infinite value, sufficient for all who believe. The Reformers also emphasized that Christ's atonement is particular in its efficacy: He actually secures, rather than merely makes possible, the salvation of all for whom He died. This does not diminish the love of God but magnifies it: God did not merely open a door and hope sinners would walk through; He entered history, paid the debt, and ensured that every one of His sheep would be brought safely home. The cross is the ultimate demonstration of both God's justice and His mercy."),
-                scripture: { reference: "Isaiah 53:5-6", text: "But he was pierced for our transgressions; he was crushed for our iniquities; upon him was the chastisement that brought us peace, and with his wounds we are healed. All we like sheep have gone astray; we have turned—every one—to his own way; and the LORD has laid on him the iniquity of us all." }
+                commentary: window.I18N.t("The final chapter confesses the keeping power of God: those He calls, He preserves. Perseverance is not the saints' tenacity but the Shepherd's grip—no one snatches His sheep from His hand, and the good work begun is carried to completion. Paul's golden chain runs unbroken from foreknowledge to predestination to calling to justification to glorification, every link forged by God. So the quest ends not with a trophy but with surrender: yielding the story into the hands of its Author and Finisher. The consummation is not escape from creation but its liberation—the groaning world set free into the glory of God's children, every tear wiped away, Christ all in all."),
+                scripture: { reference: "Jude 24-25", text: "Now to him who is able to keep you from stumbling and to present you blameless before the presence of his glory with great joy, to the only God, our Savior, through Jesus Christ our Lord, be glory, majesty, dominion, and authority, before all time and now and forever. Amen." }
             },
             16: {
                 title: window.I18N.t("Justification"),

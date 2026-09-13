@@ -199,6 +199,22 @@ class DivinePuzzles {
                 ],
                 hint: 'This is the very first verse of the very first book of the sacred text...',
                 reward: { wisdom: 20, faith: 15 }
+            },
+            {
+                id: 'solas_match',
+                name: 'Five Solas',
+                description: 'Match each sola to its meaning — the rallying cries of the Reformation',
+                type: 'choice',
+                difficulty: 'medium',
+                verse: 'Sola Fide: we are justified before God by...',
+                options: [
+                    { text: 'Faith alone in Christ alone, not by works', correct: true },
+                    { text: 'Faith plus the sacraments administered by priests', correct: false },
+                    { text: 'Scripture alone as final authority', correct: false },
+                    { text: 'Grace earned through pilgrimage and penance', correct: false }
+                ],
+                hint: 'Luther called this the article by which the church stands or falls...',
+                reward: { faith: 20, wisdom: 15 }
             }
         ];
     }

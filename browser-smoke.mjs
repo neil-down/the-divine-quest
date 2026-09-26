@@ -2,6 +2,7 @@ import { createServer } from 'http';
 import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
+import os from 'os';
 import { fileURLToPath } from 'url';
 import { chromium } from 'playwright';
 
@@ -233,8 +234,37 @@ try {
       JSON.stringify(Object.fromEntries(Object.entries(rects).map(([k, v]) => [k, v && { l: Math.round(v.left), t: Math.round(v.top), r: Math.round(v.right), b: Math.round(v.bottom) }]))));
   }
 
+  // --- PWA offline: SW registers, precaches, and serves the app with no network
+  const swReady = await page.evaluate(() =>
+    navigator.serviceWorker && navigator.serviceWorker.ready ? navigator.serviceWorker.ready.then(() => true).catch(() => false) : false);
+  step('browserSwRegisters', swReady);
+  if (swReady) {
+    await page.reload({ waitUntil: 'load' }); // let the SW control the page
+    await wait(1500);
+    const cached = await page.evaluate(async () => {
+      const keys = await caches.keys();
+      const name = keys.find((k) => k.startsWith('divine-quest-'));
+      if (!name) return { keys, count: -1 };
+      const cache = await caches.open(name);
+      return { keys, name, count: (await cache.keys()).length };
+    });
+    step('browserSwPrecaches', cached.count >= 10, JSON.stringify(cached));
+    await page.context().setOffline(true);
+    await page.reload({ waitUntil: 'load' }).catch(() => {});
+    await wait(600);
+    const offline = await page.evaluate(() => ({
+      title: document.title,
+      story: (document.getElementById('story-text') || {}).textContent || '',
+      game: !!window.game
+    }));
+    step('browserOfflineReload', offline.title.includes('The Divine Quest') && offline.story.trim().length > 50 && offline.game,
+      JSON.stringify(offline));
+    await page.context().setOffline(false);
+    await page.reload({ waitUntil: 'load' });
+  }
+
   await page.setViewportSize({ width: 1280, height: 800 });
-  const shotDir = path.join(process.env.TEMP || __dirname, 'opencode', 'divine-quest-shots');
+  const shotDir = path.join(os.tmpdir(), 'opencode', 'divine-quest-shots');
   const { mkdirSync } = await import('fs');
   mkdirSync(shotDir, { recursive: true });
   const shotPath = path.join(shotDir, 'browser-smoke.png');

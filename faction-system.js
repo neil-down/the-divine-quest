@@ -69,6 +69,13 @@ class FactionSystem {
 
         const result = { 'The Faithful': 0, 'The Doubting': 0, 'The World': 0 };
 
+        // Prefer explicit faction data authored on the choice (Act II+);
+        // fall back to the text/stat heuristic below.
+        if (choice.faction && typeof choice.faction === 'object') {
+            const explicit = Object.assign({}, result, choice.faction);
+            return explicit;
+        }
+
         // Heuristic mapping from choice text to factions
         if (/devotion|prayer|faith|worship|gospel|christ|scripture|truth|righteousness/.test(text)) {
             result['The Faithful'] += 3;

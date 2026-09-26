@@ -22,7 +22,17 @@ class DivineAudio {
   _ensureStarted() {
     if (this.started) return;
     this.started = true;
-    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) {
+      // No WebAudio support (e.g. headless tests, restricted iframes):
+      // degrade to silent, never crash the game.
+      this.available = false;
+      window.removeEventListener('click', this._ensureStarted);
+      window.removeEventListener('keydown', this._ensureStarted);
+      return;
+    }
+    this.available = true;
+    this.ctx = new AC();
     this.masterGain = this.ctx.createGain();
     this.masterGain.gain.value = 0.35;
     this.masterGain.connect(this.ctx.destination);
@@ -121,7 +131,7 @@ class DivineAudio {
 
   setAmbientEnabled(enabled) {
     this.ambientEnabled = !!enabled;
-    if (!this.started) return;
+    if (!this.started || !this.ctx) return;
     if (this.ambientEnabled && !this.muted) {
       if (this.ambientNodes.length === 0) {
         this._startAmbient();
@@ -146,7 +156,7 @@ class DivineAudio {
       this.masterGain.gain.setTargetAtTime(muted ? 0 : 0.35, this.ctx.currentTime, 0.3);
     }
     // If unmuting and ambient is enabled, start ambient if it's not running
-    if (!muted && this.ambientEnabled && this.ambientNodes.length === 0 && this.started) {
+    if (!muted && this.ambientEnabled && this.ambientNodes.length === 0 && this.started && this.ctx) {
       this._startAmbient();
     }
   }
@@ -371,7 +381,7 @@ window.divineAudio = new DivineAudio();
     Object.assign(btn.style, {
       position: 'fixed',
       bottom: '16px',
-      right: '72px',
+      right: '208px',
       zIndex: '9999',
       background: 'rgba(0,0,0,0.55)',
       color: '#fff',
@@ -417,7 +427,7 @@ window.divineAudio = new DivineAudio();
     Object.assign(btn.style, {
       position: 'fixed',
       bottom: '16px',
-      right: '16px',
+      right: '144px',
       zIndex: '9999',
       background: 'rgba(0,0,0,0.55)',
       color: '#fff',
@@ -489,14 +499,13 @@ window.divineAudio = new DivineAudio();
   }
 
   function hookDefeat() {
-    if (!window.battleEncounters || typeof window.battleEncounters.defeat !== 'function') return false;
-    const original = window.battleEncounters.defeat.bind(window.battleEncounters);
-    window.battleEncounters.defeat = function (...args) {
-      audio.play('defeat');
-      return original(...args);
-    };
-    return true;
+    // Replaced by the battleDefeat event listener (battle-system dispatches it).
+    return false;
   }
+
+  // Defeat sound is wired via the battleDefeat event (the old hook targeted
+  // `battleEncounters.defeat`, which never existed).
+  document.addEventListener('battleDefeat', () => audio.play('defeat'));
 
   // Wait for globals to be defined by other scripts
   function tryHook() {

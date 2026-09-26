@@ -386,7 +386,13 @@ class VisualEffectsEngine {
     }
     
     getOverlayContainer() {
-        return document.querySelector('.fixed.inset-0.z-50') || this.container;
+        const preferred = ['puzzle-overlay', 'battle-overlay']
+            .map((id) => document.getElementById(id))
+            .find((el) => el && !el.classList.contains('hidden'));
+        if (preferred) return preferred;
+        const visible = Array.from(document.querySelectorAll('.fixed.inset-0.z-50'))
+            .find((el) => !el.classList.contains('hidden'));
+        return visible || this.container;
     }
     
     // Portal Effects
@@ -436,6 +442,57 @@ class VisualEffectsEngine {
             
             this.container.appendChild(particle);
             setTimeout(() => particle.remove(), 2000);
+        }
+    }
+
+    // Accessibility check — honors both the OS preference and the in-game reduced-motion toggle
+    _reducedMotion() {
+        if (document.body && document.body.classList.contains('reduced-motion')) return true;
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    triggerGraceShimmer() {
+        if (this._reducedMotion()) return;
+        const shimmer = document.createElement('div');
+        shimmer.textContent = '✨';
+        shimmer.className = 'tdq-grace-shimmer';
+        document.body.appendChild(shimmer);
+        setTimeout(() => shimmer.remove(), 1800);
+    }
+
+    triggerConvictionFlash() {
+        if (this._reducedMotion()) return;
+        const flash = document.createElement('div');
+        flash.className = 'tdq-conviction-flash';
+        document.body.appendChild(flash);
+        setTimeout(() => flash.remove(), 600);
+    }
+
+    triggerChoiceRipple(x, y, target) {
+        if (this._reducedMotion()) return;
+        const ripple = document.createElement('span');
+        ripple.className = 'tdq-choice-ripple';
+        const rect = (target && target.getBoundingClientRect) ? target.getBoundingClientRect() : null;
+        const rx = rect ? (x - rect.left) : 10;
+        const ry = rect ? (y - rect.top) : 10;
+        ripple.style.left = rx + 'px';
+        ripple.style.top = ry + 'px';
+        if (target && target.style) {
+            const prevPos = target.style.position;
+            if (!prevPos || prevPos === 'static') target.style.position = 'relative';
+            target.style.overflow = 'hidden';
+            target.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        }
+    }
+
+    triggerBattleImpact() {
+        if (this._reducedMotion()) return;
+        if (document.body) {
+            document.body.classList.remove('tdq-battle-impact');
+            void document.body.offsetWidth; // reflow to restart animation
+            document.body.classList.add('tdq-battle-impact');
+            setTimeout(() => document.body.classList.remove('tdq-battle-impact'), 450);
         }
     }
 }
@@ -521,57 +578,6 @@ style.textContent = `
         }
     }
     
-    // Accessibility-aware effects (no-op when reduced motion is on)
-    _reducedMotion() {
-        if (document.body && document.body.classList.contains('reduced-motion')) return true;
-        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-
-    triggerGraceShimmer() {
-        if (this._reducedMotion()) return;
-        const shimmer = document.createElement('div');
-        shimmer.textContent = '✨';
-        shimmer.className = 'tdq-grace-shimmer';
-        document.body.appendChild(shimmer);
-        setTimeout(() => shimmer.remove(), 1800);
-    }
-
-    triggerConvictionFlash() {
-        if (this._reducedMotion()) return;
-        const flash = document.createElement('div');
-        flash.className = 'tdq-conviction-flash';
-        document.body.appendChild(flash);
-        setTimeout(() => flash.remove(), 600);
-    }
-
-    triggerChoiceRipple(x, y, target) {
-        if (this._reducedMotion()) return;
-        const ripple = document.createElement('span');
-        ripple.className = 'tdq-choice-ripple';
-        const rect = (target && target.getBoundingClientRect) ? target.getBoundingClientRect() : null;
-        const rx = rect ? (x - rect.left) : 10;
-        const ry = rect ? (y - rect.top) : 10;
-        ripple.style.left = rx + 'px';
-        ripple.style.top = ry + 'px';
-        if (target && target.style) {
-            const prevPos = target.style.position;
-            if (!prevPos || prevPos === 'static') target.style.position = 'relative';
-            target.style.overflow = 'hidden';
-            target.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 600);
-        }
-    }
-
-    triggerBattleImpact() {
-        if (this._reducedMotion()) return;
-        if (document.body) {
-            document.body.classList.remove('tdq-battle-impact');
-            void document.body.offsetWidth; // reflow to restart animation
-            document.body.classList.add('tdq-battle-impact');
-            setTimeout(() => document.body.classList.remove('tdq-battle-impact'), 450);
-        }
-    }
-
     @keyframes ringExpand {
         0% {
             transform: scale(0);
@@ -693,34 +699,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => {
         window.visualEffects = new VisualEffectsEngine();
         
-        // Hook into battle system
-        if (window.battleEncounters) {
-            const originalUseSkill = window.battleEncounters.useSkill.bind(window.battleEncounters);
-            window.battleEncounters.useSkill = function(skillName) {
-                const result = originalUseSkill(skillName);
-                if (window.visualEffects && this.currentEnemy) {
-                    const skill = this.skills[skillName];
-                    let damage = skill.damage;
-                    if (skillName === this.currentEnemy.weakness) damage *= 2;
-                    window.visualEffects.triggerAttackEffect('player', 'enemy', damage);
-                }
-                return result;
-            };
-        }
-        
-        // Hook into puzzle system
-        if (window.puzzleSystem) {
-            const originalSolvePuzzle = window.puzzleSystem.solvePuzzle.bind(window.puzzleSystem);
-            window.puzzleSystem.solvePuzzle = function() {
-                const result = originalSolvePuzzle();
-                if (window.visualEffects) {
-                    window.visualEffects.triggerPuzzleSolveEffect();
-                    window.visualEffects.triggerGraceShimmer();
-                }
-                return result;
-            };
-        }
-
         // Grace shimmer on victory; conviction flash on a low-path / wrong choice
         document.addEventListener('battleVictory', () => {
             if (window.visualEffects) window.visualEffects.triggerGraceShimmer();
@@ -730,31 +708,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const isLowPath = e && e.detail && e.detail.lowPath;
             if (isLowPath) window.visualEffects.triggerConvictionFlash();
         });
-        
-        // Hook into progression system
-        if (window.progressionSystem) {
-            const originalOnLevelUp = window.progressionSystem.onLevelUp.bind(window.progressionSystem);
-            window.progressionSystem.onLevelUp = function() {
-                const result = originalOnLevelUp();
-                if (window.visualEffects) {
-                    window.visualEffects.triggerLevelUpEffect();
-                }
-                return result;
-            };
-        }
 
         // Battle impact: brief screen shake when the player takes a hit
         document.addEventListener('battleHit', () => {
             if (window.visualEffects) window.visualEffects.triggerBattleImpact();
         });
-        if (window.battleEncounters && typeof window.battleEncounters.takeDamage === 'function') {
-            const originalTakeDamage = window.battleEncounters.takeDamage.bind(window.battleEncounters);
-            window.battleEncounters.takeDamage = function(amount) {
-                const result = originalTakeDamage(amount);
-                document.dispatchEvent(new CustomEvent('battleHit'));
-                return result;
-            };
-        }
 
         // Choice ripple: tap/click feedback on choice buttons
         document.addEventListener('click', (e) => {
@@ -763,5 +721,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.visualEffects.triggerChoiceRipple(e.clientX, e.clientY, btn);
             }
         });
+
+        // Puzzle-solve and level-up effects are attached once their owners
+        // exist (puzzle/progression initialize on later timers).
+        let hooked = 0;
+        const hookTimer = setInterval(() => {
+            try {
+                if (window.puzzleSystem && !window.visualEffects._puzzleHooked && typeof window.puzzleSystem.solvePuzzle === 'function') {
+                    const originalSolvePuzzle = window.puzzleSystem.solvePuzzle.bind(window.puzzleSystem);
+                    window.puzzleSystem.solvePuzzle = function () {
+                        const result = originalSolvePuzzle();
+                        if (window.visualEffects) {
+                            window.visualEffects.triggerPuzzleSolveEffect();
+                            window.visualEffects.triggerGraceShimmer();
+                        }
+                        return result;
+                    };
+                    window.visualEffects._puzzleHooked = true;
+                    hooked++;
+                }
+                if (window.progressionSystem && !window.visualEffects._levelHooked && typeof window.progressionSystem.onLevelUp === 'function') {
+                    const originalOnLevelUp = window.progressionSystem.onLevelUp.bind(window.progressionSystem);
+                    window.progressionSystem.onLevelUp = function () {
+                        const result = originalOnLevelUp();
+                        if (window.visualEffects) window.visualEffects.triggerLevelUpEffect();
+                        return result;
+                    };
+                    window.visualEffects._levelHooked = true;
+                    hooked++;
+                }
+                if (hooked >= 2) {
+                    clearInterval(hookTimer);
+                }
+            } catch (err) { /* leave for next tick */ }
+        }, 250);
+
+        setTimeout(() => clearInterval(hookTimer), 8000);
     }, 1000);
 });

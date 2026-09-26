@@ -121,13 +121,14 @@ class Settings {
     if (this.button && this.panel) return; // already injected
 
     this.button = document.createElement('button');
+    this.button.id = 'settings-toggle';
     this.button.textContent = '⚙️ Settings';
     this.button.setAttribute('aria-label', 'Open settings');
     this.button.title = 'Settings';
     Object.assign(this.button.style, {
       position: 'fixed',
       bottom: '16px',
-      right: '16px',
+      right: '272px',
       zIndex: '9999',
       background: 'rgba(0,0,0,0.55)',
       color: '#fff',
@@ -348,6 +349,7 @@ class Settings {
 /* ------------------------------------------------------------------ bootstrap */
 document.addEventListener('DOMContentLoaded', () => {
   window.settings = new Settings();
+  window.settings.injectUI();
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {

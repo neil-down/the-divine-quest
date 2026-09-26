@@ -1,14 +1,22 @@
 {
   "name": "the-divine-quest",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node esbuild.config.js",
-    "dev": "node esbuild.config.js --watch"
+    "content": "node scripts/fetch-verses.mjs && node scripts/lint-content.mjs && node scripts/gen-content.mjs",
+    "verses": "node scripts/fetch-verses.mjs",
+    "lint": "node scripts/lint-content.mjs",
+    "build": "node scripts/fetch-verses.mjs && node scripts/lint-content.mjs && node scripts/gen-content.mjs && node esbuild.config.js",
+    "build:skipcontent": "node esbuild.config.js",
+    "deploy": "node esbuild.config.js && npx --yes gh-pages -d dist",
+    "dev": "node esbuild.config.js --watch",
+    "smoke": "node smoke-test.mjs",
+    "browser:smoke": "node browser-smoke.mjs"
   },
   "devDependencies": {
-    "esbuild": "^0.24.2",
-    "jsdom": "^30.0.1"
+    "esbuild": "^0.28.2",
+    "jsdom": "^30.0.1",
+    "playwright": "^1.63.0"
   }
 }

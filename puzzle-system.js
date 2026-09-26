@@ -254,6 +254,7 @@ class DivinePuzzles {
     }
     
     showPuzzle(puzzle) {
+        this.currentPuzzle = puzzle;
         const overlay = document.createElement('div');
         overlay.className = 'fixed inset-0 bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 flex items-center justify-center z-50';
         overlay.id = 'puzzle-overlay';
@@ -290,6 +291,16 @@ class DivinePuzzles {
                 break;
             case 'verse-order':
                 puzzleContent = this.createVerseOrderPuzzle(puzzle);
+                break;
+            case 'creed-match':
+                puzzleContent = this.createChoicePuzzle(puzzle);
+                break;
+            default:
+                if (puzzle.options && puzzle.options.length > 0) {
+                    puzzleContent = this.createChoicePuzzle(puzzle);
+                } else {
+                    puzzleContent = '<div class="text-center text-gray-400">This puzzle type is not available.</div>';
+                }
                 break;
         }
         
@@ -353,13 +364,14 @@ class DivinePuzzles {
     }
     
     createChoicePuzzle(puzzle) {
+        const scenarioBlock = puzzle.scenario ? `<p class="text-lg text-gray-200 mb-6 italic">"${puzzle.scenario}"</p>` : '';
         return `
             <div class="bg-gray-800 rounded-lg p-6">
                 <div class="text-center mb-6">
-                    <p class="text-lg text-gray-200 mb-6 italic">"${puzzle.scenario}"</p>
+                    ${scenarioBlock}
                     <div class="space-y-3">
                         ${puzzle.options.map((option, index) => `
-                            <button onclick="window.puzzles.makeChoice(${index})" class="w-full text-left bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg transition-all">
+                            <button onclick="window.puzzles.submitAnswer(${index})" class="w-full text-left bg-gray-700 hover:bg-gray-600 text-white p-4 rounded-lg transition-all">
                                 <div class="font-bold">${String.fromCharCode(65 + index)}. ${option.text}</div>
                             </button>
                         `).join('')}
@@ -367,6 +379,16 @@ class DivinePuzzles {
                 </div>
             </div>
         `;
+    }
+    
+    submitAnswer(choiceIndex) {
+        const option = this.currentPuzzle.options[choiceIndex];
+        if (!option) return;
+        if (option.correct) {
+            this.solvePuzzle();
+        } else {
+            this.showError('Not the correct match. Try again!');
+        }
     }
     
     createCipherPuzzle(puzzle) {
@@ -673,16 +695,23 @@ class DivinePuzzles {
     
     makeChoice(choiceIndex) {
         const choice = this.currentPuzzle.options[choiceIndex];
-        const effect = choice.effect;
+        if (!choice) return;
+        
+        if (choice.correct !== undefined) {
+            this.submitAnswer(choiceIndex);
+            return;
+        }
+        
+        if (!choice.effect) return;
         
         // Apply effects
-        this.game.playerStats.faith += effect.faith;
-        this.game.playerStats.wisdom += effect.wisdom;
-        this.game.playerStats.compassion += effect.compassion;
+        this.game.playerStats.faith += choice.effect.faith || 0;
+        this.game.playerStats.wisdom += choice.effect.wisdom || 0;
+        this.game.playerStats.compassion += choice.effect.compassion || 0;
         this.game.updateStats();
         
         // Best choice gives full reward
-        if (choiceIndex === 2) { // The compassionate option
+        if (this.currentPuzzle.options[2] && choice.effect.compassion === 15) { // The compassionate option
             this.solvePuzzle();
         } else {
             this.showPartialReward('You chose wisely, but there was a more compassionate path.');
@@ -930,6 +959,12 @@ class DivinePuzzles {
                     break;
                 case 'verse-order':
                     hint = this.currentPuzzle.hint || 'Look for key words that indicate time or sequence in the sacred narrative...';
+                    break;
+                case 'creed-match':
+                    hint = this.currentPuzzle.hint || 'Match the quoted fragment to its source in the sacred text...';
+                    break;
+                case 'choice':
+                    hint = this.currentPuzzle.hint || 'Choose the answer that best reflects the mind of Christ...';
                     break;
             }
             

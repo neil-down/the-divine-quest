@@ -3,17 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1e3c72">
+    <meta name="description" content="The Divine Quest — a theological RPG exploring faith, wisdom, and compassion through meaningful choices rooted in Scripture.">
     <title>The Divine Quest - A Journey Through Faith and Reason</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="assets/vendor/tailwind.min.css">
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/fonts.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
         
         body {
             font-family: 'Crimson Text', serif;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
             min-height: 100vh;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        button {
+            touch-action: manipulation;
         }
         
         .cinzel {
@@ -106,6 +114,16 @@
             background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
             transition: width 0.5s ease;
         }
+        
+        .beat-bar {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24, #fcd34d);
+            transition: width 0.5s ease;
+        }
+        
+        .fruit-bar {
+            background: linear-gradient(90deg, #ec4899, #f472b6, #f9a8d4);
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 <body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
@@ -117,15 +135,15 @@
                 <div class="flex space-x-6">
                     <div class="text-white">
                         <i class="fas fa-pray text-blue-400"></i>
-                        <span class="ml-2" data-i18n="stat.faith">Faith: <span id="faith">50</span></span>
+                        <span class="ml-2"><span data-i18n="stat.faith">Faith</span>: <span id="faith">50</span></span>
                     </div>
                     <div class="text-white">
                         <i class="fas fa-brain text-yellow-400"></i>
-                        <span class="ml-2" data-i18n="stat.wisdom">Wisdom: <span id="wisdom">50</span></span>
+                        <span class="ml-2"><span data-i18n="stat.wisdom">Wisdom</span>: <span id="wisdom">50</span></span>
                     </div>
                     <div class="text-white">
                         <i class="fas fa-heart text-green-400"></i>
-                        <span class="ml-2" data-i18n="stat.compassion">Compassion: <span id="compassion">50</span></span>
+                        <span class="ml-2"><span data-i18n="stat.compassion">Compassion</span>: <span id="compassion">50</span></span>
                     </div>
                 </div>
             </div>
@@ -179,6 +197,50 @@
                     <p id="wisdom-quote" class="text-sm text-gray-700 italic text-center">
                         "The journey of a thousand miles begins with a single step of faith."
                     </p>
+                </div>
+
+                <!-- Spiritual Gifts & Fruit of the Spirit -->
+                <div class="theology-card rounded-xl p-6 mt-6">
+                    <h3 class="cinzel text-lg font-bold mb-1 text-gray-800">Spiritual Gifts &amp; Fruit</h3>
+                    <p class="text-xs text-gray-500 mb-3">1 Corinthians 12 &middot; Galatians 5:22-23<br>
+                        <span class="font-semibold text-gray-700"><span data-gift-count>0</span> gifts &middot; <span data-fruit-count>0</span> fruits</span>
+                    </p>
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                        <div>
+                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Gifts</p>
+                            <div id="gifts-panel" class="space-y-1">
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Faith</span><span data-gift-val="faith">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="faith" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Wisdom</span><span data-gift-val="wisdom">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="wisdom" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Knowledge</span><span data-gift-val="knowledge">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="knowledge" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Discernment</span><span data-gift-val="discernment">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="discernment" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Prophecy</span><span data-gift-val="prophecy">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="prophecy" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Teaching</span><span data-gift-val="teaching">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="teaching" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Exhortation</span><span data-gift-val="exhortation">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="exhortation" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Service</span><span data-gift-val="service">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="service" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Mercy</span><span data-gift-val="mercy">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="mercy" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Giving</span><span data-gift-val="giving">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="giving" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Leadership</span><span data-gift-val="leadership">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="leadership" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Healing</span><span data-gift-val="healing">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="healing" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Evangelism</span><span data-gift-val="evangelism">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="evangelism" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Worship</span><span data-gift-val="worship">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="worship" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Hope</span><span data-gift-val="hope">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="beat-bar h-1.5 rounded-full" data-gift-bar="hope" style="width:0%"></div></div></div>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-700 uppercase tracking-wide mb-1">Fruit</p>
+                            <div id="fruits-panel" class="space-y-1">
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Love</span><span data-fruit-val="love">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="love" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Joy</span><span data-fruit-val="joy">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="joy" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Peace</span><span data-fruit-val="peace">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="peace" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Patience</span><span data-fruit-val="patience">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="patience" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Kindness</span><span data-fruit-val="kindness">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="kindness" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Goodness</span><span data-fruit-val="goodness">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="goodness" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Faithfulness</span><span data-fruit-val="faithfulness">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="faithfulness" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Gentleness</span><span data-fruit-val="gentleness">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="gentleness" style="width:0%"></div></div></div>
+                                <div><div class="flex justify-between text-xs text-gray-600"><span>Self-control</span><span data-fruit-val="self-control">0</span></div><div class="w-full bg-gray-200 rounded-full h-1.5"><div class="fruit-bar h-1.5 rounded-full" data-fruit-bar="self-control" style="width:0%"></div></div></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -249,7 +311,12 @@
         </div>
     </footer>
 
+    <script src="content/bundled-content.js"></script>
     <script src="game.js"></script>
+    <script src="verses.js"></script>
+    <script src="gifts.js"></script>
+    <script src="devotions.js"></script>
+    <script src="journal.js"></script>
     <script src="enhancements.js"></script>
     <script src="battle-system.js"></script>
     <script src="puzzle-system.js"></script>
@@ -259,7 +326,9 @@
     <script src="infinite-loop.js"></script>
     <script src="i18n.js"></script>
 <script src="study-guide.js"></script>
-    <script src="settings.js"></script>
-<script src="audio.js"></script>
+<script src="settings.js"></script>
+    <script src="audio.js"></script>
+    <script src="faction-system.js"></script>
+    <script src="pwa.js"></script>
 </body>
 </html>

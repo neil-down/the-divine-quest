@@ -111,7 +111,28 @@ class ChallengeMode {
         `;
         
         document.body.appendChild(ui);
+        // Expose under every alias the inline handlers reference, so the
+        // various `onclick="window.challenge..."/"window.nightmare..."`
+        // bindings all resolve to this single instance.
         window.challenge = this;
+        window.nightmare = this;
+        window.nightmareMode = this;
+    }
+
+    _getNightmareUI() {
+        return document.getElementById('nightmare-ui') || document.getElementById('challenge-ui');
+    }
+
+    checkRealityPuzzles() {
+        // Reserved for challenge-mode reality-tearing puzzle events.
+    }
+
+    spawnChallengeEntities() {
+        // Reserved for challenge-mode entity spawns (see spawnNightmareEntities).
+    }
+
+    drainFocus(_amount) {
+        // Reserved for challenge-mode focus-drain mechanic.
     }
     
     startRealityMonitoring() {
@@ -163,7 +184,8 @@ class ChallengeMode {
         }
 
         // Show nightmare UI
-        document.getElementById('nightmare-ui').classList.remove('hidden');
+        const nightmareUI = this._getNightmareUI();
+        if (nightmareUI) nightmareUI.classList.remove('hidden');
 
         // Reality breaking effects
         this.breakReality();
@@ -239,6 +261,7 @@ class ChallengeMode {
             </div>
         `;
         
+        overlay.dataset.tdqNightmare = '1';
         document.body.appendChild(overlay);
         setTimeout(() => overlay.remove(), 5000);
     }
@@ -401,7 +424,7 @@ class ChallengeMode {
     
     createNightmareEntity() {
         const entity = document.createElement('div');
-        entity.className = 'fixed text-6xl z-50';
+        entity.className = 'fixed text-6xl z-50 nightmare-entity';
         entity.style.left = Math.random() * window.innerWidth + 'px';
         entity.style.top = Math.random() * window.innerHeight + 'px';
         entity.textContent = ['👁️', '🌀', '⚠️', '❓', '🔮'][Math.floor(Math.random() * 5)];
@@ -490,6 +513,13 @@ class ChallengeMode {
                 <h2 class="text-3xl font-bold text-red-400 mb-4">BREAK THE LOOP</h2>
                 <p class="text-gray-300 mb-6">The nightmare feeds on repetition. Break the pattern by finding the anomaly:</p>
                 
+                <div class="mb-4">
+                    <div class="text-xs text-red-400 mb-1">Sanity</div>
+                    <div class="w-full bg-gray-800 rounded-full h-2">
+                        <div class="bg-red-500 h-2 rounded-full transition-all duration-300" id="sanity-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-4 gap-2 mb-6" id="loop-puzzle">
                     ${this.generateLoopPuzzle()}
                 </div>
@@ -502,6 +532,7 @@ class ChallengeMode {
             </div>
         `;
         
+        overlay.dataset.tdqNightmare = '1';
         document.body.appendChild(overlay);
     }
     
@@ -551,7 +582,7 @@ class ChallengeMode {
         this.recordEscape();
         this.currentFailures = 0;
         // Remove nightmare overlay
-        document.querySelector('.fixed.inset-0').remove();
+        document.querySelectorAll('[data-tdq-nightmare="1"]').forEach(el => el.remove());
         
         // Success message
         const success = document.createElement('div');
@@ -572,6 +603,7 @@ class ChallengeMode {
             </div>
         `;
         
+        success.dataset.tdqNightmare = '1';
         document.body.appendChild(success);
         
         // Big reward
@@ -641,6 +673,7 @@ class ChallengeMode {
         `;
 
         document.body.appendChild(overlay);
+        overlay.dataset.tdqNightmare = '1';
 
         const qContainer = overlay.querySelector('#mirror-questions');
         this.mirrorAnswers = {};
@@ -678,7 +711,15 @@ class ChallengeMode {
             return;
         }
 
-        document.querySelectorAll('.fixed.inset-0').forEach(el => el.remove());
+        document.querySelectorAll('[data-tdq-nightmare="1"]').forEach(el => el.remove());
+
+        this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 15;
+        this.nightmareLevel = Math.max(1, (this.nightmareLevel || 1) - 1);
+        this.game.updateStats();
+        this.inNightmare = false;
+        this.recordEscape();
+        this.currentFailures = 0;
+        this.endNightmare();
 
         const success = document.createElement('div');
         success.className = 'fixed inset-0 bg-gradient-to-br from-purple-900 to-blue-900 flex items-center justify-center z-50';
@@ -695,19 +736,13 @@ class ChallengeMode {
                 </button>
             </div>
         `;
+        success.dataset.tdqNightmare = '1';
         document.body.appendChild(success);
-
-        this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 15;
-        this.nightmareLevel = Math.max(1, (this.nightmareLevel || 1) - 1);
-        this.game.updateStats();
-        this.inNightmare = false;
-        this.recordEscape();
-        this.currentFailures = 0;
-        this.endNightmare();
     }
 
     triggerUnmaking() {
         this.inUnmaking = true;
+        this._endUnmakingDone = false;
         this.unmakingStep = 0;
         this.maxUnmakingSteps = 5;
         this.showUnmakingOverlay();
@@ -729,6 +764,7 @@ class ChallengeMode {
                 <div id="unmaking-stage" class="text-sm text-red-300 mb-4">Stage 1 of ${this.maxUnmakingSteps}</div>
             </div>
         `;
+        overlay.dataset.tdqNightmare = '1';
         document.body.appendChild(overlay);
     }
 
@@ -770,8 +806,10 @@ class ChallengeMode {
     }
 
     endUnmaking(success) {
+        if (this._endUnmakingDone) return;
+        this._endUnmakingDone = true;
         this.inUnmaking = false;
-        document.querySelectorAll('#unmaking-overlay, .fixed.inset-0').forEach(el => el.remove());
+        document.querySelectorAll('#unmaking-overlay, [data-tdq-nightmare="1"]').forEach(el => el.remove());
         document.body.style.animation = '';
         document.body.style.filter = '';
         document.body.style.transform = '';
@@ -792,13 +830,13 @@ class ChallengeMode {
                     </button>
                 </div>
             `;
+            msg.dataset.tdqNightmare = '1';
             document.body.appendChild(msg);
             this.game.playerStats.wisdom = (this.game.playerStats.wisdom || 0) + 20;
             this.game.updateStats();
             this.inNightmare = false;
             this.recordEscape();
             this.currentFailures = 0;
-            this.endNightmare();
         } else {
             this.recordFailure();
             this.showNightmareEnd('The unmaking consumes all. The loop tightens.');
@@ -810,10 +848,11 @@ class ChallengeMode {
         this.currentFailures = 0;
         
         // Remove nightmare UI
-        document.getElementById('nightmare-ui').classList.add('hidden');
+        const nightmareUI = this._getNightmareUI();
+        if (nightmareUI) nightmareUI.classList.add('hidden');
         
-        // Remove overlays
-        document.querySelectorAll('.fixed.inset-0').forEach(el => el.remove());
+        // Remove nightmare-scoped overlays only (other systems' overlays are untouched)
+        document.querySelectorAll('[data-tdq-nightmare="1"]').forEach(el => el.remove());
         
         // Reset reality
         document.body.style.animation = '';
@@ -824,8 +863,8 @@ class ChallengeMode {
         const audio = document.getElementById('nightmare-audio');
         if (audio) audio.remove();
         
-        // Clean up entities
-        document.querySelectorAll('.text-6xl').forEach(el => el.remove());
+        // Clean up nightmare-spawned entities
+        document.querySelectorAll('.nightmare-entity').forEach(el => el.remove());
         
         // Show achievement
         this.game.showAchievement('Nightmare Survivor', `Escaped loop ${this.loopCount}!`);
@@ -870,6 +909,7 @@ class ChallengeMode {
             </div>
         `;
         
+        overlay.dataset.tdqNightmare = '1';
         document.body.appendChild(overlay);
     }
 }

@@ -1,5 +1,21 @@
 // Enhanced Gameplay Features for The Divine Quest
 
+// matchMedia polyfill: jsdom (headless tests) lacks it, and older browsers
+// may too. Reduced-motion + hover media queries degrade to false.
+if (!window.matchMedia) {
+    window.matchMedia = function (query) {
+        return {
+            matches: false,
+            media: query,
+            addListener() {},
+            removeListener() {},
+            addEventListener() {},
+            removeEventListener() {},
+            dispatchEvent() { return false; }
+        };
+    };
+}
+
 class EnhancedGameplay {
     constructor(game) {
         this.game = game;
@@ -239,7 +255,8 @@ class EnhancedGameplay {
     addRitualMechanic() {
         // Add prayer/meditation mini-game
         const ritualButton = document.createElement('button');
-        ritualButton.className = 'fixed bottom-4 left-4 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-40';
+        ritualButton.id = 'ritual-button';
+        ritualButton.className = 'fixed bottom-32 left-4 bg-purple-600 text-white p-3 rounded-full shadow-lg hover:bg-purple-700 transition-colors z-40';
         ritualButton.innerHTML = '<i class="fas fa-spa text-xl"></i>';
         ritualButton.title = 'Enter Prayer Meditation';
         
@@ -392,6 +409,7 @@ class EnhancedGameplay {
     
     endMeditation(score) {
         const area = document.getElementById('meditation-area');
+        if (!area) return;
         const focus = this._meditationFocus || 0;
         area.innerHTML = `
             <div class="flex flex-col items-center justify-center h-full">

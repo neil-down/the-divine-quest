@@ -1,0 +1,636 @@
+{
+  "mergeInto": "chapters",
+  "version": 1,
+  "chapters": [
+    {
+      "title": "The Cost of Discipleship",
+      "theme": "discipleship",
+      "location": "The Narrow Road",
+      "verse": "Luke 14:27",
+      "scenes": [
+        {
+          "text": "The Master's word cuts through every easy comfort: unless you carry your own cross and come after me, you cannot be my disciple. Christ counts the cost Himself — the tower half-built, the king outnumbered — and calls you to leave everything on the table of His lordship. Yet the cross He commands is the very cross He carried first, so that what He asks of you He has already purchased for you. The narrow road runs uphill, and the first step is renunciation.",
+          "setting": "A narrow path climbs out of the plain; at its foot lies an unclaimed wooden cross, freshly hewn.",
+          "choices": [
+            {
+              "text": "Take up the cross and follow",
+              "description": "Deny yourself, take up the cross, and follow Christ wherever He leads.",
+              "effects": { "faith": 28, "wisdom": 6, "compassion": 6 },
+              "next": 17,
+              "gift": "faith",
+              "fruit": "faithfulness",
+              "flags": ["pathDiscipleship"],
+              "faction": { "The Faithful": 6 },
+              "memoryVerse": "Luke 14:27"
+            },
+            {
+              "text": "Count the cost before you build",
+              "description": "Sit down and reckon what following the risen Lord truly demands.",
+              "effects": { "faith": 6, "wisdom": 30, "compassion": 6 },
+              "next": 18,
+              "gift": "wisdom",
+              "fruit": "patience",
+              "flags": ["pathCounting"]
+            },
+            {
+              "text": "Put your hand to the plow",
+              "description": "Resolve to press forward and never look back to what you have left.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 22 },
+              "next": 19,
+              "gift": "service",
+              "fruit": "kindness",
+              "flags": ["pathPlow"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Faith of Abraham",
+      "theme": "justification",
+      "location": "The Plains of Mamre",
+      "verse": "Romans 4:3",
+      "scenes": [
+        {
+          "text": "One night under a sky of impossible stars, the Lord said to Abram what He says to every sinner in Christ: count the stars if you can. Abraham believed God, and it was credited to him as righteousness. The apostle draws the line of that faith forward to us — not the works of his hands, not the circumcision he later received, but the believing go-ahead of a soul that trusted the Word of the promise. Righteousness is a gift; the gift comes by faith; the faith is the empty hand that receives it.",
+          "setting": "A tent door opens on a field of stars too many to be numbered; the old man counts them one more time, and laughs.",
+          "variant": {
+            "flag": "pathDiscipleship",
+            "text": "Because you took up your own cross at the foot of the narrow road, the promise to Abraham feels less like a doctrine and more like the next step of a walk already begun. One night under a sky of impossible stars, the Lord says to you what He said to Abram: count the stars if you can. Abraham believed God, and it was credited to him as righteousness — and the same believing hand is still open, reaching for the same unbroken promise."
+          },
+          "choices": [
+            {
+              "text": "Believe the promise as Abraham did",
+              "description": "Let God's word be credited to your account as that alone which justifies you.",
+              "effects": { "faith": 25, "wisdom": 10, "compassion": 6 },
+              "next": 19,
+              "gift": "faith",
+              "fruit": "joy",
+              "flags": ["justifiedByFaith"],
+              "memoryVerse": "Romans 4:3"
+            },
+            {
+              "text": "Walk in obedient departure",
+              "description": "Go out from home and kindred, as Abraham went out, not knowing where he was going.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 18 },
+              "next": 20,
+              "gift": "evangelism",
+              "fruit": "goodness",
+              "flags": ["obedientDeparture"]
+            },
+            {
+              "text": "Wait in patience for the promise",
+              "description": "Hope against hope, as Abraham hoped, trembling not at the time of the promise.",
+              "effects": { "faith": 6, "wisdom": 20, "compassion": 12 },
+              "next": 18,
+              "gift": "hope",
+              "fruit": "patience",
+              "flags": ["waitingPromise"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The City of Refuge",
+      "theme": "assurance",
+      "location": "The City of Refuge",
+      "verse": "Hebrews 6:19",
+      "scenes": [
+        {
+          "text": "So long as the enemy pursues you, the blood-avenger of a guilty past, the city was provided by God Himself an escape for every fleeing soul. Two things cannot change — God's promise and God's oath, in which it is impossible for God to lie. There you have the anchor for your consolation: strong and secure, it enters the inner sanctuary behind the curtain, where a forerunner has gone in on your behalf — Jesus, made a high priest forever.",
+          "setting": "Gates of iron stand open on a tableland beneath the full sky; behind them the smoke of sacrifice rises ceaselessly.",
+          "choices": [
+            {
+              "text": "Flee to the refuge anchored in hope",
+              "description": "Lay hold of the hope set before you, anchored within the veil.",
+              "effects": { "faith": 26, "wisdom": 10, "compassion": 8 },
+              "next": 20,
+              "gift": "faith",
+              "fruit": "peace",
+              "flags": ["anchoredHope"],
+              "memoryVerse": "Hebrews 6:19"
+            },
+            {
+              "text": "Grasp the two immutable things",
+              "description": "Rest on God's promise and oath, in which it is impossible that He should lie.",
+              "effects": { "faith": 10, "wisdom": 24, "compassion": 6 },
+              "next": 21,
+              "gift": "wisdom",
+              "fruit": "self-control",
+              "flags": ["oathAndPromise"],
+              "requirement": { "attribute": "wisdom", "min": 60 }
+            },
+            {
+              "text": "Bid the searching soul to enter",
+              "description": "Stand at the gate and point every fleeing conscience toward the open refuge.",
+              "effects": { "faith": 10, "wisdom": 6, "compassion": 24 },
+              "next": 19,
+              "gift": "mercy",
+              "fruit": "gentleness",
+              "flags": ["counselingRefuge"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The School of Grace",
+      "theme": "sanctification",
+      "location": "The School of Grace",
+      "verse": "Titus 2:11",
+      "scenes": [
+        {
+          "text": "The grace of God that brings salvation has appeared to all people — and far from leaving you to yourselves, it enrolls you in a school. Grace is no license; it is a teacher. It instructs you to say no to ungodliness and worldly desires, and to live wisely, righteously, and devoutly in this present age. The same free gift that pardons you is the master that trains you for the glory yet to be revealed.",
+          "setting": "A low stone schoolroom with windows high; the day's lesson is written in gold across the lime-washed wall.",
+          "choices": [
+            {
+              "text": "Let grace instruct you to say no",
+              "description": "Receive the discipline of the free gift that trains you in godliness.",
+              "effects": { "faith": 22, "wisdom": 10, "compassion": 8 },
+              "next": 20,
+              "gift": "teaching",
+              "fruit": "self-control",
+              "flags": ["graceTrains"],
+              "memoryVerse": "Titus 2:11"
+            },
+            {
+              "text": "Discipline yourself for godliness",
+              "description": "Train yourself in the habits of faith, prayer, and holy living.",
+              "effects": { "faith": 10, "wisdom": 24, "compassion": 6 },
+              "next": 22,
+              "gift": "wisdom",
+              "fruit": "faithfulness",
+              "flags": ["godlyDiscipline"]
+            },
+            {
+              "text": "Teach sound doctrine in love",
+              "description": "Feed the church on doctrine that accords with godliness, spoken in love.",
+              "effects": { "faith": 8, "wisdom": 12, "compassion": 22 },
+              "next": 21,
+              "gift": "teaching",
+              "fruit": "love",
+              "flags": ["teachSoundly"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Shepherd's Rod and Staff",
+      "theme": "comfort",
+      "location": "The Valley of Deep Shadow",
+      "verse": "Psalm 23:1",
+      "scenes": [
+        {
+          "text": "Though you walk through the valley of the shadow of death, you fear no evil — because the Shepherd is with you. His rod and His staff, the two instruments of discipline and defence, comfort you. Even the table He prepares is spread in the presence of your enemies, and His goodness and mercy pursue you all the days of your life. The psalmist walks the dark valley not because the valley is removed but because the Shepherd is not denied.",
+          "setting": "A gorge in gloom where the stream is loud; yet the Shepherd walks beside the pilgrim without a lantern.",
+          "choices": [
+            {
+              "text": "Walk through the valley, fearing no evil",
+              "description": "Trust the presence of the Shepherd when no light is visible on the path.",
+              "effects": { "faith": 26, "wisdom": 6, "compassion": 12 },
+              "next": 21,
+              "gift": "faith",
+              "fruit": "peace",
+              "flags": ["valleyWalk"],
+              "faction": { "The Faithful": 5, "The Doubting": -2 },
+              "memoryVerse": "Psalm 23:1"
+            },
+            {
+              "text": "Trust the rod and the staff",
+              "description": "Receive the Shepherd's correction and defence as comfort, not cause for fear.",
+              "effects": { "faith": 10, "wisdom": 22, "compassion": 8 },
+              "next": 22,
+              "gift": "hope",
+              "fruit": "patience",
+              "flags": ["rodAndStaff"]
+            },
+            {
+              "text": "Restore the wandering sheep",
+              "description": "Go and find the one who has strayed, carrying that one home on willing shoulders.",
+              "effects": { "faith": 10, "wisdom": 6, "compassion": 26 },
+              "next": 23,
+              "gift": "mercy",
+              "fruit": "gentleness",
+              "flags": ["shepherdCare"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Great Commission",
+      "theme": "mission",
+      "location": "The Mountain in Galilee",
+      "verse": "Matthew 28:19",
+      "scenes": [
+        {
+          "text": "On the mountain of Galilee the risen Christ speaks with all authority in heaven and on earth: go, therefore, and make disciples of all nations. Baptize them in the name of the Father and of the Son and of the Holy Spirit, and teach them to observe all that He commanded. The church exists by mission as fire exists by burning. It is not an optional program of the church; it is the marching order of the risen King.",
+          "setting": "A risen morning; eleven disciples kneel, and the One who holds all authority stands among them, earth trembling beneath His feet.",
+          "variant": {
+            "flag": "valleyWalk",
+            "text": "You arrive on the mountain of Galilee, and behind you is the valley you walked through — the shadow and the nearness of the Shepherd who would not leave. Now the risen Christ speaks with all authority in heaven and on earth: go, therefore, and make disciples of all nations. The One who comforted you in the dark is the One who sends you into the light."
+          },
+          "choices": [
+            {
+              "text": "Go and make disciples of all nations",
+              "description": "Take the gospel to the ends of the earth until the Lamb receives His reward.",
+              "effects": { "faith": 26, "wisdom": 10, "compassion": 12 },
+              "next": 22,
+              "gift": "evangelism",
+              "fruit": "joy",
+              "flags": ["goMakeDisciples"],
+              "faction": { "The Faithful": 6 },
+              "memoryVerse": "Matthew 28:19"
+            },
+            {
+              "text": "Baptize them in the triune name",
+              "description": "Receive converts into the fold of the covenant under the name of the triune God.",
+              "effects": { "faith": 18, "wisdom": 16, "compassion": 10 },
+              "next": 23,
+              "gift": "worship",
+              "fruit": "faithfulness",
+              "flags": ["baptizeTrinity"],
+              "requirement": { "attribute": "faith", "min": 65 }
+            },
+            {
+              "text": "Teach them to observe all He commanded",
+              "description": "Build disciples who keep the teaching of the Lord, not merely consent to it.",
+              "effects": { "faith": 8, "wisdom": 26, "compassion": 8 },
+              "next": 24,
+              "gift": "teaching",
+              "fruit": "self-control",
+              "flags": ["teachObedience"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Communion of the Body",
+      "theme": "ecclesiology",
+      "location": "The Body of Christ",
+      "verse": "1 Corinthians 12:12",
+      "scenes": [
+        {
+          "text": "As the body is one and has many members, so also is Christ. One Spirit, one baptism, one table — many members with differing gifts, each needed, none dispensable. The eye cannot say to the hand what it does, nor the head to the feet, and the parts the body deems weaker are the ones it treats with special honor. Christ's body is not a crowd of smiling individuals but a breathing organism, and when one member suffers, all suffer.",
+          "setting": "One Body rises in a hall of many doors; every door fits the door-frame of the one it serves.",
+          "variant": {
+            "flag": "graceTrains",
+            "text": "You step into the hall of the Body of Christ still wearing the lessons of the School of Grace, where you learned to say no to ungodliness and yes to the wise and righteous life. As the body is one and has many members, so also is Christ — and the grace that trained you is the same grace that fits you into a member's place."
+          },
+          "choices": [
+            {
+              "text": "Use the gift you have been given",
+              "description": "Discover your place in the body and serve in the grace allotted to you.",
+              "effects": { "faith": 16, "wisdom": 14, "compassion": 12 },
+              "next": 23,
+              "gift": "service",
+              "fruit": "goodness",
+              "flags": ["useYourGift"]
+            },
+            {
+              "text": "Honor the member that seems weaker",
+              "description": "Give surpassing honor to the parts of the body that appear unpresentable.",
+              "effects": { "faith": 8, "wisdom": 10, "compassion": 26 },
+              "next": 24,
+              "gift": "mercy",
+              "fruit": "gentleness",
+              "flags": ["honorWeaker"]
+            },
+            {
+              "text": "Suffer and rejoice with the whole body",
+              "description": "Weep with those who weep and rejoice with those who rejoice, for you are one body.",
+              "effects": { "faith": 20, "wisdom": 6, "compassion": 14 },
+              "next": 25,
+              "gift": "exhortation",
+              "fruit": "love",
+              "flags": ["oneInSpirit"],
+              "faction": { "The Faithful": 4, "The World": 2 },
+              "memoryVerse": "1 Corinthians 12:13"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Testing of Faith",
+      "theme": "trials",
+      "location": "The Refiner's Fire",
+      "verse": "James 1:2",
+      "scenes": [
+        {
+          "text": "Consider it pure joy, my brothers and sisters, whenever you face trials of many kinds — because you know the testing of your faith produces steadfastness, and steadfastness leads you toward completeness, lacking nothing. If any of you lacks wisdom, you should ask God, who gives generously and without finding fault. The refiner does not abandon the gold to the fire; He sits by the furnace and keeps His eye fixed on the precious metal until it reflects His face.",
+          "setting": "A furnace glows quietly; the refiner sits without hurry, watching the gold rather than the flame.",
+          "choices": [
+            {
+              "text": "Count it all joy when you meet trials",
+              "description": "Welcome the testing as the Lord's appointed means of steadfast faith.",
+              "effects": { "faith": 26, "wisdom": 10, "compassion": 8 },
+              "next": 24,
+              "gift": "faith",
+              "fruit": "joy",
+              "flags": ["joyInTrials"],
+              "memoryVerse": "James 1:2"
+            },
+            {
+              "text": "Ask for wisdom that God gives generously",
+              "description": "Ask without doubting, and receive wisdom from the hand of the giving God.",
+              "effects": { "faith": 8, "wisdom": 24, "compassion": 8 },
+              "next": 25,
+              "gift": "wisdom",
+              "fruit": "patience",
+              "flags": ["askWisdom"],
+              "faction": { "The Doubting": 4 },
+              "requirement": { "attribute": "wisdom", "min": 55 }
+            },
+            {
+              "text": "Let steadfastness produce its full work",
+              "description": "Refuse to let the trial cut the work of perseverance short.",
+              "effects": { "faith": 16, "wisdom": 10, "compassion": 14 },
+              "next": 24,
+              "gift": "hope",
+              "fruit": "patience",
+              "flags": ["steadfastMaturity"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Renewal of the Mind",
+      "theme": "transformation",
+      "location": "The Altar of Living Sacrifice",
+      "verse": "Romans 12:2",
+      "scenes": [
+        {
+          "text": "Present your bodies as a living sacrifice, holy and pleasing to God — which is your spiritual act of worship. Do not conform to the pattern of this world, but be transformed by the renewing of your mind. Then you will be able to test and approve what God's will is: His good, pleasing, and perfect will. Worship on this altar is not the death of a victim but the offering of a life — the whole self as a burnt offering on the wood of the cross.",
+          "setting": "An altar of unhewn stone; on it not a sacrifice dead but a life surrendered, still breathing, rising like incense.",
+          "variant": {
+            "flag": "baptizeTrinity",
+            "text": "You come to the altar of the living sacrifice having already given the nations a sign — baptized in the name of the Father and of the Son and of the Holy Spirit. Present your bodies, therefore, as a living sacrifice, holy and pleasing to God. The renaming of those disciples is not finished until the whole self follows them into the water."
+          },
+          "choices": [
+            {
+              "text": "Present your body a living sacrifice",
+              "description": "Offer your whole life, holiness and surrender, as the liturgy of daily worship.",
+              "effects": { "faith": 20, "wisdom": 8, "compassion": 16 },
+              "next": 25,
+              "gift": "worship",
+              "fruit": "love",
+              "flags": ["livingSacrifice"]
+            },
+            {
+              "text": "Be transformed by the renewing of your mind",
+              "description": "Let the Spirit retrain the deep structures of your thinking toward God.",
+              "effects": { "faith": 12, "wisdom": 26, "compassion": 8 },
+              "next": 25,
+              "gift": "wisdom",
+              "fruit": "self-control",
+              "flags": ["renewedMind"],
+              "faction": { "The Doubting": 5, "The Faithful": -1 },
+              "memoryVerse": "Romans 12:2"
+            },
+            {
+              "text": "Discern what is good, pleasing and perfect",
+              "description": "Prove the will of God by a mind saturated in the Word and the Spirit.",
+              "effects": { "faith": 10, "wisdom": 18, "compassion": 12 },
+              "next": 25,
+              "gift": "discernment",
+              "fruit": "goodness",
+              "flags": ["discerningWill"]
+            },
+            {
+              "text": "Keep watch with the redeemed through the night of waiting",
+              "description": "Before the feast, walk the deeper watch — sealed, waiting, sheltered, bearing firstfruits.",
+              "effects": { "faith": 18, "wisdom": 14, "compassion": 10 },
+              "next": 26,
+              "gift": "faith",
+              "fruit": "patience",
+              "flags": ["nightWatch"],
+              "requirement": { "attribute": "faith", "min": 55 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Marriage Supper of the Lamb",
+      "theme": "consummation",
+      "location": "The New Jerusalem",
+      "verse": "Revelation 19:9",
+      "scenes": [
+        {
+          "text": "A voice like a trumpet announces what the Spirit has longed for through every age: blessed are those invited to the wedding supper of the Lamb. The Bride, the church, has made herself ready, and the Bridegroom who purchased her with His own blood grants the Spirit and the Bride to cry together, Come! At last the Alpha and the Omega, the Beginning and the End, wipes away every tear, and God dwells with His people in a creation redeemed, not merely mollified. Every road you walked, every stone you turned, every cross you carried was a step toward this one, endless feast.",
+          "setting": "A table without end on an avenue of the City of God; the Bridegroom stands, and the feast of the ages has begun.",
+          "choices": [
+            {
+              "text": "Enter the Feast of the Lamb",
+              "description": "Take your place at the wedding supper of the Lamb, the gladness of the redeemed.",
+              "effects": { "faith": 40, "wisdom": 20, "compassion": 20 },
+              "next": 25,
+              "special": "ending",
+              "endingKey": "glory",
+              "gift": "worship",
+              "fruit": "joy",
+              "flags": ["feastOfTheLamb"]
+            },
+            {
+              "text": "Reign with Christ in the new creation",
+              "description": "Share the throne of the Lamb in the world made new, where righteousness dwells.",
+              "effects": { "faith": 25, "wisdom": 40, "compassion": 15 },
+              "next": 25,
+              "special": "ending",
+              "endingKey": "heritage",
+              "gift": "hope",
+              "fruit": "peace",
+              "flags": ["reignWithChrist"]
+            },
+            {
+              "text": "Gather the nations to the marriage supper",
+              "description": "Bring the peoples of every tribe and tongue into the city of the great King.",
+              "effects": { "faith": 25, "wisdom": 15, "compassion": 40 },
+              "next": 25,
+              "special": "ending",
+              "endingKey": "perseverance",
+              "gift": "exhortation",
+              "fruit": "love",
+              "flags": ["gatherNations"],
+              "faction": { "The World": 4, "The Faithful": 2 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Sealing of the Spirit",
+      "theme": "assurance",
+      "location": "The Dove's Resting Place",
+      "verse": "Ephesians 1:13",
+      "scenes": [
+        {
+          "text": "You heard the word of truth, the gospel of your salvation; and having believed, you were sealed with the promised Holy Spirit — not a mark on parchment but the very presence of God dwelling in clay. The Spirit is the earnest of the inheritance, the down payment of glory that will yet be paid in full at the redemption of God's own possession. Like a dove that carries an olive branch to the ark, the Spirit within you is living evidence that the flood of judgment has passed and the dry land of promise is ahead.",
+          "setting": "A quiet rooftop above the City of God; a dove descends and rests, and the whole span of the pilgrimage is visible below.",
+          "choices": [
+            {
+              "text": "Rest in the seal of the promised Spirit",
+              "description": "Receive the quiet certainty that God has marked you as His own possession.",
+              "effects": { "faith": 22, "wisdom": 8, "compassion": 10 },
+              "next": 27,
+              "gift": "faith",
+              "fruit": "peace",
+              "flags": ["sealedBySpirit"],
+              "memoryVerse": "Ephesians 1:13"
+            },
+            {
+              "text": "Embrace the earnest of the inheritance",
+              "description": "Live now on the pledge of glory, the Spirit as the first installment of what is coming.",
+              "effects": { "faith": 12, "wisdom": 20, "compassion": 8 },
+              "next": 27,
+              "gift": "hope",
+              "fruit": "patience",
+              "flags": ["earnestOfInheritance"]
+            },
+            {
+              "text": "Walk in step with the One who seals",
+              "description": "Match your stride to the Spirit's, for the sealed believer is also Spirit-sent.",
+              "effects": { "faith": 14, "wisdom": 10, "compassion": 16 },
+              "next": 28,
+              "gift": "discernment",
+              "fruit": "faithfulness",
+              "flags": ["walkInSpirit"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Coming King",
+      "theme": "hope",
+      "location": "The Watchtower",
+      "verse": "Revelation 22:20",
+      "scenes": [
+        {
+          "text": "He who testifies to these things says, 'Yes, I am coming soon.' And all the waiting church, the Spirit and the Bride together, answers with one voice: Come! Lord Jesus, come! To await His coming is not to idle; lamps are trimmed, loaves are kneaded, and watchmen keep the night because the promise is not a date on a calendar but a Person on a throne. The church does not count the days in fear but in longing, like a bride who has already seen the Groom's face in the grace of the betrothal.",
+          "setting": "A tower above the outer walls; beneath it the city stays awake, lamps burning, every window facing east.",
+          "choices": [
+            {
+              "text": "Long for the coming of the King",
+              "description": "Let 'Come, Lord Jesus' rise as the settled desire of your soul.",
+              "effects": { "faith": 24, "wisdom": 10, "compassion": 10 },
+              "next": 28,
+              "gift": "faith",
+              "fruit": "joy",
+              "flags": ["longingForKing"],
+              "memoryVerse": "Revelation 22:20"
+            },
+            {
+              "text": "Keep the lamps burning and trimmed",
+              "description": "Order your whole life as a lamp prepared for the wedding procession.",
+              "effects": { "faith": 10, "wisdom": 24, "compassion": 8 },
+              "next": 29,
+              "gift": "wisdom",
+              "fruit": "self-control",
+              "flags": ["lampsReady"]
+            },
+            {
+              "text": "Console the weary with His soon return",
+              "description": "Give to faint souls the strengthening word: yes, He is coming soon.",
+              "effects": { "faith": 12, "wisdom": 8, "compassion": 22 },
+              "next": 28,
+              "gift": "exhortation",
+              "fruit": "kindness",
+              "flags": ["consoleWeary"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Strong Tower",
+      "theme": "refuge",
+      "location": "The Name of the Lord",
+      "verse": "Proverbs 18:10",
+      "scenes": [
+        {
+          "text": "The name of the Lord is a strong tower; the righteous run into it and are safe. Every other refuge in the dying age is a tent pitched on sand — reputation, riches, self-sufficiency — while the name of the covenant God is tower, gate, and garrison in one. To run into that tower is not to hide from life but to stand in the only place where life cannot be taken. The weak who learn the tower's name become its doorkeepers, and the world that cannot storm the name is forced to stop at its base.",
+          "setting": "A fortress with gates standing open night and day; the hunted and the heavy-laden stream into its courtyard from every direction.",
+          "choices": [
+            {
+              "text": "Run into the strong tower",
+              "description": "Trade every fragile refuge for the name that no siege can breach.",
+              "effects": { "faith": 22, "wisdom": 10, "compassion": 10 },
+              "next": 29,
+              "gift": "faith",
+              "fruit": "peace",
+              "flags": ["strongTower"],
+              "memoryVerse": "Proverbs 18:10"
+            },
+            {
+              "text": "Forsake the false refuges",
+              "description": "Name and abandon the tents of the age that promise shade and give none.",
+              "effects": { "faith": 10, "wisdom": 24, "compassion": 8 },
+              "next": 25,
+              "gift": "wisdom",
+              "fruit": "self-control",
+              "flags": ["falseRefuges"]
+            },
+            {
+              "text": "Lead the hunted into shelter",
+              "description": "Stand at the gate and show every soul that the tower has room.",
+              "effects": { "faith": 12, "wisdom": 8, "compassion": 22 },
+              "next": 29,
+              "gift": "exhortation",
+              "fruit": "kindness",
+              "flags": ["leadToShelter"]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Firstfruits of Glory",
+      "theme": "resurrection",
+      "location": "The Vineyard at Sunrise",
+      "verse": "Romans 8:23",
+      "scenes": [
+        {
+          "text": "We who have the firstfruits of the Spirit groan within ourselves, waiting for our adoption, the redemption of our bodies. The whole creation groans like a woman in labor, and the groaning is not despair but birth pangs — the ache of a world midwife to glory. You carry in yourself the firstfruits of that harvest: peace where there was war, love where there was fear, a joy that has already outlived its mourners. The redemption of the body is the last link, and even now one resurrected Man has already risen to prove the harvest real.",
+          "setting": "First light over a vineyard; the vine is heavy with the offering of the first cluster, and the eastern sky brightens without hurry.",
+          "choices": [
+            {
+              "text": "Wait with creation for its redemption",
+              "description": "Groan and hope, for the same Spirit who groans in you groans within the world.",
+              "effects": { "faith": 22, "wisdom": 10, "compassion": 12 },
+              "next": 25,
+              "gift": "hope",
+              "fruit": "patience",
+              "flags": ["firstfruits"],
+              "memoryVerse": "Romans 8:23"
+            },
+            {
+              "text": "Grow strong in the hope of the resurrection",
+              "description": "Let the risen Man be the argument that the body's redemption is certain.",
+              "effects": { "faith": 10, "wisdom": 24, "compassion": 10 },
+              "next": 25,
+              "gift": "faith",
+              "fruit": "faithfulness",
+              "flags": ["resurrectionHope"]
+            },
+            {
+              "text": "Bear firstfruits of compassion to earth now",
+              "description": "Let the age to come leak into this one through your hands and your table.",
+              "effects": { "faith": 12, "wisdom": 8, "compassion": 24 },
+              "next": 25,
+              "gift": "worship",
+              "fruit": "love",
+              "flags": ["firstfruitsOfCompassion"],
+              "faction": { "The Faithful": 4 }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

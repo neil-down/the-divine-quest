@@ -1,0 +1,624 @@
+{
+  "version": 1,
+  "chapters": [
+    {
+      "title": "The Crossroads of Grace",
+      "theme": "grace",
+      "location": "The Crossroads of God's Grace",
+      "verse": "John 14:6",
+      "scenes": [
+        {
+          "text": "You stand at the crossroads of God's grace, where His divine providence guides your path. The Holy Scriptures speak of a journey of faith—not of works, but of understanding God's sovereign grace. Before you lies a path that will test not just your beliefs, but your understanding of Christ's redemptive work. Suddenly, the ground trembles as three divine portals materialize before you, each radiating different colors of sacred light.",
+          "setting": "Wind stirs between three glowing portals — gold, blue, and green — each humming with a different promise.",
+          "choices": [
+            {
+              "text": "The Path of Faith",
+              "description": "Step through the golden portal of trusting in Christ's finished work on the cross.",
+              "effects": { "faith": 15, "wisdom": 5, "compassion": 10 },
+              "next": 1,
+              "special": "portal_gold",
+              "gift": "faith",
+              "fruit": "joy",
+              "memoryVerse": "Hebrews 11:1"
+            },
+            {
+              "text": "The Path of Scripture",
+              "description": "Enter the blue portal of studying God's Word and sound doctrine.",
+              "effects": { "faith": 5, "wisdom": 15, "compassion": 5 },
+              "next": 2,
+              "special": "portal_blue",
+              "gift": "knowledge",
+              "fruit": "patience"
+            },
+            {
+              "text": "The Path of Service",
+              "description": "Walk through the green portal of serving others in Christ's love.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 15 },
+              "next": 3,
+              "special": "portal_green",
+              "gift": "service",
+              "fruit": "kindness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Garden of Prayer",
+      "theme": "prayer",
+      "location": "The Garden of Prayer",
+      "verse": "James 5:16",
+      "scenes": [
+        {
+          "text": "You find yourself in a sacred garden where every leaf whispers God's truth. The air is thick with the presence of the Holy Spirit. A wise pastor sits beneath an ancient tree, their eyes holding the depth of years spent studying God's Word and shepherding His flock.",
+          "setting": "Cypress and olive trees frame a stone garden bench; incense-thin mist curls through the branches.",
+          "choices": [
+            {
+              "text": "Join in corporate prayer",
+              "description": "Gather with the pastor in prayer, seeking God's will through intercession.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 5 },
+              "next": 2,
+              "gift": "faith",
+              "fruit": "peace"
+            },
+            {
+              "text": "Study the Scriptures together",
+              "description": "Open the Bible with the pastor to understand sound doctrine and God's revelation.",
+              "effects": { "faith": 5, "wisdom": 15, "compassion": 0 },
+              "next": 3,
+              "gift": "teaching",
+              "fruit": "self-control"
+            },
+            {
+              "text": "Practice biblical fellowship",
+              "description": "Serve alongside the pastor in ministering to others through Christ's love.",
+              "effects": { "faith": 5, "wisdom": 5, "compassion": 15 },
+              "next": 8,
+              "gift": "service",
+              "fruit": "love"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Library of God's Word",
+      "theme": "scripture",
+      "location": "The Library of God's Word",
+      "verse": "2 Timothy 3:16",
+      "scenes": [
+        {
+          "text": "Before you stands the sacred library, containing the complete canon of Scripture and the writings of the Reformers. The books glow with the light of divine inspiration, and you can hear the collective wisdom of God's people throughout the ages. A guardian appears, holding a key that can unlock any biblical truth you seek.",
+          "setting": "Endless shelves of glowing manuscripts rise toward a vaulted ceiling lit like a starry sky.",
+          "choices": [
+            {
+              "text": "Study the Old Testament",
+              "description": "Delve into the Law and Prophets that point forward to Christ's coming.",
+              "effects": { "faith": 15, "wisdom": 10, "compassion": 0 },
+              "next": 13,
+              "gift": "wisdom",
+              "fruit": "patience"
+            },
+            {
+              "text": "Read the New Testament",
+              "description": "Explore the Gospels and Epistles that reveal Christ's redemptive work.",
+              "effects": { "faith": 0, "wisdom": 20, "compassion": 5 },
+              "next": 4,
+              "gift": "knowledge",
+              "fruit": "goodness"
+            },
+            {
+              "text": "Examine the Reformation writings",
+              "description": "Learn from Luther, Calvin, and other Reformers who recovered biblical truth.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 10 },
+              "next": 4,
+              "gift": "discernment",
+              "fruit": "faithfulness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Mission Field",
+      "theme": "mission",
+      "location": "A Village in Need",
+      "verse": "Romans 10:14",
+      "scenes": [
+        {
+          "text": "You arrive at a village where the need for the Gospel is great, yet so is the hope found in Christ. The people here face spiritual darkness, but they also possess the capacity for faith in God's grace. Their prayers rise like incense to the throne of grace.",
+          "setting": "Dusty streets and open doorways; children pause in their play to watch the stranger arrive.",
+          "choices": [
+            {
+              "text": "Preach the Gospel",
+              "description": "Share the good news of Jesus Christ and His salvation.",
+              "effects": { "faith": 20, "wisdom": 5, "compassion": 5 },
+              "next": 14,
+              "gift": "evangelism",
+              "fruit": "joy"
+            },
+            {
+              "text": "Teach sound doctrine",
+              "description": "Instruct the people in biblical truth and Reformed theology.",
+              "effects": { "faith": 5, "wisdom": 10, "compassion": 10 },
+              "next": 4,
+              "gift": "teaching",
+              "fruit": "goodness",
+              "memoryVerse": "1 Corinthians 15:3"
+            },
+            {
+              "text": "Demonstrate Christ's love",
+              "description": "Serve the community through practical acts of Christian charity.",
+              "effects": { "faith": 5, "wisdom": 5, "compassion": 20 },
+              "next": 4,
+              "gift": "mercy",
+              "fruit": "kindness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Glory of God",
+      "theme": "worship",
+      "location": "The Summit of the Mountain",
+      "verse": "Romans 11:36",
+      "scenes": [
+        {
+          "text": "You have climbed the mountain of understanding and now stand at its summit. Here, the boundaries between earth and heaven dissolve in the light of God's glory. The divine presence is not something you seek anymore—it is someone you know in Christ Jesus. All your previous choices have led to this moment of worship and adoration.",
+          "setting": "Above the clouds, the air is thin and bright; the whole creation spreads below like a map of grace.",
+          "choices": [
+            {
+              "text": "Worship in spirit and truth",
+              "description": "Surrender completely to God, worshiping Him as revealed in Scripture.",
+              "effects": { "faith": 25, "wisdom": 25, "compassion": 25 },
+              "next": 5,
+              "gift": "worship",
+              "fruit": "joy"
+            },
+            {
+              "text": "Serve as Christ's ambassador",
+              "description": "Return to the world as an ambassador for Christ, sharing the Gospel.",
+              "effects": { "faith": 15, "wisdom": 15, "compassion": 35 },
+              "next": 5,
+              "gift": "evangelism",
+              "fruit": "love"
+            },
+            {
+              "text": "Glorify God in all things",
+              "description": "Live your life to bring glory to God in every thought, word, and deed.",
+              "effects": { "faith": 20, "wisdom": 20, "compassion": 20 },
+              "next": 5,
+              "gift": "faith",
+              "fruit": "faithfulness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Christian Life",
+      "theme": "sanctification",
+      "location": "A Quiet Valley at Dusk",
+      "verse": "2 Corinthians 5:17",
+      "scenes": [
+        {
+          "text": "Your journey has transformed you through God's grace. You understand now that theology is not about having all the answers, but about living faithfully according to God's Word. Knowing Christ is not a destination to be reached, but a relationship to be nurtured daily. As you reflect on your path, you realize that every choice, every struggle, and every moment of doubt was part of God's sovereign plan to draw you closer to Himself.",
+          "scripture": true,
+          "choices": [
+            {
+              "text": "Continue in grace",
+              "description": "With renewed faith, continue walking in God's grace each day.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 10 },
+              "next": 6,
+              "gift": "faith",
+              "fruit": "goodness"
+            },
+            {
+              "text": "Share the Gospel",
+              "description": "Tell others about Christ's love and the salvation found in Him.",
+              "effects": { "faith": 5, "wisdom": 15, "compassion": 10 },
+              "next": 11,
+              "gift": "evangelism",
+              "fruit": "gentleness"
+            },
+            {
+              "text": "Live for God's glory",
+              "description": "Devote your life to bringing glory to God in all things.",
+              "effects": { "faith": 15, "wisdom": 10, "compassion": 5 },
+              "next": 6,
+              "gift": "faith",
+              "fruit": "self-control"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Well of Living Water",
+      "theme": "living-water",
+      "location": "The Well Outside the Town",
+      "verse": "John 4:14",
+      "scenes": [
+        {
+          "text": "You come to a well outside a bustling town, the same well where Jesus once sat weary from His journey. A woman arrives to draw water, and in the quiet of the moment you sense the invitation: to drink of the water that quenches all thirst. The sun hangs low, and the air hums with the promise of living water—the grace that flows from Christ to all who would receive it.",
+          "setting": "A stone well at the edge of the road; the woman's jar rests empty beside her as she watches you in silence.",
+          "choices": [
+            {
+              "text": "Drink deeply of the living water",
+              "description": "Receive the grace of Christ that satisfies the soul forever.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 5 },
+              "next": 7,
+              "gift": "faith",
+              "fruit": "peace"
+            },
+            {
+              "text": "Listen to the stranger's teaching",
+              "description": "Sit in humility and learn from the wisdom being shared.",
+              "effects": { "faith": 5, "wisdom": 10, "compassion": 5 },
+              "next": 9,
+              "gift": "wisdom",
+              "fruit": "patience"
+            },
+            {
+              "text": "Share your water with someone nearby",
+              "description": "Demonstrate Christ's love through practical generosity.",
+              "effects": { "faith": 5, "wisdom": 5, "compassion": 10 },
+              "next": 7,
+              "gift": "mercy",
+              "fruit": "kindness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Upper Room",
+      "theme": "pentecost",
+      "location": "The Upper Room",
+      "verse": "Acts 2:4",
+      "scenes": [
+        {
+          "text": "You enter the upper room where the early disciples gathered after Christ's ascension. The atmosphere is thick with prayer and expectation. Suddenly, a sound like a rushing wind fills the place, and the Spirit descends upon everyone present. Tongues of flame rest on each head, and the community is transformed—afraid no longer, but bold in love. The body of Christ comes alive in a new way.",
+          "setting": "Lamplight flickers on plaster walls; men and women kneel in answered prayer as the wind of the Spirit moves.",
+          "choices": [
+            {
+              "text": "Pray and wait for the Spirit",
+              "description": "Join in persistent prayer, surrendering to the Spirit's timing.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 10 },
+              "next": 10,
+              "gift": "faith",
+              "fruit": "peace"
+            },
+            {
+              "text": "Teach the gathered crowd",
+              "description": "Boldly proclaim the truth of Christ to all who are listening.",
+              "effects": { "faith": 5, "wisdom": 10, "compassion": 5 },
+              "next": 0,
+              "gift": "teaching",
+              "fruit": "joy"
+            },
+            {
+              "text": "Break bread in fellowship",
+              "description": "Share a meal in unity, remembering Christ's sacrifice together.",
+              "effects": { "faith": 5, "wisdom": 5, "compassion": 10 },
+              "next": 0,
+              "gift": "service",
+              "fruit": "love"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Valley of Doubt",
+      "theme": "faith-in-darkness",
+      "location": "A Shadowed Valley",
+      "verse": "Hebrews 11:1",
+      "scenes": [
+        {
+          "text": "The path leads you into a shadowed valley where every step feels heavy with uncertainty. The air is cool and still, and for a moment it seems as though God has hidden His face. Yet even here, the Reformers taught, grace abounds. A narrow stream runs through the valley floor, and faint light breaks through the clouds above. You realize that doubt is not the opposite of faith—it is the terrain where faith learns to walk by trust, not by sight.",
+          "setting": "Mist clings to the stream; somewhere beyond the ridge, first light gathers like a held breath.",
+          "choices": [
+            {
+              "text": "Cry out to God in honesty",
+              "description": "Pour out your doubt before the Lord, trusting that He hears even the faintest whisper.",
+              "effects": { "faith": 15, "wisdom": 10, "compassion": 5 },
+              "next": 5,
+              "gift": "faith",
+              "fruit": "peace"
+            },
+            {
+              "text": "Search for answers in Scripture",
+              "description": "Open the Word to find the promises that hold firm when feelings fade.",
+              "effects": { "faith": 5, "wisdom": 20, "compassion": 0 },
+              "next": 4,
+              "gift": "knowledge",
+              "fruit": "self-control",
+              "memoryVerse": "Psalm 119:105"
+            },
+            {
+              "text": "Wait in silence before the Lord",
+              "description": "Sit quietly and let God renew your strength as you rest in His presence.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 10 },
+              "next": 12,
+              "gift": "prophecy",
+              "fruit": "peace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Warfare of Prayer",
+      "theme": "spiritual-warfare",
+      "location": "A Plain Under Battle-Scarred Sky",
+      "verse": "Ephesians 6:12",
+      "scenes": [
+        {
+          "text": "A spiritual battle unfolds around you, visible now only to the eyes of faith. The enemy schemes, but the Lord Jesus has already won the victory. You are called not to retreat, but to stand in the authority of Christ and pray with perseverance. The air thrums with sacred energy, and the saints of old stand beside you, interceding without ceasing.",
+          "setting": "Shadows move at the edge of sight; a banner of truth snaps in a wind no eye can see.",
+          "choices": [
+            {
+              "text": "Put on the full armor of God",
+              "description": "Clothe yourself in truth, righteousness, faith, and the Word of God.",
+              "effects": { "faith": 20, "wisdom": 5, "compassion": 5 },
+              "next": 4,
+              "gift": "faith",
+              "fruit": "self-control",
+              "memoryVerse": "Ephesians 6:12"
+            },
+            {
+              "text": "Intercede for others in prayer",
+              "description": "Lift up the needs of the world, standing in the gap through persistent prayer.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 20 },
+              "next": 5,
+              "gift": "faith",
+              "fruit": "love"
+            },
+            {
+              "text": "Stand firm in the authority of Christ",
+              "description": "Exercise the authority of Jesus' name over every scheme of darkness.",
+              "effects": { "faith": 15, "wisdom": 15, "compassion": 10 },
+              "next": 7,
+              "gift": "discernment",
+              "fruit": "faithfulness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Hope of Glory",
+      "theme": "hope",
+      "location": "The Veil Between Heaven and Earth",
+      "verse": "1 Peter 1:3",
+      "scenes": [
+        {
+          "text": "The veil between earth and heaven grows thin, and you glimpse the glory that awaits all who are in Christ. The scene exceeds every earthly joy, yet it is not a distant fantasy—it is the promised inheritance sealed by the blood of Jesus. Every trial of this present age is being woven into a crown of glory that will never fade. Your heart leaps with a hope that does not disappoint because the love of God has been poured out through the Holy Spirit.",
+          "setting": "Light pours through a rent in the sky; countless voices, one song, rising like incense.",
+          "choices": [
+            {
+              "text": "Worship the risen Christ",
+              "description": "Fall before the Lord in adoration, for He is worthy of all praise.",
+              "effects": { "faith": 15, "wisdom": 10, "compassion": 15 },
+              "next": 0,
+              "gift": "worship",
+              "fruit": "joy"
+            },
+            {
+              "text": "Share the hope of glory with others",
+              "description": "Tell the world about the living hope found in Christ's resurrection.",
+              "effects": { "faith": 10, "wisdom": 5, "compassion": 20 },
+              "next": 1,
+              "gift": "evangelism",
+              "fruit": "gentleness"
+            },
+            {
+              "text": "Live in light of eternity",
+              "description": "Return to your journey with renewed purpose, keeping your eyes on the prize.",
+              "effects": { "faith": 10, "wisdom": 15, "compassion": 5 },
+              "next": 11,
+              "gift": "faith",
+              "fruit": "patience"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Communion of Saints",
+      "theme": "communion",
+      "location": "The Great Cloud of Witnesses",
+      "verse": "Hebrews 12:1",
+      "scenes": [
+        {
+          "text": "In the communion of saints you find you are not alone on the pilgrim way. The cloud of witnesses — patriarchs, prophets, apostles, and martyrs — surrounds you, cheering you onward. Yet the Roman church had blurred this fellowship with the idolatry of Mariolatry and saint-veneration, exalting creatures above the Creator. You recall the Reformed conviction that Christ alone is the mediator, and that we honor the saints by imitating their faith, not by praying to them. The unity of the body of Christ transcends time and tongue, bound by one Spirit and one hope.",
+          "setting": "A great assembly without a horizon — fathers, mothers, martyrs kneeling in one direction.",
+          "choices": [
+            {
+              "text": "Honor the saints by imitating their faith",
+              "description": "Their lives point beyond themselves to Christ, the alone mediator.",
+              "effects": { "faith": 15, "wisdom": 15, "compassion": 5 },
+              "next": 0,
+              "gift": "teaching",
+              "fruit": "faithfulness"
+            },
+            {
+              "text": "Rejoice in the unity of the body of Christ",
+              "description": "Many members, one Spirit, one hope — the church catholic and reformed.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 20 },
+              "next": 2,
+              "gift": "exhortation",
+              "fruit": "love"
+            },
+            {
+              "text": "Press on toward the prize in Christ",
+              "description": "Forgetting what lies behind, straining forward to what lies ahead.",
+              "effects": { "faith": 12, "wisdom": 12, "compassion": 8 },
+              "next": 3,
+              "gift": "faith",
+              "fruit": "self-control"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The New Heavens and New Earth",
+      "theme": "eschatology",
+      "location": "The Renewed Creation",
+      "verse": "Revelation 21:4",
+      "scenes": [
+        {
+          "text": "The vision swells to its culmination: behold, the dwelling place of God is with man, and He will dwell with them. The new heavens and the new earth, where righteousness dwells, replace the old that passed away with its groaning. The Reformed hope is not escape from creation but its renewal — the creation liberated from bondage to corruption into the freedom of the glory of the children of God. You see that the quest was never mere moral striving but union with Christ, from whom all grace flows and to whom all glory returns. With joy you surrender the journey into His hands, knowing the Author and Finisher of faith completes what He began.",
+          "setting": "No temple, for the Lord God Almighty is its temple; the leaves of the tree of life are for the healing of the nations.",
+          "choices": [
+            {
+              "text": "Rest in the finished work of Christ",
+              "description": "It is by grace you have been saved, through faith — not of yourselves.",
+              "effects": { "faith": 20, "wisdom": 10, "compassion": 10 },
+              "next": 1,
+              "gift": "faith",
+              "fruit": "peace"
+            },
+            {
+              "text": "Feed His sheep in the renewed world",
+              "description": "Love one another as He has loved you, bearing the image of the city to come.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 25 },
+              "next": 4,
+              "gift": "mercy",
+              "fruit": "love"
+            },
+            {
+              "text": "Begin the quest anew in gratitude",
+              "description": "The old has passed away; behold, all things are made new.",
+              "effects": { "faith": 15, "wisdom": 15, "compassion": 15 },
+              "next": 6,
+              "gift": "faith",
+              "fruit": "joy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Reformation",
+      "theme": "reformation",
+      "location": "Wittenberg",
+      "verse": "Galatians 2:16",
+      "scenes": [
+        {
+          "text": "The cry of the Reformation echoes through the centuries: Sola Fide, Sola Scriptura, Solus Christus, Sola Gratia, Soli Deo Gloria. You stand in Wittenberg as the truth of God's Word is recovered from centuries of human tradition. The five solae shine like beacons — justification by faith alone, Scripture alone as the final authority, Christ alone as the mediator, grace alone as the means of salvation, and glory to God alone as the ultimate end. The air crackles with the power of the Gospel restored, and you realize that the Reformers did not invent new doctrine but unearthed the ancient faith buried beneath layers of ecclesiastical corruption.",
+          "setting": "Theses flutter from the door of the Castle Church; a new day breaks over the city.",
+          "choices": [
+            {
+              "text": "Stand upon Sola Scriptura",
+              "description": "Receive the Word of God alone as your supreme authority, rejecting all human traditions that contradict Scripture.",
+              "effects": { "faith": 15, "wisdom": 20, "compassion": 5 },
+              "next": 14,
+              "gift": "discernment",
+              "fruit": "faithfulness",
+              "requirement": { "attribute": "wisdom", "min": 55 }
+            },
+            {
+              "text": "Embrace Sola Fide",
+              "description": "Rest in the blessed truth that you are justified by faith alone in Christ alone, not by any work of your own.",
+              "effects": { "faith": 25, "wisdom": 5, "compassion": 10 },
+              "next": 15,
+              "gift": "faith",
+              "fruit": "peace",
+              "memoryVerse": "Galatians 2:16"
+            },
+            {
+              "text": "Live for Soli Deo Gloria",
+              "description": "Dedicate every thought, word, and deed to the glory of God alone, the ultimate end of all things.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 20 },
+              "next": 13,
+              "gift": "worship",
+              "fruit": "goodness"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "The Church Fathers",
+      "theme": "church-history",
+      "location": "The Hall of the Ancient Witnesses",
+      "verse": "Jude 3",
+      "scenes": [
+        {
+          "text": "The ancient witnesses surround you: Athanasius, who championed the full deity of Christ against Arianism; Augustine, who confessed the grace of God in his own heart and formulated the doctrines of original sin and irresistible grace; Irenaeus, who defended the faith once for all delivered to the saints against Gnostic heresy; and the Council of Chalcedon, which declared Christ to be one person in two natures, without confusion, without change, without division, without separation. Their writings are not equal to Scripture, yet they shine as faithful lamps that illuminate the biblical text. You see that the Reformed faith is not a novelty but the ancient catholic faith recovered and purified.",
+          "setting": "Torchlight on weathered faces; scrolls older than the nations rest in carved stone cradles.",
+          "choices": [
+            {
+              "text": "Defend the deity of Christ with Athanasius",
+              "description": "Stand firm for the full divinity of the Son against every reduction of His glory.",
+              "effects": { "faith": 20, "wisdom": 10, "compassion": 5 },
+              "next": 15,
+              "gift": "discernment",
+              "fruit": "faithfulness",
+              "requirement": { "attribute": "faith", "min": 60 }
+            },
+            {
+              "text": "Confess grace with Augustine",
+              "description": "Admit your dependence on God's sovereign grace, as Augustine did in his Confessions.",
+              "effects": { "faith": 15, "wisdom": 15, "compassion": 10 },
+              "next": 13,
+              "gift": "wisdom",
+              "fruit": "gentleness"
+            },
+            {
+              "text": "Contend for the faith once delivered",
+              "description": "Follow Irenaeus in guarding the apostolic teaching against every false philosophy.",
+              "effects": { "faith": 10, "wisdom": 20, "compassion": 5 },
+              "next": 13,
+              "gift": "knowledge",
+              "fruit": "self-control"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Perseverance & Glory",
+      "theme": "perseverance",
+      "location": "The Threshold of the City of God",
+      "verse": "Philippians 1:6",
+      "scenes": [
+        {
+          "text": "The final chapter of the pilgrimage unfolds: the saints persevere not by their own grip but by the power of God who keeps them. The New Heavens and New Earth descend as the final dwelling place of God with man, where every tear is wiped away and death is no more. The consummation of all things arrives — not as an escape from creation but as its redemption, when the whole groaning world is liberated into the freedom of the glory of the children of God. You understand now that the Reformed hope is not pie in the sky but the renewal of all things in Christ, who is the Alpha and the Omega, the Beginning and the End.",
+          "setting": "Behind you, the whole earthly pilgrimage; before you, a city with foundations, whose architect is God.",
+          "choices": [
+            {
+              "text": "Persevere in the power of the Spirit",
+              "description": "Trust that He who began a good work in you will carry it on to completion until the day of Christ Jesus.",
+              "effects": { "faith": 25, "wisdom": 5, "compassion": 10 },
+              "next": 16,
+              "gift": "faith",
+              "fruit": "faithfulness",
+              "memoryVerse": "Philippians 1:6"
+            },
+            {
+              "text": "Anticipate the New Heavens & New Earth",
+              "description": "Set your hope fully on the grace to be revealed when the heavens are renewed and all things are made new.",
+              "effects": { "faith": 10, "wisdom": 20, "compassion": 10 },
+              "next": 17,
+              "gift": "hope",
+              "fruit": "patience"
+            },
+            {
+              "text": "Surrender to the consummation",
+              "description": "Yield the final chapter of your story into the hands of the Author and Finisher of faith.",
+              "effects": { "faith": 10, "wisdom": 10, "compassion": 25 },
+              "next": 18,
+              "gift": "faith",
+              "fruit": "love"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,7 @@ class SpiritualBattle {
         this.intercessionActive = false;
         this.intercessionTurns = 0;
         this.intercessionHeal = 0;
+        this.battleEnded = false;
         this.skills = this.initSkills();
         this.enemies = this.initEnemies();
     }
@@ -281,6 +282,7 @@ class SpiritualBattle {
         this.inBattle = true;
         this.battleTurn = 0;
         this.combo = 0;
+        this.battleEnded = false;
         this.triggeredEnrages = new Set();
         this.behaviorFlags = {};
         this.playerDefenseDebuff = 0;
@@ -505,7 +507,10 @@ class SpiritualBattle {
     }
     
     enemyTurn() {
+        if (!this.inBattle || !document.getElementById('battle-overlay')) return;
+        
         const log = document.getElementById('battle-log');
+        if (!log) return;
         
         // Process Intercession heal over time
         if (this.intercessionActive) {
@@ -585,6 +590,9 @@ class SpiritualBattle {
 
         this.playerHP -= damage;
         
+        // Player took a hit
+        document.dispatchEvent(new CustomEvent('battleHit'));
+        
         // Reset combo
         if (damage > 0) {
             this.combo = 0;
@@ -602,7 +610,8 @@ class SpiritualBattle {
         
         // Next turn
         this.battleTurn++;
-        document.querySelector('#battle-overlay .text-yellow-400').innerHTML = `${window.I18N.t("Turn")} ${this.battleTurn + 1} | ${window.I18N.t("Combo:")} <span id="combo">${this.combo}</span>x`;
+        const turnEl = document.querySelector('#battle-overlay .text-yellow-400');
+        if (turnEl) turnEl.innerHTML = `${window.I18N.t("Turn")} ${this.battleTurn + 1} | ${window.I18N.t("Combo:")} <span id="combo">${this.combo}</span>x`;
         
         // Regenerate MP
         this.playerMP = Math.min(50, this.playerMP + 2);
@@ -657,8 +666,11 @@ class SpiritualBattle {
     }
     
     victory() {
+        if (this.battleEnded || !this.inBattle) return;
+        this.battleEnded = true;
+        
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-green-400 text-xl font-bold animate-pulse">🎉 ${window.I18N.t("VICTORY!")} ${this.currentEnemy.name} ${window.I18N.t("defeated!")}</div>`;
+        if (log) log.innerHTML += `<div class="text-green-400 text-xl font-bold animate-pulse">🎉 ${window.I18N.t("VICTORY!")} ${this.currentEnemy.name} ${window.I18N.t("defeated!")}</div>`;
         
         // Trigger visual effects
         if (window.visualEffects) {
@@ -671,7 +683,7 @@ class SpiritualBattle {
         // The Rationalist reduces wisdom gain
         if (this.currentEnemy.type === 'rationalist') {
             reward.wisdom = Math.max(0, Math.floor(reward.wisdom * 0.5));
-            log.innerHTML += `<div class="text-gray-400">${window.I18N.t("The Rationalist's arguments linger... Wisdom reward reduced!")}</div>`;
+            if (log) log.innerHTML += `<div class="text-gray-400">${window.I18N.t("The Rationalist's arguments linger... Wisdom reward reduced!")}</div>`;
         }
 
         this.game.playerStats.faith += reward.faith;
@@ -679,7 +691,10 @@ class SpiritualBattle {
         this.game.playerStats.compassion += reward.compassion;
         this.game.updateStats();
         
-        log.innerHTML += `<div class="text-yellow-400">${window.I18N.t("Rewards:")} +${reward.faith} ${window.I18N.t("Faith,")} +${reward.wisdom} ${window.I18N.t("Wisdom,")} +${reward.compassion} ${window.I18N.t("Compassion!")}</div>`;
+        if (log) {
+            log.innerHTML += `<div class="text-yellow-400">${window.I18N.t("Rewards:")} +${reward.faith} ${window.I18N.t("Faith,")} +${reward.wisdom} ${window.I18N.t("Wisdom,")} +${reward.compassion} ${window.I18N.t("Compassion!")}</div>`;
+            log.scrollTop = log.scrollHeight;
+        }
         
         // Show achievement
         this.game.showAchievement('Spiritual Warrior', `${window.I18N.t("Defeated")} ${this.currentEnemy.name}!`);
@@ -693,8 +708,11 @@ class SpiritualBattle {
     }
     
     defeat() {
+        if (this.battleEnded || !this.inBattle) return;
+        this.battleEnded = true;
+        
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-red-400 text-xl font-bold animate-pulse">💀 ${window.I18N.t("DEFEAT! You have been overwhelmed...")}</div>`;
+        if (log) log.innerHTML += `<div class="text-red-400 text-xl font-bold animate-pulse">💀 ${window.I18N.t("DEFEAT! You have been overwhelmed...")}</div>`;
         
         // Penalty
         this.game.playerStats.faith = Math.max(0, this.game.playerStats.faith - 10);
@@ -710,8 +728,11 @@ class SpiritualBattle {
     }
     
     flee() {
+        if (this.battleEnded || !this.inBattle) return;
+        this.battleEnded = true;
+        
         const log = document.getElementById('battle-log');
-        log.innerHTML += `<div class="text-gray-400">${window.I18N.t("You fled from battle...")}</div>`;
+        if (log) log.innerHTML += `<div class="text-gray-400">${window.I18N.t("You fled from battle...")}</div>`;
         
         // Small penalty
         this.game.playerStats.faith = Math.max(0, this.game.playerStats.faith - 5);

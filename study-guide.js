@@ -170,7 +170,7 @@ class StudyGuide {
                 commentary: window.I18N.t("The final chapter confesses the keeping power of God: those He calls, He preserves. Perseverance is not the saints' tenacity but the Shepherd's grip—no one snatches His sheep from His hand, and the good work begun is carried to completion. Paul's golden chain runs unbroken from foreknowledge to predestination to calling to justification to glorification, every link forged by God. So the quest ends not with a trophy but with surrender: yielding the story into the hands of its Author and Finisher. The consummation is not escape from creation but its liberation—the groaning world set free into the glory of God's children, every tear wiped away, Christ all in all."),
                 scripture: { reference: "Jude 24-25", text: "Now to him who is able to keep you from stumbling and to present you blameless before the presence of his glory with great joy, to the only God, our Savior, through Jesus Christ our Lord, be glory, majesty, dominion, and authority, before all time and now and forever. Amen." }
             },
-            16: {
+            34: {
                 title: window.I18N.t("Justification"),
                 questions: [
                     "Why does Reformed theology describe justification as a 'forensic' act rather than a process of moral improvement?",
@@ -180,7 +180,7 @@ class StudyGuide {
                 commentary: window.I18N.t("Justification is God's gracious act of declaring a sinner righteous in His sight, not on the basis of any works or inherent righteousness in the believer, but solely on account of the imputed righteousness of Jesus Christ. The Reformers contrasted this with the Roman view, which understood justification as an internal transformation making one objectively righteous. For Calvin and Luther, justification is a legal verdict: God the Judge acquits the guilty and credits the perfect obedience and sacrificial merit of Christ to the believer's account. This righteousness is imputed, not infused—counted as belonging to the believer even though it is not his own. Faith alone receives this gift; faith is not a work that earns justification, but the empty hand that embraces Christ. Because justification rests entirely on Christ, it is once-for-all and unchanging. A justified believer is still a sinner, yet in Christ he is fully accepted. The covenant theologian sees justification as the great blessing of the covenant of grace, administered in every age by promise and type, fulfilled in Christ, and received by faith alone."),
                 scripture: { reference: "2 Corinthians 5:21", text: "For our sake he made him to be sin who knew no sin, so that in him we might become the righteousness of God." }
             },
-            17: {
+            35: {
                 title: window.I18N.t("The Church (Ecclesiology)"),
                 questions: [
                     "Why is the church called the 'visible' and 'invisible' church, and how does this distinction help Christians today?",
@@ -190,7 +190,7 @@ class StudyGuide {
                 commentary: window.I18N.t("The church is the covenant community purchased by Christ's blood, called out of the world to worship, grow, and bear witness. Reformed theology distinguishes between the invisible church—the whole company of the elect known perfectly only to God—and the visible church—the gathered assembly of professing believers and their children, in which the Word is truly preached, the sacraments rightly administered, and discipline faithfully exercised. The visible church will always be mixed: some members are genuine believers, others are merely external participants. Yet the Reformers rejected both sectarian perfectionism and lax indifference: the church is called to be holy, to receive all who profess faith, and yet not to pretend that every baptized person is necessarily regenerate. The Belgic Confession and Westminster Confession identify the marks of the true church as the pure preaching of the gospel, the right administration of the sacraments, and the faithful exercise of church discipline. These marks protect the church from both barren formalism and subjective enthusiasm, keeping her rooted in Christ alone. Membership in the church is not optional; it is the ordinary means by which Christ nourishes His people."),
                 scripture: { reference: "Hebrews 10:24-25", text: "And let us consider how to stir up one another to love and good works, not neglecting to meet together, as is the habit of some, but encouraging one another, and all the more as you see the Day drawing near." }
             },
-            18: {
+            36: {
                 title: window.I18N.t("Eschatology"),
                 questions: [
                     "How does the Reformed view of the 'already/not yet' kingdom affect how Christians live between Christ's first and second coming?",
@@ -200,7 +200,7 @@ class StudyGuide {
                 commentary: window.I18N.t("Eschatology is the study of last things, and Reformed theology embraces a robust, biblical hope anchored in the return of Christ. The kingdom of God has been inaugurated in Christ's first coming but has not yet been consummated; believers live in the 'already/not yet' tension, enjoying the benefits of salvation now while awaiting its full realization when Christ returns. Reformed orthodoxy rejects both utopian optimism that the world will gradually perfect itself and pessimistic escapism that despises the present creation. Instead, it teaches that Christ will bodily return, raise the dead, judge the world in righteousness, and establish the new heavens and new earth—a renewed, physical, everlasting realm where righteousness dwells. The resurrection of the body is central: Christianity is not the escape of the soul from matter, but the redemption of the whole person and the renewal of the whole creation. This hope does not paralyze but energizes the believer, pressing toward holiness, missions, and faithful stewardship of all God has made. The Heidelberg Catechism closes with the comfort of resurrection life, and the Westminster Confession confesses a general resurrection of both the just and the unjust."),
                 scripture: { reference: "1 Thessalonians 4:16-17", text: "For the Lord himself will descend from heaven with a cry of command, with the voice of an archangel, and with the sound of the trumpet of God. And the dead in Christ will rise first. Then we who are alive, who are left, will be caught up together with them in the clouds to meet the Lord in the air, and so we will always be with the Lord." }
             },
-            19: {
+            37: {
                 title: window.I18N.t("Total Depravity"),
                 questions: [
                     "What does 'total depravity' mean, and how is it different from saying every person is as bad as they could possibly be?",
@@ -210,7 +210,147 @@ class StudyGuide {
                 commentary: window.I18N.t("Total depravity is the first head of the TULIP summary of Reformed soteriology. It does not teach that every human is as wicked as possible, but that sin has corrupted every part of human nature—mind, will, affections, and conscience—so that no one seeks God by nature (Romans 3:10-12). The will is not neutral but in bondage to sin; left to himself, a person chooses according to his fallen desires. This is why Reformed theology insists that salvation must be monergistic in its inception: the initiative is entirely God's. The Spirit must regenerate the dead heart before anyone can respond in faith (John 6:44, 65). Total depravity magnifies grace: if the saved were in any part the authors of their own deliverance, they could boast; but since all are equally lost, the rescue of any is sheer mercy. Calvin grounded this in Augustine's anti-Pelagian writings, and the Canons of Dort affirm that 'there is left in man since the fall, no spark of true saving light.' The doctrine is humbling but hopeful: the worse the disease, the greater the Physician."),
                 scripture: { reference: "Romans 3:10-12", text: "as it is written: 'None is righteous, no, not one; no one understands; no one seeks for God. All have turned aside; together they have become worthless; no one does good, not even one.'" }
             },
+            16: {
+                title: "The Cost of Discipleship",
+                questions: [
+                    "What does it mean to carry one's cross as a daily posture rather than a single dramatic decision?",
+                    "How is counting the cost different from trying to earn salvation?",
+                    "Why does Christ offer no guarantee of comfort but only of His presence to those who follow?"
+                ],
+                commentary: "Discipleship is lordship. The cross the pilgrim carries is rarely martyrdom; it is the daily, willing surrender of one's own agenda to Christ's. Counting the cost keeps grace from becoming cheap — an honesty born of the upper room, not a condition added to mercy. The choice to deny self, to steward all things as a servant, and to endure in suffering is not the seedbed of salvation but the shape salvation takes under a Master who was Himself obedient unto death. Reformed piety has always insisted God's grace is free but never cheap: it cost the Son everything, and following is the response of those who do not presume.",
+                scripture: { reference: "Luke 14:27", text: "Whoever does not bear his own cross and come after me cannot be my disciple." }
+            },
+            17: {
+                title: "Faith Counted as Righteousness",
+                questions: [
+                    "What does it mean that righteousness is 'counted' or 'credited' rather than earned?",
+                    "Since Abraham was justified before circumcision and the law, what does that reveal about how God saves people in every age?",
+                    "Why is faith itself not a work, but the empty hand that receives Christ?"
+                ],
+                commentary: "Paul's argument from Genesis 15:6 is decisive: Abraham's believing was itself a gift, and God 'reckoned' it as righteousness — a verdict of the Judge, not an achievement of the man. Because this verdict preceded circumcision by a generation and Sinai by centuries, justification can never rest on sacraments or lawkeeping. It answers the Reformation's deepest question — how can a righteous God accept the ungodly? — by pointing wholly to God's own promise. Faith saves not because believing is a finer work but because it rests the soul entirely on Another. And the same promise that justified a wandering patriarch covers every sin of everyone united to Christ.",
+                scripture: { reference: "Romans 4:3", text: "For what does the Scripture say? 'Abraham believed God, and it was accounted to him for righteousness.'" }
+            },
+            18: {
+                title: "The Anchor of the Soul",
+                questions: [
+                    "What refuge does a soul actually need, and how is Christ a better refuge than any earthly shelter?",
+                    "How does an 'anchor of the soul' steady a believer in storms that feel utterly unmoored?",
+                    "Why does Scripture speak of assurance as something to hold firmly rather than merely to wish for?"
+                ],
+                commentary: "The cities of refuge gave the manslayer safety until the death of the high priest; Hebrews takes up that imagery and resolves it in Christ, whose priesthood never ends. The anchor metaphor pierces to the heart of the chapter: hope enters 'within the veil,' resting not on the strength of our grip but on the finished work the Son has already presented to the Father. Assurance, then, is a blessed state to be held, not a far-off possibility to be feared toward. When the waters rise, the believer's refuge is not a feeling but a finished work — the veil already torn, the Advocate already entered. The rod and staff of the Shepherd are here exchanged for the one thing that cannot slip: a hope made sure in the risen Christ.",
+                scripture: { reference: "Hebrews 6:19", text: "This hope we have as an anchor of the soul, a hope both sure and steadfast and entering into that which is within the veil;" }
+            },
+            19: {
+                title: "Grace That Trains Us",
+                questions: [
+                    "How does grace 'train' or 'discipline' a believer rather than merely pardon?",
+                    "What does it look like to deny ungodliness while still embracing ordinary daily duty?",
+                    "Why is the virtuous life the fruit of grace rather than its purchase price?"
+                ],
+                commentary: "Titus pairs the appearing of grace with a classroom: the grace that saves is the grace that 'trains' us to renounce ungodliness and worldly passions and to live self-controlled, upright, and godly lives in this present age. This is sanctification — the Spirit of Christ working through the Word, the sacraments, and the means of grace to conform us to the Beloved. Sober, righteous, godly living is not a legalist surcharge on the gospel but the shape gratitude takes when the grace that saved us begins to govern us. The Reformers named this the third use of the law: not to merit salvation, but to orient the redeemed life toward the God who has already pardoned and is now purifying.",
+                scripture: { reference: "Titus 2:11-12", text: "For the grace of God has appeared, bringing salvation to all men, instructing us to the intent that, denying ungodliness and worldly lusts, we would live soberly, righteously, and godly in this present age;" }
+            },
             20: {
+                title: "The Shepherd's Portion",
+                questions: [
+                    "What do the shepherd's rod and staff each signify for correction and comfort?",
+                    "Why does the psalm place the valley within the good shepherd's path, and what does 'You are with me' do that 'the valley is empty' cannot?",
+                    "Why is 'I shall lack nothing' the deepest possible definition of contentment?"
+                ],
+                commentary: "Psalm 23 reframes the whole life of faith as the walk of a sheep under a faithful shepherd. The rod defends against the enemy; the staff steers and rescues; both are instruments of love, not mere symbols on a page. The valley is not a detour the psalmist avoids but the appointed path — and the comfort of the chapter is not the darkness removed but the Shepherd present in it. Contentment, 'I shall lack nothing,' is not the absence of need but settled trust that this Shepherd's provision is enough. The prepared table and the anointing oil look past the wilderness to a feast, and goodness and mercy that follow all the days of life find their terminus in the very house of the Lord.",
+                scripture: { reference: "Psalm 23:1", text: "Yahweh is my shepherd; I shall lack nothing." }
+            },
+            21: {
+                title: "The Great Commission",
+                questions: [
+                    "Why does the Great Commission begin with worship and end with a promise rather than a program?",
+                    "What does baptizing into the triune Name teach about the church's mission being more than social improvement?",
+                    "How can a believer go into all the world while remaining planted in one place?"
+                ],
+                commentary: "The Great Commission is the hinge of the church's purpose: every nation, disciples made, baptism into the name of the Father and of the Son and of the Holy Spirit, and teaching that aims at obedience rather than mere information. Its grammar is trinitarian and its ground is the delegated authority of the risen Christ; because He says, 'I am with you always,' the mission is never a solo venture — the One who sends is the One who goes in and with His witnesses. The valley walk of the preceding chapter becomes here the going: the Spirit empowers what the Lord commands, and the church does not so much engineer the growth of the kingdom as follow the Lamb who is already gathering His sheep from every tongue and tribe.",
+                scripture: { reference: "Matthew 28:19", text: "Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit," }
+            },
+            22: {
+                title: "The Body of Christ",
+                questions: [
+                    "Why is the image of a body more accurate than the image of a crowd for understanding the church?",
+                    "What is one way your particular gift, however small, is essential to the health of the whole?",
+                    "How does the diversity of members display, rather than threaten, the glory of the Head?"
+                ],
+                commentary: "Paul's anatomy of grace is breathtaking: the many members are one body because they share one Spirit, one baptism, one broken bread. No member may say it has no need of another, and the members that seem weaker are the ones declared indispensable. The unity of the church is therefore not uniformity — that would rob the body of its members — but a living interdependence under the one Head, Christ. To be joined to this body is to receive both belonging and function: you are needed, and the body is not whole without you. Communion, the very center of this chapter, is where the one body becomes visibly one as every member drinks from the same cup and is knit by the same love.",
+                scripture: { reference: "1 Corinthians 12:12", text: "For as the body is one and has many members, and all the members of the body, being many, are one body, so also is Christ." }
+            },
+            23: {
+                title: "The Testing of Faith",
+                questions: [
+                    "How can trials be counted 'all joy' without pretending they do not hurt?",
+                    "What is the difference between a trial that refines faith and a temptation that would lure it into sin?",
+                    "Why does James tell the weary to ask for wisdom rather than merely for relief?"
+                ],
+                commentary: "James writes to scattered believers bowed under trials, and his opening command is startling: count it all joy. Not because pain is pleasant, but because the testing of faith produces steadfastness — endurance that becomes character. The trial is the gymnasium of trust; the temptation is the lure to sin, and James is emphatic that God tempts no one, for He is pure and cannot be the author of evil. In the trial the appropriate prayer is not only 'deliver me' but 'give me wisdom to walk as Your child through it,' for the God of all wisdom gives liberally and without reproach. Endurance matured makes the pilgrim complete, lacking nothing — the very wholeness of a tested and proved faith.",
+                scripture: { reference: "James 1:2-3", text: "Count it all joy, my brothers, when you fall into various trials, knowing that the testing of your faith produces endurance." }
+            },
+            24: {
+                title: "The Renewed Mind",
+                questions: [
+                    "What does it mean to be transformed by renewal rather than merely inspired by information?",
+                    "How can a believer live in the world without being conformed to it, and what does that pattern not look like?",
+                    "What does it mean to prove the good, acceptable, and perfect will of God in daily decisions?"
+                ],
+                commentary: "Romans 12 opens the gospel-shaped life with an act of worship: present your bodies as living sacrifices and be transformed by the renewal of your mind. Conformity to this world is the path of least resistance; transformation is a Spirit-wrought change at the level of thinking, affections, and desire. Renewal produces discernment — the ability to test and approve what is genuinely good, well-pleasing, and mature before God. The renewed mind is therefore not detached information but eager, humble participation in God's purposes: the offering of our whole selves to the Presented One grows the fruit of wise, godly decision in the ordinary materials of everyday life.",
+                scripture: { reference: "Romans 12:2", text: "Don't be conformed to this world, but be transformed by the renewing of your mind, so that you may prove what is the good, well-pleasing, and perfect will of God." }
+            },
+            25: {
+                title: "The Marriage Supper of the Lamb",
+                questions: [
+                    "Why is the climax of redemptive history revealed as a wedding feast rather than a courtroom?",
+                    "What does the blessing on 'those invited' imply about how believers should live in the present age?",
+                    "How do the three final postures of the quest — glory, heritage, and perseverance — picture one whole response to the consummation?"
+                ],
+                commentary: "John's apocalypse consummates the covenant as a marriage: the Bride has made herself ready, and the Spirit and the Bride say, 'Come.' A feast, not a trial, is the end of history because Christ did not come to condemn the world but to save it — judgment is real, yet for the redeemed the banquet is the joy of union with the Lamb at last. To be 'invited' is to be elect, called, kept; blessedness is both the free invitation and the faithful response of readiness. The three closing paths — giving glory, receiving the promised inheritance, and enduring the age — are not rival endings but one stance: pilgrims who anticipate the feast by worship, by hope, and by patient perseverance until the marriage supper of the Lamb is spread.",
+                scripture: { reference: "Revelation 19:9", text: "He said to me, 'Write: Blessed are those who are invited to the wedding supper of the Lamb.' He said to me, 'These are true words of God.'" }
+            },
+            26: {
+                title: "The Sealing of the Spirit",
+                questions: [
+                    "What does it mean to be sealed with the Holy Spirit of promise, and why is a seal stronger than a signature?",
+                    "How is the Spirit an 'earnest' or down payment of the inheritance?",
+                    "Why is assurance rooted in God's keeping rather than in our own performance?"
+                ],
+                commentary: "A seal is a mark of ownership and security: having believed, believers belong to God, and no one can break that ownership. The Spirit is given as the earnest (the arrhabon, a pledge deposit) of the inheritance — God's own down payment of the glory yet to come. Because the seal is God's work, assurance rests on the Spirit's indwelling rather than on self-monitoring. The Reformed tradition has treasured this as the ground of perseverance: the promise is God's, the seal is God's, and what God has begun He is faithful to complete.",
+                scripture: { reference: "Ephesians 1:13-14", text: "In him you also, having heard the word of the truth, the Good News of your salvation—in whom, having also believed, you were sealed with the Holy Spirit of promise, who is a pledge of our inheritance, to the redemption of God's own possession, to the praise of his glory." }
+            },
+            27: {
+                title: "The Coming King",
+                questions: [
+                    "How does the church's cry 'Come, Lord Jesus' shape present-day longing?",
+                    "What does it mean that the Spirit and the Bride say 'Come' together?",
+                    "Why is expectation meant to produce readiness rather than anxiety?"
+                ],
+                commentary: "The final verse of the returned word is a wedding-cry. That the Spirit and the Bride join voices shows that sanctification and worship meet in one longing: the coming of the King. To live in the age of the watchtower is to confess the already/not yet — Christ present by the Spirit, yet the face of the Groom still awaited. Readiness means trimmed lamps, faithful vocation, and buoyant patience, not date-setting. Like the first believers of the upper room, the church waits for a Person, not a calendar, and every lamp kept burning is an act of hope.",
+                scripture: { reference: "Revelation 22:20", text: "He who testifies these things says, 'Yes, I am coming soon.' Amen! Come, Lord Jesus!" }
+            },
+            28: {
+                title: "The Strong Tower",
+                questions: [
+                    "Why is the name of the Lord a refuge in a way that even His mighty works are not?",
+                    "What are the 'tents on sand' the world offers as refuges?",
+                    "How does running into the tower both shelter a pilgrim and make them a doorkeeper of the gate?"
+                ],
+                commentary: "In the ancient world a name bore a person's character and reputation; the covenant name Yahweh gathers all of God's self-revelation — faithful, mighty, redeeming. The righteous run into it because salvation was never a slow negotiation but a desperate sprint to a door already standing open. Every alternative refuge — wealth, reputation, self-rule — is a tent pitched on sand. The tower's gates stay open so that those who found shelter become its doorkeepers, gesturing the hunted inside before the great storm, and the name that none can storm becomes the peace of all who enter it.",
+                scripture: { reference: "Proverbs 18:10", text: "The name of Yahweh is a strong tower; the righteous run to him, and are safe." }
+            },
+            29: {
+                title: "The Firstfruits of Glory",
+                questions: [
+                    "Why does Paul call the Spirit's work 'firstfruits', and what does that imply about the coming harvest?",
+                    "How can groaning and hoping coexist in the same believer?",
+                    "Why is the redemption of the body essential to the Christian hope?"
+                ],
+                commentary: "Firstfruits are the first sheaf of the harvest — a pledge that the whole field will follow. The Spirit in the redeemed is exactly that: the initial installment of the coming restoration of all things. The believer's groaning is therefore not the despair of the lost but the labour-pang of a new creation being born. Because God made bodies, He will redeem bodies; Christianity is resurrection, not escape from the world. The wealth of glory already enjoyed — peace amid war, love amid fear, joy that outlives its mourners — is the Spirit's down payment that the harvest of adoption, the redemption of our body, is certain.",
+                scripture: { reference: "Romans 8:23", text: "Not only so, but ourselves also, who have the first fruits of the Spirit, groan within ourselves, waiting for adoption, the redemption of our body." }
+            },
+            30: {
                 title: window.I18N.t("Unconditional Election"),
                 questions: [
                     "Why does Reformed theology describe God's election as 'unconditional' rather than based on foreseen faith or merit?",
@@ -220,7 +360,7 @@ class StudyGuide {
                 commentary: window.I18N.t("Unconditional election teaches that from before the foundation of the world, God freely and sovereignly chose a people for Himself in Christ, not on the basis of any foreseen faith, merit, or good in them, but according to the good pleasure of His will (Ephesians 1:4-5). The Reformed confession rejects the view that God elects because He foresaw who would believe; that would make the ultimate cause of salvation reside in man rather than God, and grace would no longer be grace. Election is grounded in God's loving, wise, and secret decree, revealed and applied through the gospel. Far from discouraging evangelism, this doctrine fuels it: the apostle who most taught election was also the apostle to the Gentiles, for he knew the Elector delights to gather His sheep through the preaching of the word. Election is a comfort, not a terror: those whom God predestined He also called, justified, and will glorify (Romans 8:29-30). The believer's perseverance rests not on the strength of his own resolving but on the immutability of God's counsel."),
                 scripture: { reference: "Ephesians 1:4-5", text: "even as he chose us in him before the foundation of the world, that we should be holy and blameless before him. In love he predestined us for adoption to himself as sons through Jesus Christ, according to the purpose of his will" }
             },
-            21: {
+            31: {
                 title: window.I18N.t("The Law and the Gospel"),
                 questions: [
                     "What is the difference between the moral, civil, and ceremonial law, and which continues to bind the conscience today?",
@@ -230,7 +370,7 @@ class StudyGuide {
                 commentary: window.I18N.t("The distinction between law and gospel is, in Luther's words, the sum of all Christian doctrine. The law commands and condemns; the gospel promises and gives. Reformed covenant theology has historically distinguished three uses of the law: the civil use, restraining sin in society; the pedagogical (or elenctic) use, convicting sinners and driving them to Christ; and the normative (or third) use, guiding the grateful believer in sanctification. The moral law, summed in the Ten Commandments and reaffirmed by Christ, remains the abiding rule of life; the ceremonial and civil aspects of the Mosaic code found their fulfillment in Christ and are no longer binding as covenant obligations. The gospel does not abolish the law's authority but fulfills it, so that believers, freed from the law as a covenant of works, now delight in it as the pattern of grateful obedience. The Heidelberg Catechism asks, 'Since then we are delivered from the law, can it no longer accuse us?' and answers that the law still shows us our sin and the holiness God requires—yet our acceptance before God rests solely on Christ's obedience, not ours."),
                 scripture: { reference: "Galatians 3:24-25", text: "So then, the law was our guardian until Christ came, in order that we might be justified by faith. But now that faith has come, we are no longer under a guardian." }
             },
-            22: {
+            32: {
                 title: window.I18N.t("Union with Christ"),
                 questions: [
                     "Why do Reformed theologians call 'union with Christ' the fountain from which all other benefits of salvation flow?",
@@ -240,7 +380,7 @@ class StudyGuide {
                 commentary: window.I18N.t("Union with Christ is the central, organizing blessing of salvation: all the benefits of redemption—justification, adoption, sanctification, and glorification—are ours only because we are united to the risen and ascended Christ by the Spirit (John 15:1-5; Romans 6:1-11). Calvin called it the sum of all blessings, and modern Reformed theology (following him and later writers such as John Murray and Sinclair Ferguson) emphasizes that we must not treat the ordo salutis as a ladder of separate steps but as dimensions of one shared life. Because Christ lived, died, and rose, those in Him have died to sin's dominion and been raised to newness of life; His righteousness is theirs by imputation, His death theirs by identification, His resurrection theirs by power. This truth guards against both legalism (trying to earn what is already given) and antinomianism (forgetting that grace teaches us to say no to sin). Living 'in Christ' means the Christian life is not the sinner's lonely climb to God but the Spirit's continual drawing of the elect into the fellowship of the Son with the Father."),
                 scripture: { reference: "Romans 6:5", text: "For if we have been united with him in a death like his, we shall certainly be united with him in a resurrection like his." }
             },
-            23: {
+            33: {
                 title: window.I18N.t("The Two Kingdoms"),
                 questions: [
                     "What does the Reformed 'two kingdoms' (or twofold government) doctrine say about how Christ rules the church and the civil order?",
@@ -287,7 +427,7 @@ class StudyGuide {
         this.button.setAttribute('type', 'button');
 
         // Base styles + Tailwind classes
-        this.button.className = 'fixed bottom-6 left-6 z-40 bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-5 rounded-full shadow-lg transition-colors duration-200 text-lg';
+        this.button.className = 'fixed bottom-44 left-4 z-40 bg-indigo-700 hover:bg-indigo-600 text-white font-bold py-3 px-5 rounded-full shadow-lg transition-colors duration-200 text-lg';
 
         this.button.addEventListener('click', () => {
             if (this.isOpen) {
@@ -313,8 +453,11 @@ class StudyGuide {
     }
 
     handleChapterChanged(event) {
-        if (this.isOpen && event && typeof event.detail === 'number') {
-            this.renderContent(event.detail);
+        if (!this.isOpen || !event) return;
+        const d = event.detail;
+        const chapter = typeof d === 'number' ? d : (d && typeof d.chapter === 'number' ? d.chapter : -1);
+        if (chapter >= 0) {
+            this.renderContent(chapter);
         }
     }
 

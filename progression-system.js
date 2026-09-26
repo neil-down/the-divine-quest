@@ -97,9 +97,14 @@ class ProgressionSystem {
     }
 
     initShopPerks() {
+        const qp = () => {
+            if (!window.questPerks) window.questPerks = {};
+            return window.questPerks;
+        };
         return [
-            { id: 'max_hp_plus', name: '+10 Max HP', description: 'Increases your maximum HP by 10', cost: 3, effect: () => { if (typeof window.game !== 'undefined' && typeof window.game.maxHealth !== 'undefined') { window.game.maxHealth += 10; window.game.health = Math.min(window.game.health + 10, window.game.maxHealth); } } },
-            { id: 'start_faith', name: '+1 Starting Faith', description: 'Begin each journey with +1 faith', cost: 4, effect: () => { if (typeof window.game !== 'undefined' && typeof window.game.faith !== 'undefined') { window.game.faith += 1; } } },
+            { id: 'start_faith2', name: '+2 Starting Faith', description: 'Begin each new journey with +2 faith (the trust of a seasoned pilgrim)', cost: 3, effect: () => { qp().faithHeadStart = (Number(qp().faithHeadStart) || 0) + 2; } },
+            { id: 'start_faith', name: '+1 Starting Faith', description: 'Begin each journey with +1 faith', cost: 4, effect: () => { qp().faithHeadStart = (Number(qp().faithHeadStart) || 0) + 1; } },
+            { id: 'pathfinder_sight', name: "Pathfinder's Sight", description: 'Walk hidden variant paths even when the key flag is not yet carried', cost: 4, effect: () => { qp().pathfinder = true; } },
             { id: 'wisdom_insight', name: 'Keener Insight', description: 'Puzzles award +1 wisdom', cost: 5, effect: () => { this.gracePerkWisdom = (this.gracePerkWisdom || 0) + 1; } }
         ];
     }
@@ -128,6 +133,17 @@ class ProgressionSystem {
                 this.game.showAchievement(def.name, def.description);
             }
         });
+        this.updateLevelDisplay();
+    }
+
+    // A journey milestone (awarded by the game engine) also pays out the
+    // grace-point meta-currency and registers in the achievements ledger.
+    awardMilestone(title) {
+        if (title && !this.achievements.includes(title) && !this.achievementsUnlocked.has('mv_' + title)) {
+            this.achievements.push(title);
+            this.achievementsUnlocked.add('mv_' + title);
+            this.gracePoints += 1;
+        }
         this.updateLevelDisplay();
     }
 
@@ -543,7 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.progressionSystem.addExperienceForAction('battle_win', Math.floor(50 * bonus));
                 window.progressionSystem.achState.battlesWon++;
                 window.progressionSystem.gracePoints += 1;
-                if (window.battleEncounters && window.battleEncounters.currentEnemy && window.battleEncounters.currentEnemy.isBoss) {
+                if (window.battle && window.battle.currentEnemy && window.battle.currentEnemy.isBoss) {
                     window.progressionSystem.achState.bossesDefeated++;
                 }
                 window.progressionSystem.evaluateAchievements();

@@ -1,8 +1,17 @@
 // The Divine Quest - Core Game Engine
+const APP_VERSION = '1.0.2';
+window.APP_VERSION = APP_VERSION;
+
+// Purchased grace-shop perks that reshape the next journey (persisted).
+window.questPerks = (window.questPerks || {});
+window.questPerks.faithHeadStart = Number(window.questPerks.faithHeadStart) || 0;
+window.questPerks.pathfinder = !!window.questPerks.pathfinder;
+
 class DivineQuest {
     constructor() {
+        const headStart = window.questPerks ? (Number(window.questPerks.faithHeadStart) || 0) : 0;
         this.playerStats = {
-            faith: 50,
+            faith: 50 + headStart,
             wisdom: 50,
             compassion: 50
         };
@@ -11,6 +20,7 @@ class DivineQuest {
         this.currentScene = 0;
         this.gameState = 'playing';
         this.choices = [];
+        this.flags = new Set();
         this.earnedAchievements = new Set();
         
         this.routeMap = {
@@ -576,6 +586,15 @@ class DivineQuest {
             }
         ];
         
+        // Phase 1: data-driven content packs. When the bundled content bridge
+        // (window.__TDQ_CONTENT) is present, its chapters are canonical; the
+        // literal above stays only as a safe offline fallback for old builds.
+        const __packs = (window.__TDQ_CONTENT && window.__TDQ_CONTENT.packs) || null;
+        if (__packs && __packs.chapters && Array.isArray(__packs.chapters.chapters)) {
+            this.storyChapters = __packs.chapters.chapters;
+            this.contentMeta = __packs.chapters.version || 1;
+        }
+        
         this.init();
     }
     
@@ -618,7 +637,7 @@ class DivineQuest {
     }
     
     goToChapter(index, scene = 0) {
-        if (index >= this.storyChapters.length) {
+        if (typeof index !== 'number' || !isFinite(index) || index < 0 || index >= this.storyChapters.length) {
             index = 0;
         }
 
@@ -641,11 +660,28 @@ class DivineQuest {
         this.currentScene = sceneIndex;
         
         const chapter = this.storyChapters[chapterIndex];
-        const scene = chapter.scenes[sceneIndex];
+        const baseScene = chapter.scenes[sceneIndex];
+
+        // Act II consequences: a scene may carry a variant that unlocks once a
+        // prior chapter planted the matching narrative flag. The Pathfinder's
+        // Sight grace-shop perk walks variant paths even without the flag.
+        const variantActive = baseScene.variant && (this.flags.has(baseScene.variant.flag)
+            || !!(window.questPerks && window.questPerks.pathfinder));
+        const variant = variantActive ? baseScene.variant : null;
+        const scene = variant
+            ? Object.assign({}, baseScene, {
+                text: variant.text || baseScene.text,
+                setting: variant.setting || baseScene.setting
+              })
+            : baseScene;
         
         // Update story
         document.querySelector('#story-container h2').textContent = window.I18N ? window.I18N.t(chapter.title) : chapter.title;
-        document.getElementById('story-text').innerHTML = `<p class="mb-4">${window.I18N ? window.I18N.t(scene.text) : scene.text}</p>`;
+        let storyHtml = `<p class="mb-4">${window.I18N ? window.I18N.t(scene.text) : scene.text}</p>`;
+        if (scene.setting) {
+            storyHtml += `<p class="mb-4 italic text-sm text-gray-300 border-l-2 border-yellow-500 pl-3">${window.I18N ? window.I18N.t(scene.setting) : scene.setting}</p>`;
+        }
+        document.getElementById('story-text').innerHTML = storyHtml;
         
         // Update choices
         const choicesContainer = document.getElementById('choices-container');
@@ -655,6 +691,16 @@ class DivineQuest {
             const button = document.createElement('button');
             button.className = 'choice-button w-full text-left p-4 rounded-lg border border-yellow-500 border-opacity-30 hover:border-opacity-60';
             button.onclick = () => this.makeChoice(index);
+            
+            // Phase 1: attribute-gated choices (deep-theology requirements).
+            const req = choice.requirement;
+            const met = !(req && req.attribute) || this.playerStats[req.attribute] >= (req.min || 0);
+            if (!met) {
+                button.disabled = true;
+                button.classList.add('opacity-40', 'cursor-not-allowed');
+                button.setAttribute('aria-disabled', 'true');
+                button.setAttribute('title', window.I18N ? window.I18N.t(`Requires ${req.attribute} ${req.min}`) : `Requires ${req.attribute} ${req.min}`);
+            }
             
             const icon = this.getChoiceIcon(choice.text);
             
@@ -673,15 +719,27 @@ class DivineQuest {
             choicesContainer.appendChild(button);
         });
         
-        // Show scripture if applicable
+        // Show scripture: prefer the chapter's theme verse from the WEB
+        // registry, then a per-scene verse, then legacy random fallback.
         const scriptureContainer = document.getElementById('scripture-container');
-        if (scene.scripture) {
-            const randomScripture = this.scriptures[Math.floor(Math.random() * this.scriptures.length)];
-            document.getElementById('scripture-text').textContent = window.I18N ? window.I18N.t(randomScripture.text) : randomScripture.text;
-            document.getElementById('scripture-reference').textContent = window.I18N ? window.I18N.t(randomScripture.reference) : randomScripture.reference;
+        let verseShown = false;
+        const themeRef = chapter.verse || scene.verse;
+        if (themeRef && window.VerseSystem && window.VerseSystem.has(themeRef)) {
+            const verse = window.VerseSystem.lookup(themeRef);
+            document.getElementById('scripture-text').textContent = verse.text;
+            document.getElementById('scripture-reference').textContent = verse.ref;
             scriptureContainer.classList.remove('hidden');
-        } else {
-            scriptureContainer.classList.add('hidden');
+            verseShown = true;
+        }
+        if (!verseShown) {
+            if (scene.scripture && this.scriptures.length) {
+                const randomScripture = this.scriptures[Math.floor(Math.random() * this.scriptures.length)];
+                document.getElementById('scripture-text').textContent = window.I18N ? window.I18N.t(randomScripture.text) : randomScripture.text;
+                document.getElementById('scripture-reference').textContent = window.I18N ? window.I18N.t(randomScripture.reference) : randomScripture.reference;
+                scriptureContainer.classList.remove('hidden');
+            } else {
+                scriptureContainer.classList.add('hidden');
+            }
         }
     }
     
@@ -706,9 +764,28 @@ class DivineQuest {
         const scene = chapter.scenes[this.currentScene];
         const choice = scene.choices[choiceIndex];
         
+        // Lock all choice buttons to prevent double-clicks double-applying.
+        const buttons = document.querySelectorAll('.choice-button');
+        buttons.forEach((b) => {
+            b.disabled = true;
+            b.classList.add('opacity-40', 'cursor-not-allowed');
+        });
+        
         // Add special effects for portal choices
         if (choice.special) {
             this.triggerSpecialEffect(choice.special);
+        }
+        
+        // Phase 1: spiritual gifts + fruit of the Spirit advance.
+        if (choice.gift && window.GiftSystem) {
+            window.GiftSystem.gift(choice.gift, 1);
+            if (choice.fruit) window.GiftSystem.fruit(choice.fruit, 1);
+            if (typeof window.GiftSystem.refresh === 'function') window.GiftSystem.refresh();
+        }
+
+        // Act II: record narrative flags (drives variant scenes + endings).
+        if (Array.isArray(choice.flags)) {
+            choice.flags.forEach((f) => this.flags.add(f));
         }
         
         // Apply effects with visual feedback
@@ -727,17 +804,202 @@ class DivineQuest {
                 text: choice.text
             });
             
+            // Phase 1: unlock a memory verse when the choice teaches one.
+            if (choice.memoryVerse && window.VerseSystem) {
+                const verse = window.VerseSystem.unlock(choice.memoryVerse);
+                if (verse) this.showMemoryVerse(verse);
+            }
+            
             // Update display
             this.updateStats();
-            
-            // Load next chapter via routeMap
+
+            // Finale: resolve the ending instead of routing onward.
+            if (choice.special === 'ending') {
+                setTimeout(() => this.showEnding(choice.endingKey || 'glory'), 600);
+                return;
+            }
+
+            // Load next chapter — `next` on the choice is canonical; the
+            // routeMap literal above remains as a legacy fallback.
             setTimeout(() => {
-                const nextChapter = this.routeMap[`${this.currentChapter}-${this.currentScene}-${choiceIndex}`];
+                const routeKey = `${this.currentChapter}-${this.currentScene}-${choiceIndex}`;
+                const nextChapter = (typeof choice.next === 'number')
+                    ? choice.next
+                    : this.routeMap[routeKey];
                 this.goToChapter(nextChapter, 0);
             }, 500);
         }, 300);
     }
     
+    showMemoryVerse(verse) {
+        if (!verse) return;
+        const toast = document.createElement('div');
+        toast.className = 'fixed bottom-8 right-4 bg-gradient-to-br from-indigo-800 to-purple-900 text-white p-4 rounded-xl shadow-2xl z-50 max-w-sm transform translate-x-full transition-transform duration-500 border-l-4 border-yellow-500';
+        toast.innerHTML = `
+            <div class="flex items-start space-x-3">
+                <div class="text-2xl pt-1">🗝️</div>
+                <div>
+                    <h4 class="font-bold text-sm text-yellow-400">Memory Verse Unlocked</h4>
+                    <p class="text-sm italic mt-1">${verse.text}</p>
+                    <p class="text-xs text-indigo-300 mt-2 font-semibold">${verse.ref}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.classList.remove('translate-x-full'); toast.classList.add('translate-x-0'); }, 100);
+        setTimeout(() => {
+            toast.classList.add('translate-x-full');
+            setTimeout(() => toast.remove(), 500);
+        }, 5000);
+    }
+
+    dominantTrack(attribute) {
+        if (attribute === 'faith') {
+            return 'Your journey was a walk of trust: the anchor set behind the veil within the cross of Christ, the empty hand that receives His righteousness, the heart that kept believing when the night was longest. You stand now not on your own footing but on the finished work of the Lamb.';
+        }
+        if (attribute === 'wisdom') {
+            return 'Your journey was a school of the Word: the library of Scripture, the sound doctrine of the Reformers, the mind renewed to discern the will of God. You leave the quest with eyes accustomed to the light, able to teach and anchor a generation.';
+        }
+        return 'Your journey was a life poured out: living water shared at the well, the lost sheep carried home, the members of the body honored and lifted. You leave the quest bearing the image of the One who served, washed feet, and gave Himself.';
+    }
+
+    showEnding(endingKey) {
+        this.gameState = 'completed';
+        const s = this.playerStats;
+        const dominant = (s.faith >= s.wisdom && s.faith >= s.compassion) ? 'faith'
+            : (s.wisdom >= s.compassion) ? 'wisdom' : 'compassion';
+
+        const titles = {
+            glory: 'The Glory of God',
+            heritage: 'The Heritage of the Saints',
+            perseverance: 'The Perseverance of the Saints'
+        };
+        const keyVerses = {
+            glory: 'Revelation 21:4 — "He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning nor crying nor pain anymore, for the former things have passed away."',
+            heritage: 'Galatians 4:7 — "So you are no longer a slave, but a son; and if a son, then an heir through God."',
+            perseverance: 'Philippians 1:6 — "being confident of this very thing, that he who began a good work in you will complete it until the day of Jesus Christ."'
+        };
+
+        const gifts = window.GiftSystem ? window.GiftSystem.summary() : null;
+        const unlockedGifts = gifts ? Object.keys(gifts.gifts).filter((g) => gifts.gifts[g] > 0).length : 0;
+        const unlockedFruits = gifts ? Object.keys(gifts.fruits).filter((f) => gifts.fruits[f] > 0).length : 0;
+        const memoryVerses = window.VerseSystem ? window.VerseSystem.memoryVerses() : [];
+        const chaptersTrod = new Set(this.choices.map((c) => c.chapter)).size;
+        const narrativeFlags = this.flags.size;
+
+        // Act II/III: faction influence + echoes of narrative flags.
+        const factionNames = ['The Faithful', 'The Doubting', 'The World'];
+        const factions = window.factionSystem
+            ? factionNames.map((n) => ({ name: n, standing: (window.factionSystem.get(n) || {}).standing }))
+            : [];
+        const echoMap = {
+            justifiedByFaith: 'a righteousness received by faith alone',
+            pathDiscipleship: 'a cross taken up and carried to Glory',
+            valleyWalk: 'a valley walked with the Shepherd at your side',
+            goMakeDisciples: 'the nations embraced on the mountain of Galilee',
+            graceTrains: 'the school of grace where you learned to say no',
+            oneInSpirit: 'the suffering and rejoicing of the one body',
+            livingSacrifice: 'a life offered back like incense on the altar',
+            renewedMind: 'a mind renewed to discern the will of God',
+            joyInTrials: 'joy counted in the refining fire',
+            shepherdCare: 'a wandering sheep carried home',
+            feastOfTheLamb: 'a place taken at the wedding supper'
+        };
+        const echoes = Array.from(this.flags)
+            .map((f) => echoMap[f])
+            .filter(Boolean)
+            .slice(0, 5);
+
+        const overlay = document.createElement('div');
+        overlay.id = 'ending-overlay';
+        overlay.className = 'fixed inset-0 z-[60] overflow-y-auto bg-gradient-to-b from-indigo-950 via-purple-950 to-pink-950 text-white';
+        overlay.innerHTML = `
+            <div class="container mx-auto max-w-3xl px-6 py-16">
+                <div class="text-center mb-10">
+                    <div class="text-5xl mb-4">🏰</div>
+                    <h1 class="cinzel text-4xl font-bold scripture-text mb-2">${titles[endingKey] || titles.glory}</h1>
+                    <p class="cinzel text-sm italic text-indigo-300">The Divine Quest</p>
+                </div>
+
+                <div class="bg-black bg-opacity-40 border border-yellow-500 border-opacity-30 rounded-2xl p-8 mb-8">
+                    <p class="italic text-indigo-100 text-lg leading-relaxed mb-4">"The quest was never about reaching the summit alone. It was about the Shepherd who carried you, the Word that lit your path, and the Spirit who kept you to the end."</p>
+                    <p class="text-sm text-yellow-300 font-semibold">${keyVerses[endingKey] || keyVerses.glory}</p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-black bg-opacity-40 border border-indigo-500 border-opacity-20 rounded-2xl p-6">
+                        <h2 class="cinzel font-bold text-amber-300 mb-3">Your Character</h2>
+                        ${['faith', 'wisdom', 'compassion'].map((a) => {
+                            const label = a.charAt(0).toUpperCase() + a.slice(1);
+                            const pct = s[a];
+                            const color = a === 'faith' ? 'bg-amber-500' : a === 'wisdom' ? 'bg-indigo-500' : 'bg-emerald-500';
+                            return `<div class="mb-3">
+                                <div class="flex justify-between text-xs text-gray-300 mb-1"><span>${label}</span><span>${pct}</span></div>
+                                <div class="w-full bg-gray-800 rounded-full h-2"><div class="${color} h-2 rounded-full" style="width:${Math.min(100, pct)}%"></div></div>
+                            </div>`;
+                        }).join('')}
+                        <p class="text-xs text-gray-400 mt-4 italic">${this.dominantTrack(dominant)}</p>
+                    </div>
+                    <div class="bg-black bg-opacity-40 border border-indigo-500 border-opacity-20 rounded-2xl p-6">
+                        <h2 class="cinzel font-bold text-amber-300 mb-3">Pilgrim's Ledger</h2>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div class="text-gray-300">Chapters pondered</div><div class="text-right font-semibold">${chaptersTrod}</div>
+                            <div class="text-gray-300">Spiritual gifts</div><div class="text-right font-semibold">${unlockedGifts}</div>
+                            <div class="text-gray-300">Fruit of the Spirit</div><div class="text-right font-semibold">${unlockedFruits}</div>
+                            <div class="text-gray-300">Memory verses</div><div class="text-right font-semibold">${memoryVerses.length}</div>
+                            <div class="text-gray-300">Narrative threads</div><div class="text-right font-semibold">${narrativeFlags}</div>
+                        </div>
+                        ${factions.length ? `<div class="mt-3 pt-3 border-t border-gray-800">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Faction Standing</h4>
+                            <div class="space-y-2">
+                                ${factions.map((f) => `<div>
+                                    <div class="flex justify-between text-xs mb-1"><span class="text-gray-300">${f.name}</span><span>${f.standing != null ? f.standing : '—'}</span></div>
+                                    <div class="w-full bg-gray-800 rounded-full h-1.5"><div class="${f.standing != null && f.standing >= 70 ? 'bg-emerald-500' : f.standing != null && f.standing <= 30 ? 'bg-red-500' : 'bg-amber-500'} h-1.5 rounded-full" style="width:${Math.min(100, f.standing != null ? f.standing : 0)}%"></div></div>
+                                </div>`).join('')}
+                            </div>
+                        </div>` : ''}
+                        ${echoes.length ? `<div class="mt-3 pt-3 border-t border-gray-800">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Echoes of Your Walk</h4>
+                            <ul class="text-xs text-indigo-200 list-disc list-inside space-y-1">
+                                ${echoes.map((e) => `<li>${e}</li>`).join('')}
+                            </ul>
+                        </div>` : ''}
+                        ${memoryVerses.length ? `<div class="mt-4 text-xs text-indigo-300 max-h-24 overflow-y-auto">${memoryVerses.map((v) => `<div class="mb-1">🗝️ ${v.ref}</div>`).join('')}</div>` : ''}
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button id="ending-restart" class="choice-button inline-block px-8 py-4 rounded-xl border border-yellow-500 border-opacity-40 hover:border-opacity-80 hover:bg-white hover:bg-opacity-10 font-bold text-yellow-300 cinzel">
+                        Begin the Quest Again
+                    </button>
+                    <p class="text-xs text-gray-500 mt-4 italic">Soli Deo Gloria</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        const restart = overlay.querySelector('#ending-restart');
+        if (restart) restart.addEventListener('click', () => {
+            try { localStorage.removeItem('tdq_gifts'); } catch (e) { /* ignore */ }
+            try { localStorage.removeItem('tdq_memory_verses'); } catch (e) { /* ignore */ }
+            location.reload();
+        });
+        document.dispatchEvent(new CustomEvent('questEnded', {
+            detail: { endingKey, dominant, flags: Array.from(this.flags), factions }
+        }));
+        const nav = window.navigator || {};
+        if (typeof window.scrollTo === 'function' && !/jsdom/i.test(nav.userAgent || '')) {
+            try { window.scrollTo(0, 0); } catch (e) { /* legacy/no-impl */ }
+        }
+    }
+
+    // Registry of earned journey milestones. Fans out to the progression
+    // system so milestone achievements also grant the grace-point currency.
+    milestoneEarned(title) {
+        if (window.progressionSystem && typeof window.progressionSystem.awardMilestone === 'function') {
+            window.progressionSystem.awardMilestone(title);
+        }
+    }
+
     checkAchievements() {
         // Check for balanced stats
         if (this.playerStats.faith >= 80 && this.playerStats.wisdom >= 80 && this.playerStats.compassion >= 80) {
@@ -769,6 +1031,68 @@ class DivineQuest {
                 window.I18N ? window.I18N.t('Compassionate Heart') : 'Compassionate Heart',
                 window.I18N ? window.I18N.t('Your love transforms the world around you!') : 'Your love transforms the world around you!'
             );
+        }
+
+        // Journey milestones
+        if (window.GiftSystem) {
+            const s = window.GiftSystem.summary();
+            const giftsUnlocked = Object.keys(s.gifts || {}).filter((g) => s.gifts[g] > 0).length;
+            const fruitsGrown = Object.keys(s.fruits || {}).filter((f) => s.fruits[f] > 0).length;
+            if (giftsUnlocked >= 6) {
+                this.showAchievement(
+                    window.I18N ? window.I18N.t('Gifts Abound') : 'Gifts Abound',
+                    window.I18N ? window.I18N.t('Six spiritual gifts now flourish in your walk.') : 'Six spiritual gifts now flourish in your walk.'
+                );
+                this.milestoneEarned('Gifts Abound');
+            }
+            if (fruitsGrown >= 7) {
+                this.showAchievement(
+                    window.I18N ? window.I18N.t('Abounding in Fruit') : 'Abounding in Fruit',
+                    window.I18N ? window.I18N.t('Seven fruits of the Spirit are ripening in your life.') : 'Seven fruits of the Spirit are ripening in your life.'
+                );
+                this.milestoneEarned('Abounding in Fruit');
+            }
+        }
+        if (window.VerseSystem && typeof window.VerseSystem.memoryVerses === 'function') {
+            if (window.VerseSystem.memoryVerses().length >= 5) {
+                this.showAchievement(
+                    window.I18N ? window.I18N.t('Pilgrim of the Word') : 'Pilgrim of the Word',
+                    window.I18N ? window.I18N.t('Five memory verses now light your path.') : 'Five memory verses now light your path.'
+                );
+                this.milestoneEarned('Pilgrim of the Word');
+            }
+        }
+        if (this.currentChapter >= 15) {
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Act II: The Deeper Walk') : 'Act II: The Deeper Walk',
+                window.I18N ? window.I18N.t('You have entered the second movement of the quest.') : 'You have entered the second movement of the quest.'
+            );
+            this.milestoneEarned('Act II: The Deeper Walk');
+        }
+        if (this.currentChapter >= 25) {
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Face to Face') : 'Face to Face',
+                window.I18N ? window.I18N.t('The marriage supper of the Lamb is within sight.') : 'The marriage supper of the Lamb is within sight.'
+            );
+            this.milestoneEarned('Face to Face');
+        }
+        if (window.factionSystem && typeof window.factionSystem.get === 'function') {
+            const standings = window.factionSystem.get();
+            const peak = Math.max(...Object.keys(standings || {}).map((k) => standings[k]));
+            if (peak >= 10) {
+                this.showAchievement(
+                    window.I18N ? window.I18N.t('A Name Among the Faithful') : 'A Name Among the Faithful',
+                    window.I18N ? window.I18N.t('Your reputation among the factions has grown to 10 or more.') : 'Your reputation among the factions has grown to 10 or more.'
+                );
+                this.milestoneEarned('A Name Among the Faithful');
+            }
+        }
+        if (this.flags && this.flags.size >= 2) {
+            this.showAchievement(
+                window.I18N ? window.I18N.t('Pathfinder') : 'Pathfinder',
+                window.I18N ? window.I18N.t('You have walked more than one hidden variant path.') : 'You have walked more than one hidden variant path.'
+            );
+            this.milestoneEarned('Pathfinder');
         }
     }
     
@@ -923,7 +1247,8 @@ class DivineQuest {
     }
     
     resetGame() {
-        this.playerStats = { faith: 50, wisdom: 50, compassion: 50 };
+        const headStart = window.questPerks ? (Number(window.questPerks.faithHeadStart) || 0) : 0;
+        this.playerStats = { faith: 50 + headStart, wisdom: 50, compassion: 50 };
         this.currentChapter = 0;
         this.currentScene = 0;
         this.choices = [];

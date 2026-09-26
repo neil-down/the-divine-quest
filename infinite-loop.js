@@ -4,7 +4,7 @@ class InfiniteLoop {
     constructor(game) {
         this.game = game;
         this.loopDepth = 0;
-        self.loops = [];
+        this.loopHistory = [];
         this.breakingAttempts = 0;
         this.realityStability = 100;
         this.metaAwareness = false;
@@ -443,6 +443,9 @@ playerStats.compassion = 999;
     criticalRealityFailure() {
         // Extreme reality distortions
         document.body.style.animation = 'criticalFailure 0.1s infinite';
+        setTimeout(() => {
+            document.body.style.animation = '';
+        }, 1200);
         
         // Random element removal
         const elements = document.querySelectorAll('*');

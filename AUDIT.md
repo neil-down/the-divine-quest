@@ -1,9 +1,41 @@
 # The Divine Quest — Code-Readiness Audit
 
+> **v1.0.2 addendum (2026-09-24) — robustness audit.** The user's suspicion was justified:
+> several mechanics were crash-prone or silently dead. All found defects reproduced under
+> real-execution jsdom and fixed at source: battle double-reward/null-crash during the
+> victory pause, `solas_match` click TypeError, `creed_match` blank puzzle, dead battle VFX/SFX,
+> unreachable settings UI, nightmare cleanup nuking foreign overlays, dead sanity bar,
+> `bossesDefeated` never advancing, un-cleared infinite-loop shake, `endMeditation` throw,
+> corner-button occlusion. Smoke now *drives* battle/puzzle/settings/nightmare
+> (`{"errors": [], "total": 0}`, exit 0). A **real-browser suite** (`npm run browser:smoke`,
+> Playwright/Chromium) then verified rendering and caught two jsdom-invisible bugs (now fixed):
+> `showPuzzle()` left `currentPuzzle` null on direct calls (clicks threw), and puzzle-solve VFX
+> rendered into the hidden Settings overlay via a too-greedy `getOverlayContainer()`. Browser
+> smoke 21/21 green, exit 0, including real DOM clicks, battle win, and corner-collision checks at
+> two viewports. v1.0.1's verdict below is superseded by these passes.
+
+> **v1.0.1 addendum (2026-09-24).** The game is now 30 chapters (Act II + the optional
+> Act III Night-Watch arc), with the finalized Grace Shop (grace-point payout for
+> milestone achievements via `awardMilestone`, `questPerks` head-start/pathfinder
+> perks), a schema-relaxed content linter (2–4 choices), and a root-relative `dist/`
+> deploy path awaiting a git remote for `github-pages` hosting. Full verification:
+> see QA_REPORT.md v1.0.1 — lint PASS on 30 chapters/47 exact WEB verses; smoke
+> `{"errors": [], "total": 0}`. Prior verdicts below are superseded by these passes.
+
 Date: 2026-08-26  
 Project: `C:\Users\Dell\CascadeProjects\the-divine-quest` (11 files, ~170 KB)
 
 ---
+
+> **Phase 0 addendum (2026-09-23).** Original audit's "Runnable, with caveats" verdict + the two
+> crash/wiring defects below are now resolved and *proven* by the corrected smoke harness
+> (see QA_REPORT.md). Additional defects found by real-execution testing in Phase 0 and fixed:
+> 1. visual-effects.js constructor crash (methods trapped in CSS template literal) — fixed.
+> 2. nightmare-system.js dead DOM/global wiring — fixed (aliases + `_getNightmareUI` fallback).
+> 3. infinite-loop.js stray `self.loops` — fixed.
+> 4. enhancements.js unguarded `matchMedia` — polyfilled.
+> 5. PWA never shipped (CDN-only assets + stale dist) — self-hosted + build copies static files.
+>
 
 ## 1. Is the Game Runnable?
 

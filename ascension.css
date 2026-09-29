@@ -1,0 +1,808 @@
+/* ============================================================
+   ASCENSION LAYER — next-gen presentation for The Divine Quest
+   Canvas cosmos, cinematic titles, battle juice, glass UI.
+   All motion respects prefers-reduced-motion + .reduced-motion.
+   ============================================================ */
+
+/* --- Cosmos canvas sits behind everything, above body gradient --- */
+#divine-cosmos {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Lift the game shell above the canvas */
+body > header,
+body > main,
+body > footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Glassmorphism upgrade for cards --- */
+.theology-card {
+  background: linear-gradient(135deg, rgba(18, 16, 44, 0.82), rgba(38, 24, 72, 0.78)) !important;
+  backdrop-filter: blur(18px) saturate(1.2);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  border: 1px solid rgba(255, 215, 130, 0.35) !important;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 200, 80, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  color: #f3ead3;
+}
+
+.theology-card h2, .theology-card h3 { color: #ffe9b0 !important; }
+.theology-card p, .theology-card span, .theology-card div { border-color: rgba(255,215,130,0.18); }
+.theology-card .text-gray-800, .theology-card .text-gray-700, .theology-card .text-gray-600 {
+  color: #e9dfc8 !important;
+}
+.theology-card .text-gray-500 { color: #c9bda3 !important; }
+
+/* Choice buttons: richer glass + gold edge */
+.choice-button {
+  background: linear-gradient(135deg, rgba(255, 215, 130, 0.12), rgba(150, 110, 255, 0.1)) !important;
+  border: 1px solid rgba(255, 215, 130, 0.4) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.choice-button:hover {
+  border-color: rgba(255, 225, 150, 0.85) !important;
+  box-shadow: 0 14px 44px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 200, 80, 0.25);
+}
+
+/* --- Journey progress bar --- */
+#tdq-journey {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  z-index: 80;
+  background: rgba(255, 255, 255, 0.08);
+  pointer-events: none;
+}
+#tdq-journey-fill {
+  height: 100%;
+  width: 3%;
+  background: linear-gradient(90deg, #f59e0b, #fde68a, #f59e0b);
+  background-size: 200% 100%;
+  animation: tdqJourneyShimmer 3s linear infinite;
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+  transition: width 0.8s ease;
+}
+@keyframes tdqJourneyShimmer {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* --- Loading veil --- */
+#tdq-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 40%, rgba(60, 30, 120, 0.96), rgba(6, 4, 20, 0.98));
+  transition: opacity 0.6s ease;
+}
+#tdq-loader.tdq-loader-hide { opacity: 0; pointer-events: none; }
+.tdq-loader-orb {
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 220, 140, 0.95), rgba(255, 180, 60, 0.25) 60%, transparent 70%);
+  animation: tdqOrbPulse 1.6s ease-in-out infinite;
+  box-shadow: 0 0 60px rgba(255, 200, 90, 0.55);
+}
+.tdq-loader-text {
+  font-family: 'Cinzel', serif;
+  color: #ffe9b0;
+  letter-spacing: 0.35em;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+@keyframes tdqOrbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.12); opacity: 1; }
+}
+
+/* --- Letterbox cinematic bars --- */
+#tdq-bar-top, #tdq-bar-bot {
+  position: fixed;
+  left: 0; right: 0;
+  height: 0;
+  background: #000;
+  z-index: 65;
+  pointer-events: none;
+  transition: height 0.5s ease;
+}
+#tdq-bar-top { top: 0; }
+#tdq-bar-bot { bottom: 0; }
+#tdq-bar-top.tdq-bar-show, #tdq-bar-bot.tdq-bar-show { height: 6vh; }
+
+/* --- Chapter cinematic title --- */
+#tdq-cine {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  text-align: center;
+  padding: 0 24px;
+}
+#tdq-cine.tdq-cine-show { opacity: 1; transform: scale(1); }
+.tdq-cine-kicker {
+  font-size: 13px;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: rgba(255, 220, 150, 0.85);
+}
+.tdq-cine-title {
+  font-size: clamp(30px, 6vw, 64px);
+  font-weight: 700;
+  color: #fff7e0;
+  text-shadow: 0 0 30px rgba(255, 200, 90, 0.65), 0 4px 30px rgba(0,0,0,0.8);
+}
+
+/* --- Scene + paragraph reveal (CSS only; full text stays in DOM) --- */
+.tdq-scene-in { animation: tdqSceneIn 0.7s ease both; }
+@keyframes tdqSceneIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tdq-para-in { animation: tdqParaIn 0.6s ease both; }
+@keyframes tdqParaIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tdq-choice-enter { animation: tdqChoiceEnter 0.55s cubic-bezier(0.2, 0.9, 0.25, 1.2) both; }
+@keyframes tdqChoiceEnter {
+  from { opacity: 0; transform: translateX(-26px) scale(0.98); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+/* --- Low-HP warning --- */
+#battle-overlay.tdq-lowhp #player-hp-bar {
+  animation: tdqLowHp 0.9s ease-in-out infinite;
+}
+@keyframes tdqLowHp {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.8) saturate(1.5); }
+}
+#battle-overlay.tdq-lowhp::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 4;
+  background: radial-gradient(circle at 50% 50%, transparent 55%, rgba(220, 38, 38, 0.35) 100%);
+  animation: tdqLowHpVignette 0.9s ease-in-out infinite;
+}
+@keyframes tdqLowHpVignette {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* --- Battle clash canvas (physics layer, never intercepts clicks) --- */
+.tdq-clash {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* --- NG+ badge + note --- */
+#tdq-ngplus {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #1c1005;
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+  border-radius: 999px;
+  padding: 5px 14px;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
+  pointer-events: none;
+}
+.tdq-ngplus-note {
+  font-size: 12px !important;
+  color: rgba(255, 240, 210, 0.75) !important;
+  font-style: italic;
+  margin-top: 10px !important;
+}
+#tdq-ngplus-btn { margin-top: 12px; }
+
+/* --- Reward toast (top-center, never intercepts) --- */
+#tdq-gain {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  z-index: 74;
+  display: flex;
+  gap: 8px;
+  pointer-events: none;
+  opacity: 0;
+}
+#tdq-gain.tdq-gain-show { animation: tdqGainIn 2.2s ease forwards; }
+@keyframes tdqGainIn {
+  0% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+  12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+}
+#tdq-gain span {
+  font-size: 13px;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.tdq-gain-up { color: #6ee7b7; border-color: rgba(110, 231, 183, 0.5) !important; }
+.tdq-gain-down { color: #fca5a5; border-color: rgba(248, 113, 113, 0.5) !important; }
+
+/* --- Panel buttons (Journey / Honors) --- */
+.tdq-panel-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+.tdq-panel-btn {
+  flex: 1;
+  padding: 9px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffe9b0;
+  background: linear-gradient(135deg, rgba(255, 215, 130, 0.16), rgba(150, 110, 255, 0.14));
+  border: 1px solid rgba(255, 215, 130, 0.45);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+.tdq-panel-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 18px rgba(255, 200, 80, 0.25);
+}
+
+/* --- Modal (journey map + gallery; custom classes only, never the
+   .fixed.inset-0.z-50 combo other systems query for) --- */
+#tdq-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 75;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(4, 2, 14, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: tdqModalIn 0.3s ease both;
+}
+@keyframes tdqModalIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.tdq-modal-card {
+  width: min(560px, 94vw);
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, rgba(22, 18, 52, 0.97), rgba(44, 28, 84, 0.97));
+  border: 1px solid rgba(255, 215, 130, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6), 0 0 50px rgba(251, 191, 36, 0.12);
+  overflow: hidden;
+}
+.tdq-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffe9b0;
+  border-bottom: 1px solid rgba(255, 215, 130, 0.25);
+}
+.tdq-modal-x {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  width: 36px; height: 36px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.tdq-modal-body { padding: 16px 18px; overflow-y: auto; }
+.tdq-modal-sub { color: #c9bda3; font-size: 13px; margin-bottom: 12px; }
+.tdq-chip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+}
+.tdq-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #8f86a3;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.tdq-chip:hover {
+  transform: translateY(-2px);
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+.tdq-chip-num {
+  flex: none;
+  width: 24px; height: 24px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.08);
+}
+.tdq-chip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tdq-chip-done { color: #e9dfc8; border-color: rgba(110, 231, 183, 0.4); }
+.tdq-chip-done .tdq-chip-num { background: rgba(110, 231, 183, 0.25); }
+.tdq-chip-cur {
+  color: #ffe9b0;
+  border-color: rgba(251, 191, 36, 0.7);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.3);
+}
+.tdq-chip-cur .tdq-chip-num { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #231303; }
+.tdq-chip-rumor { color: #b9a8d8; border-style: dashed; border-color: rgba(196, 181, 253, 0.4); }
+.tdq-chip-rumor .tdq-chip-num { background: rgba(196, 181, 253, 0.2); }
+.tdq-chip-veiled { color: #5b5470; cursor: not-allowed; }
+.tdq-chip-veiled .tdq-chip-num { background: rgba(255, 255, 255, 0.05); font-size: 12px; }
+.tdq-ach-list { display: flex; flex-direction: column; gap: 8px; }
+.tdq-ach {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.tdq-ach-icon { font-size: 26px; flex: none; }
+.tdq-ach-text { display: flex; flex-direction: column; }
+.tdq-ach-text b { font-size: 14px; }
+.tdq-ach-text i { font-style: normal; font-size: 12px; }
+.tdq-ach-got { background: rgba(251, 191, 36, 0.1); border-color: rgba(251, 191, 36, 0.45); }
+.tdq-ach-got .tdq-ach-text b { color: #ffe9b0; }
+.tdq-ach-got .tdq-ach-text i { color: #c9bda3; }
+.tdq-ach-lock { opacity: 0.55; background: rgba(255, 255, 255, 0.03); }
+.tdq-ach-lock .tdq-ach-text b { color: #8f86a3; }
+.tdq-ach-lock .tdq-ach-text i { color: #6d6584; }
+
+/* --- Battle slash arc --- */
+.tdq-slash {
+  position: absolute;
+  width: 150px; height: 10px;
+  margin-left: -75px; margin-top: -5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #fff7d6 30%, #fbbf24 50%, #fff7d6 70%, transparent);
+  box-shadow: 0 0 24px rgba(251, 191, 36, 0.9);
+  transform: rotate(var(--tilt, -45deg)) scaleX(0.3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  animation: tdqSlashSweep 0.45s ease-out forwards;
+}
+.tdq-slash-crit { height: 16px; margin-top: -8px; box-shadow: 0 0 40px rgba(251, 146, 60, 1); }
+@keyframes tdqSlashSweep {
+  0% { opacity: 0; transform: rotate(var(--tilt, -45deg)) scaleX(0.3); }
+  25% { opacity: 1; }
+  100% { opacity: 0; transform: rotate(var(--tilt, -45deg)) scaleX(1.6); }
+}
+
+/* --- Chapter sigil --- */
+#tdq-sigil {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  pointer-events: none;
+}
+.tdq-sigil-ring {
+  width: 68px; height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, rgba(255, 225, 160, 0.28), rgba(90, 50, 160, 0.3) 70%);
+  border: 2px solid rgba(255, 215, 130, 0.65);
+  box-shadow: 0 0 28px rgba(251, 191, 36, 0.45), inset 0 0 18px rgba(251, 191, 36, 0.25);
+  animation: tdqSigilIn 0.8s ease both, tdqSigilFloat 5s ease-in-out 0.8s infinite;
+}
+.tdq-sigil-cap {
+  font-size: 11px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(255, 220, 150, 0.8);
+}
+@keyframes tdqSigilIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes tdqSigilFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* --- Word-by-word narration (textContent preserved exactly) --- */
+.tdq-w {
+  display: inline-block;
+  opacity: 0;
+  animation: tdqWordIn 0.38s ease forwards;
+}
+@keyframes tdqWordIn {
+  from { opacity: 0; transform: translateY(7px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.tdq-words-done .tdq-w { animation: none; opacity: 1; filter: none; }
+
+/* --- Battle ghost HP bars + turn pill + clash sparks --- */
+.tdq-hp-wrap { position: relative; }
+.tdq-ghost {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.55);
+  width: 100%;
+  transition: width 0.9s ease 0.15s;
+  pointer-events: none;
+}
+.tdq-turn-pill {
+  position: absolute;
+  top: 10px; right: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #fde68a;
+  background: rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  border-radius: 999px;
+  padding: 4px 12px;
+  pointer-events: none;
+  z-index: 5;
+}
+.tdq-spark {
+  position: absolute;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7d6, #f59e0b 70%, transparent);
+  pointer-events: none;
+  z-index: 20;
+  animation: tdqSparkFly 0.6s ease-out forwards;
+}
+@keyframes tdqSparkFly {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--vx, 20px), var(--vy, -30px)) scale(0.3); }
+}
+
+/* --- Battle juice --- */
+#battle-overlay { position: relative; overflow: hidden; }
+#battle-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 30%, rgba(150, 90, 255, 0.14), transparent 65%);
+}
+.tdq-enemy-idle { animation: tdqEnemyIdle 2.6s ease-in-out infinite; display: inline-block; }
+@keyframes tdqEnemyIdle {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.05); }
+}
+.tdq-enemy-hit { animation: tdqEnemyHit 0.42s ease; }
+@keyframes tdqEnemyHit {
+  0% { transform: translateX(0) scale(1); filter: brightness(1); }
+  25% { transform: translateX(-12px) scale(1.08); filter: brightness(2.2) saturate(0.4); }
+  55% { transform: translateX(9px) scale(0.97); filter: brightness(1.6); }
+  100% { transform: translateX(0) scale(1); filter: brightness(1); }
+}
+.tdq-arena-hit { animation: tdqArenaHit 0.38s ease; }
+@keyframes tdqArenaHit {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-7px, 3px); }
+  45% { transform: translate(6px, -4px); }
+  70% { transform: translate(-4px, -2px); }
+}
+.tdq-boss-name {
+  color: #f87171 !important;
+  text-shadow: 0 0 18px rgba(239, 68, 68, 0.8);
+  animation: tdqBossPulse 1.6s ease-in-out infinite;
+}
+@keyframes tdqBossPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; }
+}
+.tdq-dmg-float {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 30px;
+  font-weight: 800;
+  color: #fde68a;
+  text-shadow: 0 2px 12px rgba(0,0,0,0.8), 0 0 22px rgba(251,191,36,0.7);
+  pointer-events: none;
+  z-index: 20;
+  animation: tdqDmgFloat 1.25s ease-out forwards;
+}
+.tdq-dmg-float.tdq-crit { font-size: 40px; color: #fdba74; }
+.tdq-dmg-float.tdq-heal { color: #6ee7b7; }
+@keyframes tdqDmgFloat {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px) scale(0.7); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0) scale(1.15); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-90px) scale(1); }
+}
+.tdq-battle-badge {
+  position: absolute;
+  left: 50%;
+  top: 22%;
+  transform: translateX(-50%);
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  padding: 8px 18px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 21;
+  animation: tdqBadgePop 1.35s ease forwards;
+  white-space: nowrap;
+}
+.tdq-battle-badge.tdq-weak {
+  color: #1c1005;
+  background: linear-gradient(135deg, #fde68a, #f59e0b);
+  box-shadow: 0 0 34px rgba(251, 191, 36, 0.8);
+}
+.tdq-battle-badge.tdq-combo {
+  color: #fff;
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  box-shadow: 0 0 34px rgba(168, 85, 247, 0.8);
+}
+@keyframes tdqBadgePop {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.6); }
+  18% { opacity: 1; transform: translateX(-50%) scale(1.12); }
+  30% { transform: translateX(-50%) scale(1); }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-26px) scale(1); }
+}
+.tdq-battle-banner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  pointer-events: none;
+  z-index: 22;
+  animation: tdqBannerIn 0.5s ease both;
+  text-align: center;
+  padding: 20px;
+}
+.tdq-battle-banner.tdq-win { background: radial-gradient(circle, rgba(251,191,36,0.28), rgba(0,0,0,0.55)); }
+.tdq-battle-banner.tdq-lose { background: radial-gradient(circle, rgba(220,38,38,0.3), rgba(0,0,0,0.65)); }
+.tdq-battle-banner.tdq-boss { background: radial-gradient(circle, rgba(239,68,68,0.22), rgba(0,0,0,0.6)); }
+.tdq-battle-banner-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(26px, 5vw, 52px);
+  font-weight: 700;
+  color: #fff7e0;
+  text-shadow: 0 0 30px rgba(255, 200, 90, 0.7), 0 4px 24px rgba(0,0,0,0.9);
+}
+.tdq-battle-banner-sub { color: rgba(255, 240, 210, 0.9); font-style: italic; }
+.tdq-battle-banner-out { opacity: 0; transition: opacity 0.6s ease; }
+@keyframes tdqBannerIn {
+  from { opacity: 0; transform: scale(1.12); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Scripture panel glow-up */
+#scripture-container {
+  background: linear-gradient(135deg, rgba(60, 40, 10, 0.85), rgba(30, 20, 60, 0.85)) !important;
+  border-left: 4px solid #fbbf24 !important;
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.15), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+#scripture-container p { color: #f3e7cd !important; }
+
+/* Header god-glow */
+header h1 {
+  text-shadow: 0 0 24px rgba(251, 191, 36, 0.55), 0 2px 10px rgba(0,0,0,0.6);
+}
+
+/* ============================================================
+   ASCENSION IV — motion & physics everywhere
+   ============================================================ */
+
+/* Player warrior idle (enemy idles via .tdq-enemy-idle) */
+.tdq-player-idle { animation: tdqPlayerBob 3s ease-in-out infinite; display: inline-block; }
+@keyframes tdqPlayerBob {
+  0%, 100% { transform: translateY(0); filter: brightness(1); }
+  50% { transform: translateY(-6px); filter: brightness(1.15); }
+}
+
+/* Stat-bar pulse on change + endless shimmer sweep */
+.tdq-stat-pulse { filter: brightness(1.5) saturate(1.2); }
+.faith-bar, .wisdom-bar, .compassion-bar { position: relative; overflow: hidden; }
+.faith-bar::after, .wisdom-bar::after, .compassion-bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.45) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: tdqBarShimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes tdqBarShimmer {
+  0%, 60% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Scripture panel entrance re-trigger */
+.tdq-scripture-in { animation: tdqScriptureIn 0.7s ease both; }
+@keyframes tdqScriptureIn {
+  from { opacity: 0; transform: translateY(12px); box-shadow: 0 0 0 rgba(251,191,36,0); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Overlay card entrances (puzzle / skill tree / journal / devotion) */
+#puzzle-overlay > div, #skill-tree-overlay > div {
+  animation: tdqOverlayPop 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+#journal-modal, #devotion-modal { animation: tdqOverlayPop 0.35s ease both; }
+#study-guide-panel { animation: tdqSlideUp 0.35s ease both; }
+@keyframes tdqOverlayPop {
+  from { opacity: 0; transform: scale(0.92) translateY(14px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes tdqSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Puzzle answer feedback */
+.tdq-wrong-shake { animation: tdqWrongShake 0.5s ease; }
+@keyframes tdqWrongShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-7px); }
+  80% { transform: translateX(5px); }
+}
+.tdq-right-flash { animation: tdqRightFlash 0.6s ease; }
+@keyframes tdqRightFlash {
+  0% { box-shadow: 0 0 0 rgba(110, 231, 183, 0); }
+  40% { box-shadow: 0 0 60px rgba(110, 231, 183, 0.55); }
+  100% { box-shadow: 0 0 0 rgba(110, 231, 183, 0); }
+}
+
+/* Interactive tiles: glow hover + press physics */
+.rune-tile, .symbol-tile, .verse-fragment-btn,
+[data-row][data-col], #loop-puzzle > div, .nightmare-entity {
+  transition: transform 0.12s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.rune-tile:hover, .symbol-tile:hover, .verse-fragment-btn:hover,
+[data-row][data-col]:hover, #loop-puzzle > div:hover, .nightmare-entity:hover {
+  filter: brightness(1.25);
+  box-shadow: 0 0 18px rgba(251, 191, 36, 0.5);
+}
+.rune-tile:active, .symbol-tile:active, .verse-fragment-btn:active,
+[data-row][data-col]:active, #loop-puzzle > div:active, .nightmare-entity:active {
+  transform: scale(0.93);
+}
+
+/* Nightmare dread: entity flicker + unmaking vignette breath */
+.nightmare-entity { animation: tdqDreadFlicker 2.8s ease-in-out infinite; }
+@keyframes tdqDreadFlicker {
+  0%, 100% { opacity: 1; }
+  8% { opacity: 0.55; }
+  12% { opacity: 1; }
+  55% { opacity: 1; }
+  60% { opacity: 0.7; }
+  64% { opacity: 1; }
+}
+#unmaking-overlay { animation: tdqDreadBreath 4s ease-in-out infinite; }
+@keyframes tdqDreadBreath {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.18); }
+}
+
+/* Corner + panel buttons: glow-only hover (no translate — rects probed) */
+#devotions-btn:hover, #journal-btn:hover, #study-guide-btn:hover,
+#ritual-button:hover, #settings-toggle:hover,
+#divine-audio-toggle:hover, #divine-ambient-toggle:hover {
+  box-shadow: 0 0 22px rgba(251, 191, 36, 0.55);
+  filter: brightness(1.15);
+}
+button:active { transform: scale(0.97); }
+
+/* Choice buttons: sweeping gold sheen on hover */
+.choice-button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgba(255, 225, 150, 0.22) 50%, transparent 80%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.choice-button:hover::after { animation: tdqSheen 0.9s ease; }
+@keyframes tdqSheen {
+  from { transform: translateX(-120%); }
+  to { transform: translateX(120%); }
+}
+
+/* Achievement toasts + wisdom orb glow-up */
+.achievement-notification {
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 34px rgba(251, 191, 36, 0.5) !important;
+  animation: tdqToastGlow 1.6s ease-in-out infinite;
+}
+@keyframes tdqToastGlow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.12); }
+}
+.wisdom-orb {
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.55), 0 0 70px rgba(251, 191, 36, 0.25);
+}
+
+/* Mobile: keep new layers cheap */
+@media (max-width: 480px) {
+  .tdq-cine-title { letter-spacing: 0.02em; }
+  .tdq-dmg-float { font-size: 24px; }
+  #tdq-bar-top.tdq-bar-show, #tdq-bar-bot.tdq-bar-show { height: 4vh; }
+  /* De-collide bottom-right corner stack: styles.css parks the Settings
+     gear at right:10px/bottom:10px on small screens, directly atop the
+     devotions pill (bottom-4/right-4). Lift devotions above it. */
+  #devotions-btn { bottom: 72px !important; }
+}
+
+/* Reduced motion: disable every ascension animation */
+@media (prefers-reduced-motion: reduce) {
+  #divine-cosmos { display: none; }
+  #tdq-modal, #tdq-modal * { animation: none !important; }
+  #tdq-journey-fill { animation: none; }
+  .tdq-scene-in, .tdq-para-in, .tdq-choice-enter,
+  .tdq-enemy-idle, .tdq-enemy-hit, .tdq-arena-hit,
+  .tdq-dmg-float, .tdq-battle-badge, .tdq-battle-banner,
+  .tdq-sigil-ring, .tdq-w, .tdq-spark, .tdq-slash,
+  .tdq-loader-orb, .tdq-player-idle, .tdq-stat-pulse,
+  .tdq-scripture-in, .tdq-wrong-shake, .tdq-right-flash,
+  .nightmare-entity, #unmaking-overlay,
+  .achievement-notification, .choice-button::after,
+  #battle-overlay.tdq-lowhp #player-hp-bar,
+  #battle-overlay.tdq-lowhp::after,
+  #tdq-gain, #tdq-gain.tdq-gain-show { animation: none !important; }
+  .faith-bar::after, .wisdom-bar::after, .compassion-bar::after,
+  #puzzle-overlay > div, #skill-tree-overlay > div,
+  #journal-modal, #devotion-modal, #study-guide-panel { animation: none !important; }
+  .tdq-w { opacity: 1 !important; filter: none !important; }
+  .tdq-stat-pulse { filter: none !important; }
+  .tdq-ghost { transition: none !important; }
+  #tdq-bar-top, #tdq-bar-bot, #tdq-cine { display: none !important; }
+}

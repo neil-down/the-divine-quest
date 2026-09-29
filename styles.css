@@ -1,0 +1,663 @@
+/* Additional Styles for Enhanced Visual Experience */
+
+/* Enhanced Animations */
+@keyframes divineReveal {
+    0% { 
+        opacity: 0; 
+        transform: translateY(20px) scale(0.95);
+    }
+    50% {
+        opacity: 0.5;
+        transform: translateY(10px) scale(0.98);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes scriptureGlow {
+    0%, 100% { 
+        text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.4);
+    }
+}
+
+@keyframes choiceReveal {
+    0% { 
+        opacity: 0; 
+        transform: translateX(-30px);
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateX(0);
+    }
+}
+
+/* Enhanced Visual Effects */
+.story-reveal {
+    animation: divineReveal 1s ease-out;
+}
+
+.scripture-glow {
+    animation: scriptureGlow 3s ease-in-out infinite;
+}
+
+.choice-reveal {
+    animation: choiceReveal 0.5s ease-out;
+}
+
+/* Particle Effects */
+.divine-particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.8), transparent);
+    border-radius: 50%;
+    animation: particleFloat 10s infinite linear;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Enhanced Button States */
+.choice-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.choice-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+    transition: width 0.6s, height 0.6s;
+    transform: translate(-50%, -50%);
+}
+
+.choice-button:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Achievement Notifications */
+.achievement-notification {
+    position: fixed;
+    top: 20px;
+    right: -400px;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: right 0.5s ease-out;
+    max-width: 350px;
+}
+
+.achievement-notification.show {
+    right: 20px;
+}
+
+.achievement-notification h4 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.achievement-notification p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e22ce 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 1s ease-out;
+}
+
+.loading-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-orb {
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.8), rgba(255, 215, 0, 0.2));
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    margin-bottom: 30px;
+}
+
+.loading-text {
+    color: white;
+    font-size: 24px;
+    font-family: 'Cinzel', serif;
+    text-align: center;
+}
+
+/* ============================================
+   Global Overflow & Focus Foundations
+   ============================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+}
+
+/* Accessibility: visible keyboard focus for all interactive elements */
+:focus-visible {
+    outline: 3px solid #fbbf24 !important;
+    outline-offset: 2px !important;
+    border-radius: 4px;
+}
+
+button:focus-visible,
+.choice-button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[role="switch"]:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+.rune-tile:focus-visible,
+.symbol-tile:focus-visible,
+[data-row][data-col]:focus-visible,
+#loop-puzzle > div:focus-visible,
+.nightmare-entity:focus-visible {
+    box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.6);
+}
+
+/* Ensure interactive divs get a sensible default cursor when focused */
+[tabindex="0"]:focus {
+    cursor: pointer;
+}
+
+/* ============================================
+   Responsive Design Enhancements
+   ============================================ */
+
+/* Tablet - 768px and below */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+    
+    .theology-card {
+        padding: 20px;
+    }
+    
+    .choice-button {
+        padding: 15px;
+    }
+    
+    .choice-button h4 {
+        font-size: 16px;
+    }
+    
+    .choice-button p {
+        font-size: 13px;
+    }
+
+    header .flex.justify-between {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    header h1 {
+        font-size: 20px;
+    }
+
+    header .flex.space-x-6 {
+        flex-wrap: wrap;
+        gap: 8px 16px;
+        font-size: 14px;
+    }
+
+    /* Ensure panels stack cleanly on tablet */
+    main .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .theology-card {
+        padding: 16px;
+    }
+
+    .theology-card h2,
+    .theology-card h3 {
+        font-size: 1.1rem;
+    }
+
+    /* Overlay inner containers - prevent overflow at tablet widths */
+    .fixed.inset-0 > div {
+        max-height: 90vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100vw;
+    }
+
+    /* Battle / puzzle / skill-tree / nightmare overlays */
+    #battle-overlay > div,
+    #puzzle-overlay > div,
+    #skill-tree-overlay > div,
+    #unmaking-overlay > div {
+        max-width: 95vw;
+        margin: 0 auto;
+        padding: 16px;
+    }
+
+    /* Loop puzzle overlay */
+    #loop-puzzle {
+        max-width: 100vw;
+        overflow-x: auto;
+    }
+
+    /* Study guide panel */
+    #study-guide-panel {
+        width: calc(100vw - 32px) !important;
+        max-width: calc(100vw - 32px) !important;
+        left: 16px !important;
+        bottom: 80px !important;
+        max-height: 70vh !important;
+    }
+
+    /* Ensure all interactive elements have adequate tap targets on touch/tablet */
+    button, [role="button"], [tabindex="0"] {
+        min-height: 44px;
+    }
+}
+
+/* Mobile - 480px and below */
+@media (max-width: 480px) {
+    body {
+        font-size: 16px;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 0 10px;
+    }
+
+    header {
+        padding: 10px 0;
+    }
+
+    header h1 {
+        font-size: 18px;
+    }
+
+    header .flex.space-x-6 {
+        font-size: 13px;
+        gap: 6px 10px;
+    }
+
+    main {
+        padding: 12px 0;
+    }
+
+    .theology-card {
+        padding: 14px;
+        border-radius: 10px;
+    }
+
+    .theology-card h2 {
+        font-size: 1rem;
+    }
+
+    /* Choice buttons */
+    .choice-button {
+        display: flex;
+        width: 100%;
+        min-height: 48px;
+        padding: 14px;
+        font-size: 15px;
+        text-align: left;
+    }
+
+    .choice-button h4 {
+        font-size: 14px;
+    }
+
+    .choice-button p {
+        font-size: 12px;
+    }
+
+    /* Story text readability */
+    #story-text {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+    .cinzel.text-2xl {
+        font-size: 18px;
+    }
+
+    /* Fixed-position UI elements - reposition on very small screens */
+    .fixed.top-20 {
+        top: 10px !important;
+    }
+
+    .fixed.top-4 {
+        top: 10px !important;
+    }
+
+    .fixed.bottom-4 {
+        bottom: 10px !important;
+    }
+
+    .fixed.bottom-6 {
+        bottom: 10px !important;
+    }
+
+    /* Achievement toasts - reduce width on small screens */
+    .achievement-notification,
+    [class*="fixed top-20 right-4"],
+    [class*="fixed bottom-20 right-10"] {
+        right: 10px !important;
+        left: 10px !important;
+        max-width: none !important;
+        width: auto !important;
+    }
+
+    /* Progression HUD */
+    #meta-progress-hud {
+        left: 8px !important;
+        bottom: 8px !important;
+        font-size: 11px;
+        padding: 8px !important;
+    }
+
+    /* Study guide button */
+    #study-guide-btn {
+        left: 10px !important;
+        bottom: 10px !important;
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+    }
+
+    /* Ritual button */
+    .fixed.bottom-4.left-4 {
+        left: 10px !important;
+        bottom: 10px !important;
+    }
+
+    /* Settings button */
+    button[title="Settings"] {
+        right: 10px !important;
+        bottom: 10px !important;
+        padding: 10px 12px !important;
+        font-size: 14px !important;
+    }
+
+    /* Overlay scrollability */
+    .fixed.inset-0 {
+        align-items: flex-start !important;
+        overflow-y: auto !important;
+        padding: 16px 0 !important;
+    }
+
+    .fixed.inset-0 > div {
+        max-height: none !important;
+        max-width: 100% !important;
+        margin: 0 8px !important;
+        padding: 16px !important;
+        width: auto !important;
+    }
+
+    /* Ensure overlays don't cause horizontal overflow */
+    .fixed.inset-0 [class*="max-w-"] {
+        max-width: 100% !important;
+        width: auto !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+
+    /* Battle UI skill buttons - stack in 2 cols on very small screens */
+    #battle-overlay .grid.grid-cols-3,
+    #battle-overlay .grid.grid-cols-6 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* Puzzle UI */
+    #puzzle-overlay .space-y-3 > button {
+        font-size: 14px;
+        padding: 12px !important;
+    }
+
+    /* Skill tree */
+    #skill-tree-overlay .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    #skill-tree-overlay .bg-gray-800 {
+        margin-bottom: 8px;
+    }
+
+    /* Prayer meditation modal */
+    #meditation-area {
+        height: 200px !important;
+    }
+
+    /* Reduce large emoji / icon sizes */
+    .text-6xl {
+        font-size: 2.5rem !important;
+    }
+
+    .text-5xl {
+        font-size: 2rem !important;
+    }
+
+    /* Ensure all inputs have enough height on mobile */
+    input[type="text"],
+    input[type="number"],
+    select {
+        min-height: 44px;
+        font-size: 16px !important; /* prevent iOS zoom on focus */
+    }
+
+    /* Ensure all interactive elements have adequate tap targets */
+    button, [role="button"], [tabindex="0"] {
+        min-height: 44px;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .choice-button {
+        border: 2px solid #fbbf24;
+    }
+    
+    .theology-card {
+        border: 2px solid #fbbf24;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Hide non-essential motion containers when reduced motion is preferred */
+    .divine-particles,
+    #visual-effects-container,
+    #particles {
+        display: none !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+    
+    .choice-button,
+    .achievement-notification,
+    .divine-particles,
+    #visual-effects-container,
+    #particles {
+        display: none !important;
+    }
+    
+    .theology-card {
+        border: 1px solid #ccc !important;
+        background: white !important;
+    }
+}
+
+/* ============================================
+   Mobile & Touch Enhancements
+   ============================================ */
+
+/* Touch device detection class - added via enhancements.js */
+body.touch .choice-button:hover {
+    transform: none;
+    box-shadow: none;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+}
+
+body.touch .choice-button::before {
+    width: 0;
+    height: 0;
+    background: transparent;
+    transition: none;
+}
+
+body.touch .choice-button:active {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+body.touch .choice-button:active::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+}
+
+/* Tap feedback for all interactive elements on touch */
+body.touch button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+}
+
+/* Choice button touch optimization */
+.choice-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    min-height: 44px;
+}
+
+.choice-button:active {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+}
+
+.choice-button:active::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.3), transparent);
+}
+
+/* ============================================
+   Puzzle & Dynamic Interactive Elements
+   ============================================ */
+
+/* Puzzle rune tiles */
+.rune-tile {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 44px;
+    min-width: 44px;
+}
+
+/* Pattern grid cells */
+[data-row][data-col] {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 32px;
+    min-width: 32px;
+}
+
+/* Memory sequence tiles */
+.symbol-tile {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 64px;
+    min-width: 64px;
+}
+
+/* Verse fragment buttons */
+.verse-fragment-btn {
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+/* Loop puzzle pieces */
+#loop-puzzle > div {
+    cursor: pointer;
+    touch-action: manipulation;
+    min-height: 48px;
+    min-width: 48px;
+}
+
+/* Nightmare interactive entities */
+.nightmare-entity {
+    cursor: pointer;
+    touch-action: manipulation;
+}
